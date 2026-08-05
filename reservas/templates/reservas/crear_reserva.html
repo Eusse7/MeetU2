@@ -40,7 +40,7 @@
 <body>
     <h2>meetU2 — Reservar Experiencia</h2>
 
-    <form id="form-reserva">
+    <form id="form-reserva" method="POST" action="">
         {% csrf_token %}
         <label>ID de Experiencia</label>
         <input type="number" name="experiencia_id" value="1" required>

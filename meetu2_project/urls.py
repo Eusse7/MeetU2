@@ -1,8 +1,8 @@
-# reservas/urls.py
+from django.contrib import admin
 from django.urls import path
-from reservas.views import CrearReservaView, formulario_reserva
+from reservas.views import CrearReservaView
 
 urlpatterns = [
+    path('admin/', admin.site.urls),
     path('reservas/crear/', CrearReservaView.as_view(), name='crear_reserva'),
-    path('reservas/formulario/', formulario_reserva, name='formulario_reserva'),
 ]
