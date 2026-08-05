@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>meetU2 — Crear Reserva</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 400px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+        h2 { color: #333; }
+        label { display: block; margin-top: 15px; font-weight: bold; }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #4A47A3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        #resultado {
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 4px;
+            display: none;
+        }
+        .exito { background: #DFF5E1; color: #1D6A2E; }
+        .error { background: #FBE1DE; color: #A32E1F; }
+    </style>
+</head>
+<body>
+    <h2>meetU2 — Reservar Experiencia</h2>
+
+    <form id="form-reserva">
+        {% csrf_token %}
+        <label>ID de Experiencia</label>
+        <input type="number" name="experiencia_id" value="1" required>
+
+        <label>Cantidad de Cupos</label>
+        <input type="number" name="cantidad_cupos" value="1" min="1" required>
+
+        <button type="submit">Reservar</button>
+    </form>
+
+    <div id="resultado"></div>
+
+    <script>
+        document.getElementById('form-reserva').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const form = e.target;
+            const formData = new FormData(form);
+            const csrfToken = form.querySelector('[name=csrfmiddlewaretoken]').value;
+
+            const resultadoDiv = document.getElementById('resultado');
+
+            try {
+                const response = await fetch(form.action || window.location.pathname, {
+                    method: 'POST',
+                    headers: { 'X-CSRFToken': csrfToken },
+                    body: formData
+                });
+                const data = await response.json();
+
+                resultadoDiv.style.display = 'block';
+                if (response.ok) {
+                    resultadoDiv.className = 'exito';
+                    resultadoDiv.innerText = `Reserva #${data.reserva_id} creada. Precio final: $${data.precio_final}`;
+                } else {
+                    resultadoDiv.className = 'error';
+                    resultadoDiv.innerText = `Error: ${data.error}`;
+                }
+            } catch (err) {
+                resultadoDiv.style.display = 'block';
+                resultadoDiv.className = 'error';
+                resultadoDiv.innerText = 'Error de conexión con el servidor.';
+            }
+        });
+    </script>
+</body>
+</html>
