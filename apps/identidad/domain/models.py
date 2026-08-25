@@ -1,4 +1,11 @@
-# apps/identidad/domain/models.py
+"""
+Entidades del contexto Identidad.
+
+Los modelos definen estructura e integridad (tipos, unicidad, constraints). Las
+reglas de negocio viven en `domain/policies.py` y la orquestacion en
+`application/services.py`, para no caer en Fat Models.
+"""
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 from apps.shared.domain.base_models import BaseEntity
@@ -21,10 +28,6 @@ class Usuario(BaseEntity):
 
     def __str__(self) -> str:
         return f"{self.nombre} <{self.correo}>"
-
-    @property
-    def es_organizador(self) -> bool:
-        return hasattr(self, "perfil_organizador")
 
 
 class Organizador(BaseEntity):
@@ -50,6 +53,38 @@ class Organizador(BaseEntity):
     def __str__(self) -> str:
         return self.nombre_comercial
 
-    @property
-    def puede_publicar(self) -> bool:
-        return self.estado_verificacion == EstadoValidacion.VERIFICADO
+
+class InteresUsuario(BaseEntity):
+    """
+    Vinculo Usuario <-> CategoriaInteres con el nivel de afinidad declarado.
+
+    `categoria_id` es una referencia por identificador al contexto Catalogo:
+    igual que Experiencia.organizador_id, evita una ForeignKey entre contextos
+    para que los modulos sigan siendo extraibles (ver Wiki: Strangler).
+    """
+
+    usuario = models.ForeignKey(
+        Usuario, on_delete=models.CASCADE, related_name="intereses"
+    )
+    categoria_id = models.UUIDField(db_index=True)
+    nivel_afinidad = models.PositiveSmallIntegerField(
+        default=3,
+        validators=[MinValueValidator(1), MaxValueValidator(5)],
+    )
+
+    class Meta:
+        db_table = "identidad_interes_usuario"
+        ordering = ["-nivel_afinidad"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["usuario", "categoria_id"],
+                name="interes_unico_por_usuario",
+            ),
+            models.CheckConstraint(
+                condition=models.Q(nivel_afinidad__gte=1, nivel_afinidad__lte=5),
+                name="interes_nivel_en_rango",
+            ),
+        ]
+
+    def __str__(self) -> str:
+        return f"{self.usuario_id} -> {self.categoria_id} ({self.nivel_afinidad})"

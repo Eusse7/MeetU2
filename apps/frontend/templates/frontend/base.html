@@ -9,9 +9,11 @@
 </head>
 <body>
   <nav>
-    <strong>MeetU2</strong>
-    <a href="{% url 'frontend:catalogo' %}">Catálogo</a>
+    <span class="marca">MeetU2</span>
+    <a href="{% url 'frontend:catalogo' %}">Descubrir</a>
+    <a href="{% url 'frontend:reservas' %}">Mis reservas</a>
     <a href="{% url 'frontend:organizador' %}">Soy organizador</a>
+    <span class="sesion">Sesion: <b id="sesion-actual">sin sesion</b></span>
   </nav>
   <main>{% block contenido %}{% endblock %}</main>
   <div id="toast" class="toast oculto"></div>

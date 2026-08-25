@@ -1,0 +1,127 @@
+{% extends "frontend/base.html" %}
+{% block titulo %}Mis reservas — MeetU2{% endblock %}
+
+{% block contenido %}
+<h1>Mis reservas</h1>
+
+<section class="card">
+  <p class="hint">
+    Una reserva nace en <code>PENDIENTE_PAGO</code> y retiene el cupo durante la
+    ventana de pago. Al confirmarla pasa a <code>CONFIRMADA</code>; al cancelarla
+    se devuelve el cupo al catalogo y se calcula el reembolso segun la antelacion
+    (100 % con mas de 48 h, 50 % entre 24 y 48 h, 0 % despues).
+  </p>
+  <button id="btn-recargar" class="secundario">Recargar</button>
+</section>
+
+<div id="tabla" class="card"></div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const ETIQUETAS = {
+  PENDIENTE_PAGO: "warn",
+  CONFIRMADA: "ok",
+  CHECK_IN: "ok",
+  CANCELADA: "err",
+  EXPIRADA: "err",
+  NO_ASISTIO: "err",
+};
+
+async function cargar() {
+  const usuario = sesion.get();
+  const caja = $("tabla");
+
+  if (!usuario) {
+    caja.innerHTML =
+      '<p class="vacio">Inicia sesion desde <b>Descubrir</b> para ver tus reservas.</p>';
+    return;
+  }
+
+  try {
+    const reservas = await api.misReservas(usuario.id);
+    if (!reservas.length) {
+      caja.innerHTML = '<p class="vacio">Todavia no has reservado nada.</p>';
+      return;
+    }
+
+    caja.replaceChildren();
+    const tabla = document.createElement("table");
+    tabla.innerHTML = `
+      <thead><tr>
+        <th>Experiencia</th><th>Cuando</th><th>Ticket</th>
+        <th>Cupos</th><th>Total</th><th>Estado</th><th></th>
+      </tr></thead><tbody></tbody>`;
+
+    reservas.forEach((item) => {
+      const r = item.reserva;
+      const fila = document.createElement("tr");
+      fila.innerHTML = `
+        <td>${item.experiencia_titulo || "-"}<div class="meta">${item.experiencia_ciudad}</div></td>
+        <td>${fecha(item.experiencia_fecha)}</td>
+        <td><code>${r.codigo_ticket}</code></td>
+        <td>${r.cantidad_cupos}</td>
+        <td>${dinero(r.monto_total)}
+            ${Number(r.monto_reembolsado) > 0
+              ? `<div class="meta">reembolso ${dinero(r.monto_reembolsado)}</div>`
+              : ""}</td>
+        <td><span class="etiqueta ${ETIQUETAS[r.estado] ?? ""}">${r.estado}</span></td>
+        <td></td>`;
+
+      const acciones = fila.lastElementChild;
+      if (r.estado === "PENDIENTE_PAGO") {
+        acciones.append(boton("Pagar", () => confirmar(r.id)));
+      }
+      if (r.estado === "PENDIENTE_PAGO" || r.estado === "CONFIRMADA") {
+        acciones.append(boton("Cancelar", () => cancelar(r.id), "peligro"));
+      }
+      tabla.querySelector("tbody").append(fila);
+    });
+
+    caja.append(tabla);
+  } catch (e) {
+    mostrarError(e);
+  }
+}
+
+function boton(texto, alHacerClic, clase = "secundario") {
+  const b = document.createElement("button");
+  b.textContent = texto;
+  b.className = clase;
+  b.style.marginRight = ".4rem";
+  b.onclick = async () => {
+    b.disabled = true;
+    await alHacerClic();
+    cargar();
+  };
+  return b;
+}
+
+async function confirmar(idReserva) {
+  try {
+    await api.confirmarReserva(idReserva, `TX-${Date.now()}`);
+    toast("Pago registrado. Reserva confirmada.");
+  } catch (e) {
+    mostrarError(e);
+  }
+}
+
+async function cancelar(idReserva) {
+  const usuario = sesion.get();
+  try {
+    const resultado = await api.cancelarReserva(
+      idReserva,
+      usuario.id,
+      "cancelada desde el front"
+    );
+    const pct = Number(resultado.porcentaje_aplicado) * 100;
+    toast(`Reserva cancelada. Reembolso ${pct}% = ${dinero(resultado.monto_reembolsado)}.`);
+  } catch (e) {
+    mostrarError(e);
+  }
+}
+
+$("btn-recargar").onclick = cargar;
+cargar();
+</script>
+{% endblock %}

@@ -1,0 +1,7 @@
+Django==6.1
+djangorestframework==3.18.0
+python-dotenv==1.2.3
+
+# Desarrollo / pruebas
+pytest==9.1.1
+pytest-django==4.9.0

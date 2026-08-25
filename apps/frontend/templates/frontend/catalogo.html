@@ -1,0 +1,234 @@
+{% extends "frontend/base.html" %}
+{% block titulo %}Descubrir experiencias — MeetU2{% endblock %}
+
+{% block contenido %}
+<h1>Descubrir experiencias</h1>
+
+<section class="card">
+  <h2>Tu sesion</h2>
+  <div class="fila">
+    <div>
+      <label for="nombre">Nombre</label>
+      <input id="nombre" placeholder="Andres Asistente">
+    </div>
+    <div>
+      <label for="correo">Correo</label>
+      <input id="correo" type="email" placeholder="andres@meetu2.co">
+    </div>
+    <button id="btn-registrar">Registrarme</button>
+    <button id="btn-entrar" class="secundario">Entrar</button>
+    <button id="btn-salir" class="secundario">Salir</button>
+  </div>
+  <p class="hint">
+    Registrar dos veces el mismo correo devuelve <code>409 correo_ya_registrado</code>.
+    "Entrar" busca el usuario por correo mientras no exista autenticacion real.
+  </p>
+</section>
+
+<section class="card">
+  <h2>Tus intereses</h2>
+  <div class="fila">
+    <div>
+      <label for="categoria">Categoria</label>
+      <select id="categoria"></select>
+    </div>
+    <div>
+      <label for="nivel">Afinidad (1-5)</label>
+      <input id="nivel" type="number" min="1" max="5" value="5">
+    </div>
+    <button id="btn-interes" class="secundario">Vincular interes</button>
+  </div>
+  <p class="hint" id="mis-intereses">Sin intereses declarados.</p>
+</section>
+
+<section class="card">
+  <h2>Filtros</h2>
+  <div class="fila">
+    <div>
+      <label for="f-texto">Texto</label>
+      <input id="f-texto" placeholder="cafe, caminata...">
+    </div>
+    <div>
+      <label for="f-ciudad">Ciudad</label>
+      <input id="f-ciudad" placeholder="Medellin">
+    </div>
+    <div>
+      <label for="f-precio">Precio maximo</label>
+      <input id="f-precio" type="number" min="0" placeholder="50000">
+    </div>
+    <button id="btn-buscar">Buscar</button>
+    <button id="btn-recomendadas" class="secundario">Recomendadas para mi</button>
+  </div>
+</section>
+
+<div id="resultado" class="lista"></div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const contenedor = $("resultado");
+
+function tarjeta(exp, afinidad) {
+  const agotada = exp.cupo_disponible === 0;
+  const insignia = afinidad !== undefined && afinidad > 0
+    ? `<span class="etiqueta ok">afinidad ${(afinidad * 100).toFixed(0)}%</span>`
+    : "";
+
+  const div = document.createElement("article");
+  div.className = "experiencia";
+  div.innerHTML = `
+    <h3>${exp.titulo}</h3>
+    <div class="meta">${fecha(exp.fecha_hora)} · ${exp.ubicacion.ciudad}</div>
+    <div class="meta">${exp.ubicacion.nombre} — ${exp.ubicacion.direccion}</div>
+    <div><span class="precio">${dinero(exp.precio)}</span>
+         <span class="etiqueta ${agotada ? "err" : ""}">
+           ${agotada ? "agotada" : exp.cupo_disponible + " cupos"}
+         </span> ${insignia}</div>
+    <footer>
+      <input type="number" min="1" max="5" value="1" style="width:70px;margin:0">
+      <button ${agotada ? "disabled" : ""}>Reservar</button>
+    </footer>`;
+
+  const [entrada, boton] = [div.querySelector("input"), div.querySelector("button")];
+  boton.onclick = () => reservar(exp, Number(entrada.value), boton);
+  return div;
+}
+
+async function reservar(exp, cantidad, boton) {
+  const usuario = sesion.get();
+  if (!usuario) return toast("Primero registrate o entra con tu correo", "error");
+
+  boton.disabled = true;
+  try {
+    const reserva = await api.reservar({
+      id_usuario: usuario.id,
+      id_experiencia: exp.id,
+      cantidad_cupos: cantidad,
+    });
+    toast(`Cupo apartado. Ticket ${reserva.codigo_ticket}. Paga en "Mis reservas".`);
+    buscar();
+  } catch (e) {
+    mostrarError(e);
+    boton.disabled = false;
+  }
+}
+
+function pintar(items) {
+  contenedor.replaceChildren();
+  if (!items.length) {
+    contenedor.innerHTML = '<p class="vacio">No hay experiencias que coincidan.</p>';
+    return;
+  }
+  items.forEach((item) =>
+    contenedor.append(
+      item.experiencia ? tarjeta(item.experiencia, item.afinidad) : tarjeta(item)
+    )
+  );
+}
+
+async function buscar() {
+  try {
+    pintar(
+      await api.listarExperiencias({
+        texto: $("f-texto").value,
+        ciudad: $("f-ciudad").value,
+        precio_maximo: $("f-precio").value,
+      })
+    );
+  } catch (e) {
+    mostrarError(e);
+  }
+}
+
+async function cargarCategorias() {
+  try {
+    const categorias = await api.listarCategorias();
+    $("categoria").replaceChildren(
+      ...categorias.map((c) => new Option(c.nombre, c.id))
+    );
+  } catch (e) {
+    mostrarError(e);
+  }
+}
+
+async function cargarIntereses() {
+  const usuario = sesion.get();
+  if (!usuario) return ($("mis-intereses").textContent = "Sin sesion activa.");
+  try {
+    const intereses = await api.listarIntereses(usuario.id);
+    const nombres = Object.fromEntries(
+      [...$("categoria").options].map((o) => [o.value, o.text])
+    );
+    $("mis-intereses").textContent = intereses.length
+      ? "Intereses: " +
+        intereses.map((i) => `${nombres[i.categoria_id] ?? i.categoria_id} (${i.nivel_afinidad})`).join(", ")
+      : "Sin intereses declarados.";
+  } catch (e) {
+    mostrarError(e);
+  }
+}
+
+$("btn-registrar").onclick = async () => {
+  try {
+    sesion.set(
+      await api.registrarUsuario({
+        nombre: $("nombre").value,
+        correo: $("correo").value,
+      })
+    );
+    toast("Usuario creado. Sesion iniciada.");
+    cargarIntereses();
+  } catch (e) {
+    mostrarError(e);
+  }
+};
+
+$("btn-entrar").onclick = async () => {
+  try {
+    sesion.set(await api.buscarUsuarioPorCorreo($("correo").value));
+    toast("Sesion iniciada.");
+    cargarIntereses();
+  } catch (e) {
+    mostrarError(e);
+  }
+};
+
+$("btn-salir").onclick = () => {
+  sesion.limpiar();
+  toast("Sesion cerrada.");
+  cargarIntereses();
+};
+
+$("btn-interes").onclick = async () => {
+  const usuario = sesion.get();
+  if (!usuario) return toast("Necesitas una sesion activa", "error");
+  try {
+    await api.vincularInteres(
+      usuario.id,
+      $("categoria").value,
+      Number($("nivel").value)
+    );
+    toast("Interes vinculado.");
+    cargarIntereses();
+  } catch (e) {
+    mostrarError(e);
+  }
+};
+
+$("btn-buscar").onclick = buscar;
+
+$("btn-recomendadas").onclick = async () => {
+  const usuario = sesion.get();
+  if (!usuario) return toast("Necesitas una sesion activa", "error");
+  try {
+    pintar(await api.recomendaciones(usuario.id));
+    toast("Catalogo ordenado por afinidad con tus intereses.");
+  } catch (e) {
+    mostrarError(e);
+  }
+};
+
+cargarCategorias().then(cargarIntereses);
+buscar();
+</script>
+{% endblock %}

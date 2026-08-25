@@ -1,95 +1,307 @@
 {% extends "frontend/base.html" %}
-{% block titulo %}Publicar experiencia — MeetU2{% endblock %}
+{% block titulo %}Panel del organizador — MeetU2{% endblock %}
 
 {% block contenido %}
-<h1>Publicar una experiencia</h1>
+<h1>Panel del organizador</h1>
 
 <section class="card">
-  <h2>1. Crear usuario</h2>
-  <input id="nombre" placeholder="Nombre">
-  <input id="correo" placeholder="Correo" type="email">
-  <button id="btn-usuario">Registrar</button>
-  <p class="hint">Repite el registro para ver el 409 del dominio.</p>
+  <h2>1. Perfil de organizador</h2>
+  <div class="fila">
+    <div>
+      <label for="nombre-comercial">Nombre comercial</label>
+      <input id="nombre-comercial" placeholder="Colectivo Cafe &amp; Ritmo">
+    </div>
+    <div>
+      <label for="cuenta">Cuenta bancaria</label>
+      <input id="cuenta" placeholder="123456789">
+    </div>
+    <button id="btn-organizador">Crear perfil</button>
+    <button id="btn-verificar" class="secundario" disabled>Verificar (backoffice)</button>
+  </div>
+  <p class="hint" id="estado-organizador">
+    Inicia sesion en <b>Descubrir</b> y luego crea aqui tu perfil de organizador.
+    Nace en <code>PENDIENTE</code> y no puede publicar hasta estar
+    <code>VERIFICADO</code>: intentarlo antes devuelve <code>409</code>.
+  </p>
 </section>
 
 <section class="card">
-  <h2>2. Convertirse en organizador</h2>
-  <input id="nombre-comercial" placeholder="Nombre comercial">
-  <button id="btn-organizador" disabled>Crear perfil</button>
-  <button id="btn-verificar" disabled>Verificar (admin)</button>
+  <h2>2. Ubicacion y categorias</h2>
+  <div class="fila">
+    <div>
+      <label for="u-nombre">Nombre del sitio</label>
+      <input id="u-nombre" placeholder="Casa Rose">
+    </div>
+    <div>
+      <label for="u-direccion">Direccion</label>
+      <input id="u-direccion" placeholder="Cra 35 #8A-3">
+    </div>
+    <div>
+      <label for="u-ciudad">Ciudad</label>
+      <input id="u-ciudad" placeholder="Medellin" value="Medellin">
+    </div>
+    <div>
+      <label for="u-aforo">Aforo</label>
+      <input id="u-aforo" type="number" min="1" value="30">
+    </div>
+    <button id="btn-ubicacion" class="secundario">Crear ubicacion</button>
+  </div>
+  <div class="fila">
+    <div>
+      <label for="c-nombre">Nueva categoria</label>
+      <input id="c-nombre" placeholder="Gastronomia">
+    </div>
+    <button id="btn-categoria" class="secundario">Crear categoria</button>
+  </div>
 </section>
 
 <section class="card">
-  <h2>3. Publicar</h2>
-  <input id="titulo" placeholder="Título">
-  <textarea id="descripcion" placeholder="Descripción"></textarea>
-  <input id="fecha" type="datetime-local">
-  <input id="precio" type="number" placeholder="Precio">
-  <input id="cupo" type="number" placeholder="Cupo máximo">
-  <button id="btn-publicar" disabled>Publicar experiencia</button>
-  <p class="hint">Prueba con cupo mayor al aforo para ver la validación del Builder.</p>
+  <h2>3. Publicar experiencia</h2>
+  <div class="fila">
+    <div>
+      <label for="titulo">Titulo</label>
+      <input id="titulo" placeholder="Cata de cafes de origen">
+    </div>
+    <div>
+      <label for="ubicacion">Ubicacion</label>
+      <select id="ubicacion"></select>
+    </div>
+  </div>
+  <label for="descripcion">Descripcion</label>
+  <textarea id="descripcion" rows="2" placeholder="Cuatro origenes colombianos."></textarea>
+  <div class="fila">
+    <div>
+      <label for="fecha">Fecha y hora</label>
+      <input id="fecha" type="datetime-local">
+    </div>
+    <div>
+      <label for="precio">Precio</label>
+      <input id="precio" type="number" min="0" placeholder="45000">
+    </div>
+    <div>
+      <label for="cupo">Cupo maximo</label>
+      <input id="cupo" type="number" min="1" placeholder="12">
+    </div>
+    <div>
+      <label for="descuento">Descuento (0 a 1)</label>
+      <input id="descuento" type="number" min="0" max="1" step="0.05" value="0">
+    </div>
+  </div>
+  <div class="fila">
+    <div>
+      <label for="categorias">Categorias</label>
+      <select id="categorias" multiple size="4"></select>
+    </div>
+    <button id="btn-publicar" disabled>Publicar experiencia</button>
+  </div>
+  <p class="hint">
+    El <b>ExperienciaBuilder</b> valida por pasos: cupo mayor al aforo devuelve
+    <code>400 aforo_excedido</code> y una fecha con menos de 2 horas de
+    antelacion devuelve <code>400 datos_experiencia_invalidos</code>.
+  </p>
+</section>
+
+<section class="card">
+  <h2>4. Check-in de asistentes</h2>
+  <div class="fila">
+    <div>
+      <label for="ticket">Codigo de ticket</label>
+      <input id="ticket" placeholder="X3CY62XK">
+    </div>
+    <button id="btn-checkin" class="secundario" disabled>Registrar check-in</button>
+  </div>
+  <p class="hint">
+    Solo se habilita dentro de la ventana de 3 horas alrededor del evento; fuera
+    de ella devuelve <code>409 check_in_fuera_de_ventana</code>.
+  </p>
+</section>
+
+<section class="card">
+  <h2>Mis experiencias</h2>
+  <div id="mis-experiencias"></div>
 </section>
 {% endblock %}
 
 {% block scripts %}
 <script>
-let usuarioId = null;
-let organizadorId = null;
+let organizador = null;
 
-const $ = (id) => document.getElementById(id);
+function pintarOrganizador() {
+  const caja = $("estado-organizador");
+  const listo = organizador?.estado_verificacion === "VERIFICADO";
 
-$("btn-usuario").onclick = async () => {
-  try {
-    const u = await api.registrarUsuario({
-      nombre: $("nombre").value,
-      correo: $("correo").value,
-    });
-    usuarioId = u.id;
-    $("btn-organizador").disabled = false;
-    toast(`Usuario creado: ${u.id}`, "ok");
-  } catch (e) {
-    toast(`${e.status} · ${e.mensaje ?? e.message}`, "error");
+  if (organizador) {
+    caja.innerHTML =
+      `Perfil: <b>${organizador.nombre_comercial}</b> ` +
+      `<span class="etiqueta ${listo ? "ok" : "warn"}">${organizador.estado_verificacion}</span>`;
   }
-};
+  $("btn-verificar").disabled = !organizador || listo;
+  $("btn-publicar").disabled = !listo;
+  $("btn-checkin").disabled = !organizador;
+  $("btn-organizador").disabled = !!organizador;
+}
+
+async function cargarPerfil() {
+  const usuario = sesion.get();
+  if (!usuario) return;
+  try {
+    const datos = await api.perfilOrganizador(usuario.id);
+    organizador = datos && datos.id ? datos : null;
+    pintarOrganizador();
+    if (organizador) cargarExperiencias();
+  } catch (e) {
+    mostrarError(e);
+  }
+}
+
+async function cargarListas() {
+  try {
+    const [ubicaciones, categorias] = await Promise.all([
+      api.listarUbicaciones(),
+      api.listarCategorias(),
+    ]);
+    $("ubicacion").replaceChildren(
+      ...ubicaciones.map((u) => new Option(`${u.nombre} (aforo ${u.aforo_maximo})`, u.id))
+    );
+    $("categorias").replaceChildren(
+      ...categorias.map((c) => new Option(c.nombre, c.id))
+    );
+  } catch (e) {
+    mostrarError(e);
+  }
+}
+
+async function cargarExperiencias() {
+  if (!organizador) return;
+  try {
+    const experiencias = await api.experienciasDeOrganizador(organizador.id);
+    const caja = $("mis-experiencias");
+    if (!experiencias.length) {
+      caja.innerHTML = '<p class="vacio">Aun no has publicado experiencias.</p>';
+      return;
+    }
+    const tabla = document.createElement("table");
+    tabla.innerHTML = `
+      <thead><tr>
+        <th>Titulo</th><th>Cuando</th><th>Precio</th>
+        <th>Cupos</th><th>Estado</th><th></th>
+      </tr></thead><tbody></tbody>`;
+
+    experiencias.forEach((exp) => {
+      const fila = document.createElement("tr");
+      fila.innerHTML = `
+        <td>${exp.titulo}</td>
+        <td>${fecha(exp.fecha_hora)}</td>
+        <td>${dinero(exp.precio)}</td>
+        <td>${exp.cupo_disponible} / ${exp.cupo_maximo}</td>
+        <td><span class="etiqueta">${exp.estado}</span></td>
+        <td></td>`;
+
+      if (exp.estado !== "CANCELADA" && exp.estado !== "FINALIZADA") {
+        const b = document.createElement("button");
+        b.textContent = "Cancelar";
+        b.className = "peligro";
+        b.onclick = async () => {
+          try {
+            await api.cancelarExperiencia(exp.id, organizador.id, "cancelada por el host");
+            toast("Experiencia cancelada.");
+            cargarExperiencias();
+          } catch (e) {
+            mostrarError(e);
+          }
+        };
+        fila.lastElementChild.append(b);
+      }
+      tabla.querySelector("tbody").append(fila);
+    });
+
+    caja.replaceChildren(tabla);
+  } catch (e) {
+    mostrarError(e);
+  }
+}
 
 $("btn-organizador").onclick = async () => {
+  const usuario = sesion.get();
+  if (!usuario) return toast("Primero inicia sesion en Descubrir", "error");
   try {
-    const o = await api.convertirEnOrganizador(usuarioId, {
+    organizador = await api.convertirEnOrganizador(usuario.id, {
       nombre_comercial: $("nombre-comercial").value,
+      cuenta_bancaria: $("cuenta").value,
     });
-    organizadorId = o.id;
-    $("btn-verificar").disabled = false;
-    toast("Perfil creado en estado PENDIENTE", "ok");
+    toast("Perfil creado en estado PENDIENTE.");
+    pintarOrganizador();
   } catch (e) {
-    toast(`${e.status} · ${e.message}`, "error");
+    mostrarError(e);
   }
 };
 
 $("btn-verificar").onclick = async () => {
   try {
-    await api.verificarOrganizador(organizadorId, true);
-    $("btn-publicar").disabled = false;
-    toast("Organizador VERIFICADO — ya puede publicar", "ok");
+    organizador = await api.verificarOrganizador(organizador.id, true);
+    toast("Organizador VERIFICADO: ya puede publicar.");
+    pintarOrganizador();
   } catch (e) {
-    toast(`${e.status} · ${e.message}`, "error");
+    mostrarError(e);
+  }
+};
+
+$("btn-ubicacion").onclick = async () => {
+  try {
+    await api.crearUbicacion({
+      nombre: $("u-nombre").value,
+      direccion: $("u-direccion").value,
+      ciudad: $("u-ciudad").value,
+      latitud: 6.2087,
+      longitud: -75.5675,
+      aforo_maximo: Number($("u-aforo").value),
+    });
+    toast("Ubicacion creada.");
+    cargarListas();
+  } catch (e) {
+    mostrarError(e);
+  }
+};
+
+$("btn-categoria").onclick = async () => {
+  try {
+    await api.crearCategoria({ nombre: $("c-nombre").value });
+    toast("Categoria creada.");
+    cargarListas();
+  } catch (e) {
+    mostrarError(e);
   }
 };
 
 $("btn-publicar").onclick = async () => {
   try {
     const exp = await api.publicarExperiencia({
-      id_organizador: organizadorId,
-      id_ubicacion: document.querySelector("[data-ubicacion]")?.value,
+      id_organizador: organizador.id,
+      id_ubicacion: $("ubicacion").value,
       titulo: $("titulo").value,
       descripcion: $("descripcion").value,
       fecha_hora: new Date($("fecha").value).toISOString(),
       precio: $("precio").value,
-      cupo_maximo: parseInt($("cupo").value, 10),
+      cupo_maximo: Number($("cupo").value),
+      descuento_porcentaje: $("descuento").value,
+      categorias: [...$("categorias").selectedOptions].map((o) => o.value),
     });
-    toast(`Publicada: ${exp.titulo}`, "ok");
+    toast(`Publicada: ${exp.titulo} (${dinero(exp.precio)}).`);
+    cargarExperiencias();
   } catch (e) {
-    toast(`${e.status} · ${e.message}`, "error");
+    mostrarError(e);
   }
 };
+
+$("btn-checkin").onclick = async () => {
+  try {
+    const reserva = await api.checkIn($("ticket").value, organizador.id);
+    toast(`Check-in registrado para el ticket ${reserva.codigo_ticket}.`);
+  } catch (e) {
+    mostrarError(e);
+  }
+};
+
+cargarListas().then(cargarPerfil);
 </script>
 {% endblock %}

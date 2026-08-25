@@ -1,5 +1,5 @@
-# apps/identidad/domain/exceptions.py
-from apps.shared.domain.exceptions import ConflictError, NotFoundError
+"""Errores del contexto Identidad. El handler de DRF los traduce a HTTP."""
+from apps.shared.domain.exceptions import ConflictError, NotFoundError, ValidationError
 
 
 class UsuarioNoEncontrado(NotFoundError):
@@ -20,3 +20,11 @@ class YaEsOrganizador(ConflictError):
 
 class OrganizadorNoVerificado(ConflictError):
     codigo = "organizador_no_verificado"
+
+
+class UsuarioInactivo(ConflictError):
+    codigo = "usuario_inactivo"
+
+
+class DatosPerfilInvalidos(ValidationError):
+    codigo = "datos_perfil_invalidos"
