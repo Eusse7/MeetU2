@@ -1,0 +1,21 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block titulo %}MeetU2{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'frontend/app.css' %}">
+</head>
+<body>
+  <nav>
+    <strong>MeetU2</strong>
+    <a href="{% url 'frontend:catalogo' %}">Catálogo</a>
+    <a href="{% url 'frontend:organizador' %}">Soy organizador</a>
+  </nav>
+  <main>{% block contenido %}{% endblock %}</main>
+  <div id="toast" class="toast oculto"></div>
+  <script src="{% static 'frontend/api.js' %}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

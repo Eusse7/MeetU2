@@ -1,0 +1,95 @@
+{% extends "frontend/base.html" %}
+{% block titulo %}Publicar experiencia — MeetU2{% endblock %}
+
+{% block contenido %}
+<h1>Publicar una experiencia</h1>
+
+<section class="card">
+  <h2>1. Crear usuario</h2>
+  <input id="nombre" placeholder="Nombre">
+  <input id="correo" placeholder="Correo" type="email">
+  <button id="btn-usuario">Registrar</button>
+  <p class="hint">Repite el registro para ver el 409 del dominio.</p>
+</section>
+
+<section class="card">
+  <h2>2. Convertirse en organizador</h2>
+  <input id="nombre-comercial" placeholder="Nombre comercial">
+  <button id="btn-organizador" disabled>Crear perfil</button>
+  <button id="btn-verificar" disabled>Verificar (admin)</button>
+</section>
+
+<section class="card">
+  <h2>3. Publicar</h2>
+  <input id="titulo" placeholder="Título">
+  <textarea id="descripcion" placeholder="Descripción"></textarea>
+  <input id="fecha" type="datetime-local">
+  <input id="precio" type="number" placeholder="Precio">
+  <input id="cupo" type="number" placeholder="Cupo máximo">
+  <button id="btn-publicar" disabled>Publicar experiencia</button>
+  <p class="hint">Prueba con cupo mayor al aforo para ver la validación del Builder.</p>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let usuarioId = null;
+let organizadorId = null;
+
+const $ = (id) => document.getElementById(id);
+
+$("btn-usuario").onclick = async () => {
+  try {
+    const u = await api.registrarUsuario({
+      nombre: $("nombre").value,
+      correo: $("correo").value,
+    });
+    usuarioId = u.id;
+    $("btn-organizador").disabled = false;
+    toast(`Usuario creado: ${u.id}`, "ok");
+  } catch (e) {
+    toast(`${e.status} · ${e.mensaje ?? e.message}`, "error");
+  }
+};
+
+$("btn-organizador").onclick = async () => {
+  try {
+    const o = await api.convertirEnOrganizador(usuarioId, {
+      nombre_comercial: $("nombre-comercial").value,
+    });
+    organizadorId = o.id;
+    $("btn-verificar").disabled = false;
+    toast("Perfil creado en estado PENDIENTE", "ok");
+  } catch (e) {
+    toast(`${e.status} · ${e.message}`, "error");
+  }
+};
+
+$("btn-verificar").onclick = async () => {
+  try {
+    await api.verificarOrganizador(organizadorId, true);
+    $("btn-publicar").disabled = false;
+    toast("Organizador VERIFICADO — ya puede publicar", "ok");
+  } catch (e) {
+    toast(`${e.status} · ${e.message}`, "error");
+  }
+};
+
+$("btn-publicar").onclick = async () => {
+  try {
+    const exp = await api.publicarExperiencia({
+      id_organizador: organizadorId,
+      id_ubicacion: document.querySelector("[data-ubicacion]")?.value,
+      titulo: $("titulo").value,
+      descripcion: $("descripcion").value,
+      fecha_hora: new Date($("fecha").value).toISOString(),
+      precio: $("precio").value,
+      cupo_maximo: parseInt($("cupo").value, 10),
+    });
+    toast(`Publicada: ${exp.titulo}`, "ok");
+  } catch (e) {
+    toast(`${e.status} · ${e.message}`, "error");
+  }
+};
+</script>
+{% endblock %}

@@ -1,5 +1,8 @@
+# apps/notificaciones/apps.py
 from django.apps import AppConfig
 
 
 class NotificacionesConfig(AppConfig):
-    name = 'notificaciones'
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "apps.notificaciones"
+    label = "notificaciones"

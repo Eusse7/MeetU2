@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/6.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.1/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -31,12 +31,21 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "rest_framework",
+    "apps.shared",
+    "apps.identidad",
+    "apps.catalogo",
+    "apps.reservas",
+    "apps.pagos",
+    "apps.social",
+    "apps.notificaciones",
+    "apps.frontend",
 ]
 
 MIDDLEWARE = [
@@ -125,3 +134,16 @@ MAILERS = {
         'BACKEND': 'django.core.mail.backends.console.EmailBackend',
     },
 }
+
+REST_FRAMEWORK = {
+    "EXCEPTION_HANDLER": "apps.shared.api.exception_handler.domain_exception_handler",
+    "DEFAULT_PAGINATION_CLASS": "apps.shared.api.pagination.StandardPagination",
+    "PAGE_SIZE": 20,
+    "DEFAULT_RENDERER_CLASSES": [
+        "rest_framework.renderers.JSONRenderer",
+        "rest_framework.renderers.BrowsableAPIRenderer",
+    ],
+}
+
+CANAL_NOTIFICACION_DEFECTO = os.environ.get("CANAL_NOTIFICACION", "consola")
+PASARELA_PAGO_DEFECTO = os.environ.get("PASARELA_PAGO", "fake")
