@@ -2,6 +2,10 @@ Django==6.1
 djangorestframework==3.18.0
 python-dotenv==1.2.3
 
+# Despliegue en contenedor (docker-compose)
+gunicorn==26.2.0
+psycopg[binary]==3.3.6
+
 # Desarrollo / pruebas
 pytest==9.1.1
 pytest-django==4.9.0
