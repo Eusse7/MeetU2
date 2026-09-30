@@ -32,6 +32,8 @@ SECRET_KEY = os.environ.get(
 )
 DEBUG = env_bool("DJANGO_DEBUG", True)
 ALLOWED_HOSTS = env_list("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1")
+# Detras de Nginx el navegador ve el origen del proxy, no el de Django.
+CSRF_TRUSTED_ORIGINS = env_list("DJANGO_CSRF_TRUSTED_ORIGINS", "")
 
 
 # ------------------------------------------------------------- Aplicaciones
@@ -50,12 +52,13 @@ THIRD_PARTY_APPS = [
 
 # Un modulo por contexto acotado (bounded context). El orden refleja la
 # direccion de las dependencias: shared <- identidad <- catalogo <- reservas.
+# Pagos ya no vive aqui: se estrangulo hacia el microservicio Flask
+# `services/pagos` (ver docs/wiki/Migración-a-Microservicios-(Strangler-Pattern).md).
 LOCAL_APPS = [
     "apps.shared",
     "apps.identidad",
     "apps.catalogo",
     "apps.reservas",
-    "apps.pagos",
     "apps.social",
     "apps.notificaciones",
     "apps.frontend",
@@ -85,6 +88,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "apps.frontend.context_processors.feature_flags",
             ],
         },
     },
@@ -95,12 +99,25 @@ ASGI_APPLICATION = "config.asgi.application"
 
 
 # ------------------------------------------------------------ Base de datos
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+# SQLite en desarrollo; PostgreSQL cuando corre en docker-compose.
+if os.environ.get("POSTGRES_HOST"):
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "HOST": os.environ["POSTGRES_HOST"],
+            "PORT": os.environ.get("POSTGRES_PORT", "5432"),
+            "NAME": os.environ.get("POSTGRES_DB", "meetu2"),
+            "USER": os.environ.get("POSTGRES_USER", "meetu2"),
+            "PASSWORD": os.environ.get("POSTGRES_PASSWORD", ""),
+        }
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
@@ -150,7 +167,14 @@ REST_FRAMEWORK = {
 # Las lee la Factory correspondiente; cambiar el canal o la pasarela no
 # requiere tocar ni un solo servicio de la capa de aplicacion.
 CANAL_NOTIFICACION_DEFECTO = os.environ.get("CANAL_NOTIFICACION", "consola")
-PASARELA_PAGO_DEFECTO = os.environ.get("PASARELA_PAGO", "fake")
+
+
+# ------------------------------------------------ Strangler Pattern: Pagos
+# URL interna del microservicio Flask. Si esta definida, confirmar una reserva
+# exige una referencia de pago APROBADO en ese servicio.
+PAGOS_SERVICE_URL = os.environ.get("PAGOS_SERVICE_URL", "").strip()
+# El front usa /api/v2/pagos (servido por Nginx -> Flask) cuando esta activo.
+PAGOS_V2_HABILITADO = env_bool("PAGOS_V2_HABILITADO", bool(PAGOS_SERVICE_URL))
 
 
 # ------------------------------------------------------- Reglas de negocio

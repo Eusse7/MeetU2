@@ -1,11 +1,19 @@
-# Contexto Pagos — planificado para la Entrega 2
+# Contexto Pagos — estrangulado hacia un microservicio (Taller 02)
 
-Estructura creada, sin implementar en la Entrega 1.
+Este esqueleto **ya no forma parte del monolito** (se retiró de
+`LOCAL_APPS` en `config/settings.py`). La lógica de pagos se implementó
+directamente como microservicio Flask independiente siguiendo el
+**Strangler Pattern**:
 
-Alcance previsto: entidad `Pago`, `PasarelaPort` con una **Factory** que
-seleccione la implementación (`fake` / `wompi`) según `PASARELA_PAGO`, y
-desembolso al organizador descontando la comisión de plataforma.
+| | |
+|---|---|
+| Código | [`services/pagos/`](../../services/pagos) |
+| Ruta pública | `/api/v2/pagos` (Nginx → Flask) |
+| Documentación | [`docs/wiki/Migración-a-Microservicios-(Strangler-Pattern).md`](<../../docs/wiki/Migración-a-Microservicios-(Strangler-Pattern).md>) |
 
-Punto de integración ya preparado: `ConfirmarReservaService` recibe hoy la
-referencia de pago como dato opaco; cuando exista este contexto se le inyectará
-un `PagoPort` y el resto del servicio no cambia.
+Lo único que queda en Django es la costura de integración:
+`apps/reservas/application/ports.py::VerificadorPagoPort` y su adaptador HTTP
+`apps/reservas/infrastructure/adapters.py::HttpVerificadorPago`.
+
+Los archivos vacíos de esta carpeta pueden eliminarse cuando el equipo lo
+decida; se conservan solo como rastro histórico de la migración.
