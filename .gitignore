@@ -26,3 +26,10 @@ db.sqlite3-journal
 .idea/
 *.swp
 .DS_Store
+
+# Microservicio de pagos (SQLite local)
+services/pagos/*.sqlite3
+
+taller/
+
+docs/wiki/
