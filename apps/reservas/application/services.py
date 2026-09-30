@@ -24,11 +24,13 @@ from apps.reservas.application.ports import (
     NotificadorPort,
     PerfilUsuarioPort,
     ReservaRepositoryPort,
+    VerificadorPagoPort,
 )
 from apps.reservas.domain.enums import EstadoReserva, OrigenCancelacion
 from apps.reservas.domain.exceptions import (
     CodigoTicketInvalido,
     DatosReservaInvalidos,
+    PagoNoVerificado,
     ReservaDuplicada,
     ReservaExpirada,
     ReservaNoEncontrada,
@@ -161,9 +163,10 @@ class ConfirmarReservaService:
     """
     Confirma una reserva tras el pago.
 
-    Mientras el contexto Pagos no exista (Entrega 2), recibe la referencia de
-    pago como dato opaco. Cuando exista, se inyecta un `PagoPort` y el resto de
-    este servicio no cambia.
+    Pagos se extrajo a un microservicio Flask (Strangler Pattern, Taller 02).
+    Si se inyecta un `VerificadorPagoPort`, la referencia debe corresponder a
+    un pago APROBADO en ese servicio; sin el, se conserva el comportamiento
+    legado (referencia opaca) para no romper a los clientes de /api/v1.
     """
 
     def __init__(
@@ -174,6 +177,7 @@ class ConfirmarReservaService:
         notificador: NotificadorPort,
         uow: UnitOfWorkPort | None = None,
         reloj=timezone.now,
+        verificador_pago: VerificadorPagoPort | None = None,
     ):
         self._reservas = reservas
         self._catalogo = catalogo
@@ -181,6 +185,7 @@ class ConfirmarReservaService:
         self._notificador = notificador
         self._uow = uow or SinTransaccion()
         self._reloj = reloj
+        self._verificador_pago = verificador_pago
 
     def ejecutar(self, dto: ConfirmarReservaDTO) -> Reserva:
         reserva = self._reservas.obtener_por_id(dto.id_reserva)
@@ -196,6 +201,16 @@ class ConfirmarReservaService:
         MaquinaEstadosReserva.validar_transicion(
             reserva.estado, EstadoReserva.CONFIRMADA
         )
+
+        if self._verificador_pago is not None:
+            referencia = (dto.referencia_pago or "").strip()
+            if not referencia:
+                raise PagoNoVerificado(
+                    "Confirmar una reserva requiere la referencia de un pago aprobado"
+                )
+            self._verificador_pago.verificar(
+                referencia, reserva.id, reserva.monto_total
+            )
 
         reserva.estado = EstadoReserva.CONFIRMADA
         reserva.confirmada_en = ahora

@@ -32,3 +32,7 @@ class UsuarioNoAutorizado(ConflictError):
 
 class CodigoTicketInvalido(NotFoundError):
     codigo = "codigo_ticket_invalido"
+
+
+class PagoNoVerificado(ConflictError):
+    codigo = "pago_no_verificado"

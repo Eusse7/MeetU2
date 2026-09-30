@@ -1,11 +1,16 @@
 """
 Adaptadores del contexto Reservas hacia el resto del sistema.
 
-Los tres implementan puertos declarados en `application/ports.py` y son la
-unica frontera por la que Reservas toca Catalogo, Identidad y Notificaciones.
+Implementan puertos declarados en `application/ports.py` y son la unica
+frontera por la que Reservas toca Catalogo, Identidad, Notificaciones y el
+microservicio de Pagos (este ultimo, por HTTP).
 Traducen las entidades ajenas a las proyecciones propias (`ExperienciaVista`,
 `UsuarioVista`), de modo que un cambio en otro contexto no se propaga.
 """
+import json
+import urllib.error
+import urllib.parse
+import urllib.request
 from decimal import Decimal
 from uuid import UUID
 
@@ -20,8 +25,11 @@ from apps.reservas.application.ports import (
     NotificadorPort,
     PerfilUsuarioPort,
     UsuarioVista,
+    VerificadorPagoPort,
 )
+from apps.reservas.domain.exceptions import PagoNoVerificado
 from apps.reservas.domain.models import Reserva
+from apps.shared.domain.exceptions import DomainError
 
 
 class CatalogoServiceAdapter(CatalogoPort):
@@ -151,3 +159,56 @@ class NotificacionesAdapter(NotificadorPort):
             id_reserva=str(reserva.id),
             tipo="reserva_cancelada",
         )
+
+
+class ServicioPagosNoDisponible(DomainError):
+    codigo = "servicio_pagos_no_disponible"
+    status_code = 503
+
+
+class HttpVerificadorPago(VerificadorPagoPort):
+    """
+    Consulta al microservicio Flask de Pagos si una referencia es legitima.
+
+    Es la costura del Strangler Pattern dentro del monolito: Reservas ya no
+    sabe cobrar ni habla con pasarelas; solo pregunta por HTTP
+    (GET /api/v2/pagos/referencias/<ref>) y valida la respuesta.
+    """
+
+    def __init__(self, url_base: str, timeout: float = 3.0):
+        self._url = url_base.rstrip("/")
+        self._timeout = timeout
+
+    def verificar(self, referencia: str, id_reserva: UUID, monto: Decimal) -> None:
+        pago = self._consultar(referencia)
+        if pago.get("estado") != "APROBADO":
+            raise PagoNoVerificado(
+                f"El pago {referencia} esta en estado {pago.get('estado')}"
+            )
+        if str(pago.get("id_reserva")) != str(id_reserva):
+            raise PagoNoVerificado(
+                f"El pago {referencia} no corresponde a esta reserva"
+            )
+        if Decimal(str(pago.get("monto", "0"))) != Decimal(monto):
+            raise PagoNoVerificado(
+                f"El monto del pago {referencia} no coincide con el de la reserva"
+            )
+
+    def _consultar(self, referencia: str) -> dict:
+        ruta = urllib.parse.quote(referencia, safe="")
+        url = f"{self._url}/api/v2/pagos/referencias/{ruta}"
+        try:
+            with urllib.request.urlopen(url, timeout=self._timeout) as respuesta:
+                return json.loads(respuesta.read().decode("utf-8"))
+        except urllib.error.HTTPError as exc:
+            if exc.code == 404:
+                raise PagoNoVerificado(
+                    f"No existe un pago con referencia {referencia}"
+                ) from exc
+            raise ServicioPagosNoDisponible(
+                f"El servicio de pagos respondio {exc.code}"
+            ) from exc
+        except (urllib.error.URLError, TimeoutError, ValueError) as exc:
+            raise ServicioPagosNoDisponible(
+                "El servicio de pagos no responde; intenta de nuevo"
+            ) from exc

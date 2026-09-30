@@ -106,3 +106,19 @@ class NotificadorPort(ABC):
     @abstractmethod
     def reserva_cancelada(self, reserva: Reserva, usuario: UsuarioVista,
                           reembolso: Decimal) -> None: ...
+
+
+class VerificadorPagoPort(ABC):
+    """
+    Lo que Reservas necesita del microservicio de Pagos (Strangler Pattern).
+
+    Desde que Pagos se extrajo a Flask, el monolito ya no cobra: solo comprueba
+    que la referencia que le envian corresponde a un pago APROBADO de *esta*
+    reserva y por *este* monto. El como (HTTP, cola, gRPC) queda detras del
+    adaptador.
+    """
+
+    @abstractmethod
+    def verificar(self, referencia: str, id_reserva: UUID, monto: Decimal) -> None:
+        """Lanza `PagoNoVerificado` si la referencia no respalda la reserva."""
+

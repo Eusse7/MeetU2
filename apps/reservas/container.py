@@ -1,4 +1,6 @@
 """Composition Root del contexto Reservas."""
+from django.conf import settings
+
 from apps.reservas.application.services import (
     CancelarReservaService,
     ConfirmarReservaService,
@@ -11,6 +13,7 @@ from apps.reservas.application.services import (
 )
 from apps.reservas.infrastructure.adapters import (
     CatalogoServiceAdapter,
+    HttpVerificadorPago,
     IdentidadPerfilAdapter,
     NotificacionesAdapter,
 )
@@ -28,6 +31,17 @@ def solicitar_reserva() -> SolicitarReservaService:
     )
 
 
+def verificador_pago() -> HttpVerificadorPago | None:
+    """
+    Feature toggle del Strangler: con PAGOS_SERVICE_URL definido, la
+    confirmacion exige un pago real del microservicio; sin el, se mantiene el
+    comportamiento legado de /api/v1.
+    """
+    if not settings.PAGOS_SERVICE_URL:
+        return None
+    return HttpVerificadorPago(settings.PAGOS_SERVICE_URL)
+
+
 def confirmar_reserva() -> ConfirmarReservaService:
     return ConfirmarReservaService(
         reservas=DjangoReservaRepository(),
@@ -35,6 +49,7 @@ def confirmar_reserva() -> ConfirmarReservaService:
         perfiles=IdentidadPerfilAdapter(),
         notificador=NotificacionesAdapter(),
         uow=DjangoUnitOfWork(),
+        verificador_pago=verificador_pago(),
     )
 
 
