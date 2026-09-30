@@ -116,6 +116,15 @@
   </p>
 </section>
 
+<section class="card" id="card-liquidacion" hidden>
+  <h2>Liquidacion (microservicio de pagos)</h2>
+  <p class="hint">
+    Servido por Flask en <code>/api/v2/pagos/organizadores/{id}/liquidacion</code>:
+    lo cobrado menos la comision de plataforma y los reembolsos.
+  </p>
+  <div id="liquidacion"></div>
+</section>
+
 <section class="card">
   <h2>Mis experiencias</h2>
   <div id="mis-experiencias"></div>
@@ -148,7 +157,28 @@ async function cargarPerfil() {
     const datos = await api.perfilOrganizador(usuario.id);
     organizador = datos && datos.id ? datos : null;
     pintarOrganizador();
-    if (organizador) cargarExperiencias();
+    if (organizador) {
+      cargarExperiencias();
+      cargarLiquidacion();
+    }
+  } catch (e) {
+    mostrarError(e);
+  }
+}
+
+async function cargarLiquidacion() {
+  if (!organizador || !pagosV2Habilitado()) return;
+  $("card-liquidacion").hidden = false;
+  try {
+    const l = await api.liquidacionOrganizador(organizador.id);
+    $("liquidacion").innerHTML = `
+      <table><tbody>
+        <tr><td>Pagos considerados</td><td>${l.pagos_considerados}</td></tr>
+        <tr><td>Total cobrado</td><td>${dinero(l.total_cobrado)}</td></tr>
+        <tr><td>Reembolsado</td><td>${dinero(l.total_reembolsado)}</td></tr>
+        <tr><td>Comision plataforma</td><td>${dinero(l.comision_plataforma)}</td></tr>
+        <tr><td><b>Neto a desembolsar</b></td><td><b>${dinero(l.neto_a_desembolsar)}</b></td></tr>
+      </tbody></table>`;
   } catch (e) {
     mostrarError(e);
   }

@@ -1,11 +1,17 @@
 /**
  * Cliente HTTP del front.
  *
- * Toda la aplicacion pasa por API_BASE. En el Horizonte 3 (ver Wiki) esa
- * constante apunta al API Gateway en lugar del monolito y ningun otro archivo
- * del front cambia.
+ * Toda la aplicacion pasa por rutas relativas: Nginx decide quien responde.
+ *   /api/v1/...        -> monolito Django
+ *   /api/v2/pagos/...  -> microservicio Flask (Strangler Pattern, Taller 02)
+ * Ambos devuelven los errores con la misma forma {error: {codigo, mensaje}},
+ * asi que apiFetch no distingue entre uno y otro.
  */
 const API_BASE = "/api/v1";
+const API_V2 = "/api/v2";
+
+/** Feature toggle del Strangler: lo pinta Django en <body data-pagos-v2>. */
+const pagosV2Habilitado = () => document.body?.dataset.pagosV2 === "1";
 
 class ApiError extends Error {
   constructor(mensaje, codigo, status) {
@@ -22,8 +28,8 @@ function csrfToken() {
   return fila ? fila.split("=")[1] : "";
 }
 
-async function apiFetch(ruta, opciones = {}) {
-  const res = await fetch(`${API_BASE}${ruta}`, {
+async function apiFetch(ruta, opciones = {}, base = API_BASE) {
+  const res = await fetch(`${base}${ruta}`, {
     headers: {
       "Content-Type": "application/json",
       "X-CSRFToken": csrfToken(),
@@ -160,6 +166,23 @@ const api = {
         id_organizador: idOrganizador,
       }),
     }),
+
+  // ------------------------------------------ pagos (microservicio Flask)
+  pagar: (datos) =>
+    apiFetch("/pagos", { method: "POST", body: JSON.stringify(datos) }, API_V2),
+
+  pagosDeUsuario: (idUsuario) =>
+    apiFetch(`/pagos${qs({ id_usuario: idUsuario })}`, {}, API_V2),
+
+  reembolsar: (idReserva) =>
+    apiFetch(
+      "/pagos/reembolsos",
+      { method: "POST", body: JSON.stringify({ id_reserva: idReserva }) },
+      API_V2
+    ),
+
+  liquidacionOrganizador: (idOrganizador) =>
+    apiFetch(`/pagos/organizadores/${idOrganizador}/liquidacion`, {}, API_V2),
 };
 
 /* ------------------------------------------------------------------ sesion

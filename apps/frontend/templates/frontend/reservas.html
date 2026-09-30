@@ -11,6 +11,25 @@
     se devuelve el cupo al catalogo y se calcula el reembolso segun la antelacion
     (100 % con mas de 48 h, 50 % entre 24 y 48 h, 0 % despues).
   </p>
+  <div class="fila" id="opciones-pago" hidden>
+    <div>
+      <label for="medio-pago">Medio de pago</label>
+      <select id="medio-pago">
+        <option value="TARJETA">Tarjeta</option>
+        <option value="PSE">PSE</option>
+        <option value="NEQUI">Nequi</option>
+      </select>
+    </div>
+    <div>
+      <label for="token-pago">Resultado simulado (sandbox)</label>
+      <select id="token-pago">
+        <option value="tok_aprobada">Aprobado</option>
+        <option value="tok_rechazada">Rechazado por el emisor</option>
+        <option value="tok_fondos_insuficientes">Fondos insuficientes</option>
+      </select>
+    </div>
+  </div>
+  <p class="hint" id="modo-pago"></p>
   <button id="btn-recargar" class="secundario">Recargar</button>
 </section>
 
@@ -99,8 +118,20 @@ function boton(texto, alHacerClic, clase = "secundario") {
 
 async function confirmar(idReserva) {
   try {
-    await api.confirmarReserva(idReserva, `TX-${Date.now()}`);
-    toast("Pago registrado. Reserva confirmada.");
+    if (pagosV2Habilitado()) {
+      // Ruta estrangulada: Flask cobra y confirma la reserva en Django.
+      const pago = await api.pagar({
+        id_reserva: idReserva,
+        id_usuario: sesion.get().id,
+        medio_pago: $("medio-pago").value,
+        token_pago: $("token-pago").value,
+      });
+      toast(`Pago ${pago.referencia} aprobado (${dinero(pago.monto)}). Reserva confirmada.`);
+    } else {
+      // Ruta legada del monolito: referencia opaca, sin cobro real.
+      await api.confirmarReserva(idReserva, `TX-${Date.now()}`);
+      toast("Pago registrado. Reserva confirmada.");
+    }
   } catch (e) {
     mostrarError(e);
   }
@@ -115,11 +146,22 @@ async function cancelar(idReserva) {
       "cancelada desde el front"
     );
     const pct = Number(resultado.porcentaje_aplicado) * 100;
-    toast(`Reserva cancelada. Reembolso ${pct}% = ${dinero(resultado.monto_reembolsado)}.`);
+    let detalle = `Reembolso ${pct}% = ${dinero(resultado.monto_reembolsado)}.`;
+    if (pagosV2Habilitado() && Number(resultado.monto_reembolsado) > 0) {
+      // Django decide cuanto se devuelve; el microservicio mueve el dinero.
+      const pago = await api.reembolsar(idReserva);
+      detalle += ` Pago ${pago.referencia} -> ${pago.estado}.`;
+    }
+    toast(`Reserva cancelada. ${detalle}`);
   } catch (e) {
     mostrarError(e);
   }
 }
+
+$("opciones-pago").hidden = !pagosV2Habilitado();
+$("modo-pago").innerHTML = pagosV2Habilitado()
+  ? "Pagos atendidos por el microservicio Flask en <code>/api/v2/pagos</code>."
+  : "Modo legado: la confirmacion va al monolito en <code>/api/v1</code> sin cobro real.";
 
 $("btn-recargar").onclick = cargar;
 cargar();
