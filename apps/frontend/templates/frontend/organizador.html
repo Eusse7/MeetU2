@@ -154,6 +154,27 @@
   </div>
   <div id="mis-experiencias"></div>
 </section>
+
+<!-- 8. Auditoría y Reportes Asíncronos (Message Broker Celery / Redis - Entregable 2) -->
+<section class="card" id="card-reportes-celery">
+  <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 0.5rem;">
+    <h2>8. Auditoría y Reportes de Fondo (Message Broker Celery/Redis)</h2>
+    <span class="badge-verificado">⚡ Procesamiento Asíncrono</span>
+  </div>
+  <p class="hint">
+    Genera informes consolidados de plataforma y métricas de auditoría en segundo plano mediante Celery Worker y Redis Message Broker sin bloquear la aplicación web.
+  </p>
+  <div class="fila" style="align-items: flex-end;">
+    <div style="max-width: 340px;">
+      <label for="reporte-correo">Correo para recepción del informe</label>
+      <input id="reporte-correo" type="email" value="laura@meetu2.co">
+    </div>
+    <button id="btn-generar-reporte-celery" class="btn-black-pill" style="padding: 0.75rem 1.4rem;">
+      📊 Generar reporte asíncrono
+    </button>
+  </div>
+  <div id="resultado-reporte-celery" style="margin-top: 1rem;" class="oculto"></div>
+</section>
 {% endblock %}
 
 {% block scripts %}
@@ -427,6 +448,71 @@ $("btn-checkin").onclick = async () => {
     $("ticket").value = "";
   } catch (e) {
     mostrarError(e);
+  }
+};
+
+$("btn-generar-reporte-celery").onclick = async () => {
+  const correo = $("reporte-correo").value.trim() || "admin@meetu2.co";
+  const btn = $("btn-generar-reporte-celery");
+  const caja = $("resultado-reporte-celery");
+
+  btn.disabled = true;
+  btn.textContent = "Encolando en Celery...";
+  caja.classList.remove("oculto");
+  caja.innerHTML = '<p class="hint">Enviando tarea al Message Broker (Redis)...</p>';
+
+  try {
+    const res = await api.solicitarReporteAsincrono(correo);
+    toast(`Tarea ${res.task_id.substring(0, 8)}... encolada en Celery.`);
+    caja.innerHTML = `
+      <div style="background: #faf8f5; border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+          <b>Tarea Celery ID:</b> <code>${res.task_id}</code>
+          <span class="etiqueta ok" id="badge-tarea-status">${res.estado}</span>
+        </div>
+        <p class="hint" style="margin: 0 0 0.75rem;" id="texto-tarea-status">Procesando en segundo plano en el worker de Celery...</p>
+        <div id="metricas-tarea-celery"></div>
+      </div>
+    `;
+
+    setTimeout(async () => {
+      try {
+        const estado = await api.consultarReporteAsincrono(res.task_id);
+        const badge = $("badge-tarea-status");
+        if (badge) badge.textContent = estado.estado;
+        const texto = $("texto-tarea-status");
+        if (texto) texto.textContent = estado.mensaje;
+        if (estado.resultado && estado.resultado.metricas) {
+          const m = estado.resultado.metricas;
+          $("metricas-tarea-celery").innerHTML = `
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.75rem; margin-top: 0.75rem;">
+              <div style="background: #ffffff; padding: 0.75rem; border-radius: 8px; border: 1px solid var(--border);">
+                <div style="font-size: 0.75rem; color: var(--txt-muted);">Experiencias Totales</div>
+                <div style="font-size: 1.4rem; font-weight: 800;">${m.total_experiencias}</div>
+              </div>
+              <div style="background: #ffffff; padding: 0.75rem; border-radius: 8px; border: 1px solid var(--border);">
+                <div style="font-size: 0.75rem; color: var(--txt-muted);">Reservas Confirmadas</div>
+                <div style="font-size: 1.4rem; font-weight: 800; color: var(--ok);">${m.reservas_confirmadas_o_checkin}</div>
+              </div>
+              <div style="background: #ffffff; padding: 0.75rem; border-radius: 8px; border: 1px solid var(--border);">
+                <div style="font-size: 0.75rem; color: var(--txt-muted);">Reseñas Verificadas</div>
+                <div style="font-size: 1.4rem; font-weight: 800; color: var(--primary);">${m.total_resenas_comunidad}</div>
+              </div>
+            </div>
+          `;
+          toast("¡Reporte completado por el worker Celery!");
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "📊 Generar reporte asíncrono";
+      }
+    }, 1500);
+  } catch (e) {
+    mostrarError(e);
+    btn.disabled = false;
+    btn.textContent = "📊 Generar reporte asíncrono";
   }
 };
 

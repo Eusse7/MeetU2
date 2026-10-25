@@ -30,6 +30,18 @@ services:
       timeout: 3s
       retries: 10
 
+  # ----------------------------------------------- message broker (redis)
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
   # ----------------------------------------------------- monolito legado
   django:
     build:
@@ -43,7 +55,9 @@ services:
       DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:-cambiar-en-produccion}
       DJANGO_ALLOWED_HOSTS: localhost,127.0.0.1,django
       DJANGO_CSRF_TRUSTED_ORIGINS: http://localhost:8080,http://127.0.0.1:8080
-      CANAL_NOTIFICACION: consola
+      CANAL_NOTIFICACION: asincrono
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: redis://redis:6379/0
       # Strangler: Django verifica los pagos contra el microservicio.
       PAGOS_SERVICE_URL: http://pagos:5000
       PAGOS_V2_HABILITADO: "True"
@@ -53,8 +67,30 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      redis:
+        condition: service_healthy
     expose:
       - "8000"
+
+  # --------------------------------------------- celery worker (async tasks)
+  celery:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["celery", "-A", "config", "worker", "--loglevel=info"]
+    environment:
+      <<: *db-credenciales
+      POSTGRES_HOST: db
+      POSTGRES_DB: meetu2
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:-cambiar-en-produccion}
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: redis://redis:6379/0
+      CANAL_NOTIFICACION: consola
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
 
   # -------------------------------------------- microservicio estrangulado
   pagos:

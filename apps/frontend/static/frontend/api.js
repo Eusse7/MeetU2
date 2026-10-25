@@ -205,6 +205,22 @@ const api = {
 
   listarResenasRecientes: () =>
     apiFetch("/social/resenas"),
+
+  // ---------------------------------------------------- integraciones (E2)
+  clima: (ciudad, lat, lon) =>
+    apiFetch(`/integracion/clima${qs({ ciudad, lat, lon })}`),
+
+  planesAliados: () =>
+    apiFetch("/integracion/aliados/planes/"),
+
+  solicitarReporteAsincrono: (correo) =>
+    apiFetch("/integracion/reportes/asincrono/", {
+      method: "POST",
+      body: JSON.stringify({ correo }),
+    }),
+
+  consultarReporteAsincrono: (taskId) =>
+    apiFetch(`/integracion/reportes/asincrono/${taskId}/`),
 };
 
 /* ------------------------------------------------------------------ sesion

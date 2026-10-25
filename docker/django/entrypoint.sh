@@ -3,6 +3,7 @@
 set -e
 
 python manage.py migrate --noinput
+python manage.py compile_translations
 python manage.py collectstatic --noinput --verbosity 0
 
 # Datos de demostracion solo la primera vez (seed_demo falla si ya existen).

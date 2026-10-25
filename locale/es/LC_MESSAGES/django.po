@@ -1,0 +1,127 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: MeetU2 2.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-25 16:30-0500\n"
+"PO-Revision-Date: 2026-10-25 16:30-0500\n"
+"Last-Translator: MeetU2 Team\n"
+"Language-Team: Spanish\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Explorar"
+msgstr "Explorar"
+
+msgid "Cómo funciona"
+msgstr "Cómo funciona"
+
+msgid "Organiza"
+msgstr "Organiza"
+
+msgid "Mis reservas"
+msgstr "Mis reservas"
+
+msgid "Iniciar sesión"
+msgstr "Iniciar sesión"
+
+msgid "Crear cuenta"
+msgstr "Crear cuenta"
+
+msgid "PLANES REALES. GENTE NUEVA."
+msgstr "PLANES REALES. GENTE NUEVA."
+
+msgid "Sal de la rutina."
+msgstr "Sal de la rutina."
+
+msgid "Conecta de verdad."
+msgstr "Conecta de verdad."
+
+msgid "Descubre experiencias creadas para compartir, pasarlo bien y conocer a tu próxima persona favorita."
+msgstr "Descubre experiencias creadas para compartir, pasarlo bien y conocer a tu próxima persona favorita."
+
+msgid "¿QUÉ TE APETECE?"
+msgstr "¿QUÉ TE APETECE?"
+
+msgid "¿DÓNDE?"
+msgstr "¿DÓNDE?"
+
+msgid "Cocinar, bailar, crear..."
+msgstr "Cocinar, bailar, crear..."
+
+msgid "Más de 2.000 personas ya conectaron"
+msgstr "Más de 2.000 personas ya conectaron"
+
+msgid "Tu match ideal"
+msgstr "Tu match ideal"
+
+msgid "Según tus intereses"
+msgstr "Según tus intereses"
+
+msgid "CERCA DE TI"
+msgstr "CERCA DE TI"
+
+msgid "Tu próximo plan empieza aquí"
+msgstr "Tu próximo plan empieza aquí"
+
+msgid "Ver todas"
+msgstr "Ver todas"
+
+msgid "Todo"
+msgstr "Todo"
+
+msgid "Gastronomía"
+msgstr "Gastronomía"
+
+msgid "Aventura"
+msgstr "Aventura"
+
+msgid "Creatividad"
+msgstr "Creatividad"
+
+msgid "Bienestar"
+msgstr "Bienestar"
+
+msgid "Música"
+msgstr "Música"
+
+msgid "Juegos de mesa"
+msgstr "Juegos de mesa"
+
+msgid "Plazas agotadas"
+msgstr "Plazas agotadas"
+
+msgid "Reservar plaza"
+msgstr "Reservar plaza"
+
+msgid "Reseñas"
+msgstr "Reseñas"
+
+msgid "desde"
+msgstr "desde"
+
+msgid "PARA HOSTS"
+msgstr "PARA HOSTS"
+
+msgid "¿Tienes un plan que merece ser compartido?"
+msgstr "¿Tienes un plan que merece ser compartido?"
+
+msgid "Publica tu experiencia"
+msgstr "Publica tu experiencia"
+
+msgid "OPINIONES VERIFICADAS"
+msgstr "OPINIONES VERIFICADAS"
+
+msgid "Reseñas de la comunidad"
+msgstr "Reseñas de la comunidad"
+
+msgid "Planes de la Red Aliada"
+msgstr "Planes de la Red Aliada"
+
+msgid "Servicios y experiencias de plataformas compañeras"
+msgstr "Servicios y experiencias de plataformas compañeras"
+
+msgid "Pronóstico del clima"
+msgstr "Pronóstico del clima"

@@ -1,11 +1,12 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
-<html lang="es">
+<html lang="{{ request.LANGUAGE_CODE|default:'es' }}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block titulo %}MeetU2 — Sal de la rutina. Conecta de verdad.{% endblock %}</title>
-  <link rel="stylesheet" href="{% static 'frontend/app.css' %}?v=3">
+  <title>{% block titulo %}MeetU2 — {% trans "Sal de la rutina. Conecta de verdad." %}{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'frontend/app.css' %}?v=4">
 </head>
 <body data-pagos-v2="{{ pagos_v2_habilitado|yesno:'1,0' }}">
 
@@ -16,17 +17,29 @@
         meetu<span class="logo-violet">2</span>
       </a>
       <nav class="nav-links">
-        <a href="{% url 'frontend:catalogo' %}" class="nav-link">Explorar</a>
-        <a href="javascript:void(0)" onclick="abrirModalComoFunciona()" class="nav-link">Cómo funciona</a>
-        <a href="{% url 'frontend:organizador' %}" class="nav-link">Organiza</a>
-        <a href="{% url 'frontend:reservas' %}" class="nav-link">Mis reservas</a>
+        <a href="{% url 'frontend:catalogo' %}" class="nav-link">{% trans "Explorar" %}</a>
+        <a href="javascript:void(0)" onclick="abrirModalComoFunciona()" class="nav-link">{% trans "Cómo funciona" %}</a>
+        <a href="{% url 'frontend:organizador' %}" class="nav-link">{% trans "Organiza" %}</a>
+        <a href="{% url 'frontend:reservas' %}" class="nav-link">{% trans "Mis reservas" %}</a>
       </nav>
     </div>
     
-    <div class="nav-right" id="nav-auth-container">
-      <!-- Populated dynamically by api.js pintarSesion() -->
-      <button class="btn-link" onclick="abrirModalAuth('login')">Iniciar sesión</button>
-      <button class="btn-black-pill" onclick="abrirModalAuth('registro')">Crear cuenta</button>
+    <div class="nav-right">
+      <!-- Selector de Idioma (i18n bilingüe) -->
+      <form action="{% url 'set_language' %}" method="post" id="form-idioma" style="display: inline-flex; align-items: center; margin: 0; background: #ffffff; border: 1px solid var(--border); border-radius: var(--radius-pill); padding: 0.2rem 0.5rem; font-size: 0.78rem; font-weight: 700;">
+        {% csrf_token %}
+        <input name="next" type="hidden" value="{{ request.get_full_path }}">
+        <input name="language" type="hidden" id="input-idioma" value="{{ request.LANGUAGE_CODE|default:'es' }}">
+        <button type="button" onclick="cambiarIdioma('es')" style="background: none; border: none; padding: 0.15rem 0.35rem; cursor: pointer; color: {% if request.LANGUAGE_CODE == 'es' %}var(--primary){% else %}var(--txt-muted){% endif %}; font-weight: 800;">ES</button>
+        <span style="color: var(--border); font-size: 0.75rem;">|</span>
+        <button type="button" onclick="cambiarIdioma('en')" style="background: none; border: none; padding: 0.15rem 0.35rem; cursor: pointer; color: {% if request.LANGUAGE_CODE == 'en' %}var(--primary){% else %}var(--txt-muted){% endif %}; font-weight: 800;">EN</button>
+      </form>
+
+      <div id="nav-auth-container" style="display: inline-flex; align-items: center; gap: 0.75rem;">
+        <!-- Populated dynamically by api.js pintarSesion() -->
+        <button class="btn-link" onclick="abrirModalAuth('login')">{% trans "Iniciar sesión" %}</button>
+        <button class="btn-black-pill" onclick="abrirModalAuth('registro')">{% trans "Crear cuenta" %}</button>
+      </div>
     </div>
   </header>
 
@@ -120,6 +133,11 @@
 
   <script src="{% static 'frontend/api.js' %}?v=3"></script>
   <script>
+    function cambiarIdioma(lang) {
+      document.getElementById('input-idioma').value = lang;
+      document.getElementById('form-idioma').submit();
+    }
+
     function autollenarLogin(correo) {
       document.getElementById('auth-correo-login').value = correo;
       document.getElementById('btn-modal-login').click();

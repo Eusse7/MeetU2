@@ -61,6 +61,7 @@ LOCAL_APPS = [
     "apps.reservas",
     "apps.social",
     "apps.notificaciones",
+    "apps.integraciones",
     "apps.frontend",
 ]
 
@@ -69,6 +70,7 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -130,7 +132,12 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 # ------------------------------------------------------- Internacionalizacion
-LANGUAGE_CODE = "es-co"
+LANGUAGE_CODE = "es"
+LANGUAGES = [
+    ("es", "Español"),
+    ("en", "English"),
+]
+LOCALE_PATHS = [BASE_DIR / "locale"]
 TIME_ZONE = "America/Bogota"
 USE_I18N = True
 USE_TZ = True
@@ -169,12 +176,28 @@ REST_FRAMEWORK = {
 CANAL_NOTIFICACION_DEFECTO = os.environ.get("CANAL_NOTIFICACION", "consola")
 
 
+# ----------------------------------------------- Message Broker: Celery & Redis
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "redis://localhost:6379/0")
+CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT_BACKEND", "redis://localhost:6379/0")
+# En modo eager (True en tests o local sin redis), las tareas corren sincronas
+CELERY_TASK_ALWAYS_EAGER = env_bool("CELERY_TASK_ALWAYS_EAGER", False)
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_TIMEZONE = TIME_ZONE
+
+
 # ------------------------------------------------ Strangler Pattern: Pagos
 # URL interna del microservicio Flask. Si esta definida, confirmar una reserva
 # exige una referencia de pago APROBADO en ese servicio.
 PAGOS_SERVICE_URL = os.environ.get("PAGOS_SERVICE_URL", "").strip()
 # El front usa /api/v2/pagos (servido por Nginx -> Flask) cuando esta activo.
 PAGOS_V2_HABILITADO = env_bool("PAGOS_V2_HABILITADO", bool(PAGOS_SERVICE_URL))
+
+
+# ---------------------------------- Integración con Aliados y API de Terceros
+SERVICIO_ALIADO_URL = os.environ.get("SERVICIO_ALIADO_URL", "").strip()
+CLIMA_PROVIDER = os.environ.get("CLIMA_PROVIDER", "open_meteo").strip()
 
 
 # ------------------------------------------------------- Reglas de negocio

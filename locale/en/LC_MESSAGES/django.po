@@ -1,0 +1,127 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: MeetU2 2.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-25 16:30-0500\n"
+"PO-Revision-Date: 2026-10-25 16:30-0500\n"
+"Last-Translator: MeetU2 Team\n"
+"Language-Team: English\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Explorar"
+msgstr "Explore"
+
+msgid "Cómo funciona"
+msgstr "How it works"
+
+msgid "Organiza"
+msgstr "Host"
+
+msgid "Mis reservas"
+msgstr "My bookings"
+
+msgid "Iniciar sesión"
+msgstr "Sign in"
+
+msgid "Crear cuenta"
+msgstr "Sign up"
+
+msgid "PLANES REALES. GENTE NUEVA."
+msgstr "REAL PLANS. NEW PEOPLE."
+
+msgid "Sal de la rutina."
+msgstr "Break the routine."
+
+msgid "Conecta de verdad."
+msgstr "Connect for real."
+
+msgid "Descubre experiencias creadas para compartir, pasarlo bien y conocer a tu próxima persona favorita."
+msgstr "Discover experiences created to share, have fun, and meet your next favorite person."
+
+msgid "¿QUÉ TE APETECE?"
+msgstr "WHAT DO YOU FANCY?"
+
+msgid "¿DÓNDE?"
+msgstr "WHERE?"
+
+msgid "Cocinar, bailar, crear..."
+msgstr "Cooking, dancing, crafting..."
+
+msgid "Más de 2.000 personas ya conectaron"
+msgstr "Over 2,000 people have already connected"
+
+msgid "Tu match ideal"
+msgstr "Your ideal match"
+
+msgid "Según tus intereses"
+msgstr "Based on your interests"
+
+msgid "CERCA DE TI"
+msgstr "NEAR YOU"
+
+msgid "Tu próximo plan empieza aquí"
+msgstr "Your next plan starts here"
+
+msgid "Ver todas"
+msgstr "See all"
+
+msgid "Todo"
+msgstr "All"
+
+msgid "Gastronomía"
+msgstr "Gastronomy"
+
+msgid "Aventura"
+msgstr "Adventure"
+
+msgid "Creatividad"
+msgstr "Creativity"
+
+msgid "Bienestar"
+msgstr "Wellness"
+
+msgid "Música"
+msgstr "Music"
+
+msgid "Juegos de mesa"
+msgstr "Board games"
+
+msgid "Plazas agotadas"
+msgstr "Sold out"
+
+msgid "Reservar plaza"
+msgstr "Book spot"
+
+msgid "Reseñas"
+msgstr "Reviews"
+
+msgid "desde"
+msgstr "from"
+
+msgid "PARA HOSTS"
+msgstr "FOR HOSTS"
+
+msgid "¿Tienes un plan que merece ser compartido?"
+msgstr "Have a plan that deserves to be shared?"
+
+msgid "Publica tu experiencia"
+msgstr "Publish your experience"
+
+msgid "OPINIONES VERIFICADAS"
+msgstr "VERIFIED REVIEWS"
+
+msgid "Reseñas de la comunidad"
+msgstr "Community reviews"
+
+msgid "Planes de la Red Aliada"
+msgstr "Partner Network Plans"
+
+msgid "Servicios y experiencias de plataformas compañeras"
+msgstr "Services and experiences from partner platforms"
+
+msgid "Pronóstico del clima"
+msgstr "Weather forecast"

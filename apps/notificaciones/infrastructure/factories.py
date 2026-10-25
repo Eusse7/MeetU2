@@ -20,6 +20,7 @@ from apps.notificaciones.application.ports import NotificadorPort
 from apps.notificaciones.infrastructure.canales.consola import NotificadorConsola
 from apps.notificaciones.infrastructure.canales.email import NotificadorEmail
 from apps.notificaciones.infrastructure.canales.push import NotificadorPush
+from apps.notificaciones.infrastructure.canales.asincrono import NotificadorCelery
 
 
 class CanalNoSoportado(ValueError):
@@ -33,6 +34,8 @@ class NotificadorFactory:
         NotificadorConsola.nombre: NotificadorConsola,
         NotificadorEmail.nombre: NotificadorEmail,
         NotificadorPush.nombre: NotificadorPush,
+        NotificadorCelery.nombre: NotificadorCelery,
+        "celery": NotificadorCelery,
     }
 
     @classmethod

@@ -1,0 +1,74 @@
+=== PAGE 1 ===
+Proyecto de Curso: Arquitectura de Software 2026
+Entrega No. 2: Migraci´ on a Microservicios, Integraci´ on y
+Resiliencia
+Prof. Nicol´ as Ram´ ırez V´ elez
+Semestre 2026-I
+Alineaci´ on ABET (Acreditaci´ on Internacional)
+Resultado del Programa:Desarrolla una soluci´ on final que satisface todos los reque-
+rimientos y restricciones identificadas al formular el problema de dise˜ no.
+Resultado de la Asignatura:Implementa la arquitectura de software apropiada
+(cliente-servidor, por capas, MVC, orientadas a servicios y orientadas a microservicios).
+1. Objetivo de la Entrega
+Evolucionar la arquitectura monol´ ıtica de la primera entrega hacia un ecosistema h´ ıbrido y
+resiliente desplegado enAWS Academy. Los equipos aplicar´ an elStrangler Patternpara
+extraer funcionalidades a microservicios, orquestar´ an el tr´ afico mediante unAPI Gateway
+(Nginx), e implementar´ an comunicaci´ on as´ ıncrona garantizando est´ andares de usabilidad e
+internacionalizaci´ on.
+2. Requerimientos T´ ecnicos (Grado Empresarial)
+2.1. 1. Despliegue e Infraestructura (AWS Academy)
+Todo el ecosistema (Django, Flask, Nginx, Base de Datos, Message Broker) debe estar
+empaquetado y orquestado conDocker Compose.
+El sistema debe desplegarse en una instancia EC2 deAWS Academy.
+2.2. 2. Arquitectura y Patr´ on Estrangulador
+A´ ısle funcionalidades del monolito (Django) y m´ ıgrelas a microservicios independientes
+(Flask).
+ConfigureNginxcomo API Gateway para el ruteo de tr´ afico profesional.
+2.3. 3. Integraci´ on y Patrones Estructurales
+Servicio a Proveer:Exponga un endpoint JSON con informaci´ on relevante del sistema.
+Servicio a Consumir:Consuma el servicio delequipo aliadoy mu´ estrelo en su aplicaci´ on.
+API de Terceros:Consumo obligatorio mediante elPatr´ on Adapter(Inversi´ on de
+Dependencias).
+1
+
+=== PAGE 2 ===
+2.4. 4. Comunicaci´ on As´ ıncrona e i18n
+Eventos:Uso deMessage Broker(Redis/Celery) para procesos de fondo (reportes, noti-
+ficaciones).
+Usabilidad:Auditor´ ıa de UI/UX, navegaci´ on y formularios robustos.
+i18n:Soporte biling¨ ue completo mediantegettext. Prohibido el uso de textos quemados.
+3. R´ ubrica de Evaluaci´ on Institucional (ABET)
+ADVERTENCIA CR´ITICA
+De acuerdo con los lineamientos del curso:Si el equipo no realiza el 100 % de las
+correcciones notificadas en la Entrega 1, la nueva entrega NO ser´ a revisada y
+la nota ser´ a 0.0.
+Criterio Descripci´ on Peso
+Correcciones E1Implementaci´ on total de ajustes indicados en la sustentaci´ on
+previa.
+10 %
+ArquitecturaActualizaci´ on de diagramas incluyendo AWS, Nginx, Flask y
+Broker.
+10 %
+ServiciosExposici´ on de API, consumo de aliado y consumo de tercero v´ ıa
+Adapter.
+30 %
+InfraestructuraDespliegue en AWS Academy con Docker y ruteo v´ ıa Nginx
+Gateway.
+30 %
+Resiliencia y UXImplementaci´ on de i18n, usabilidad y tareas as´ ıncronas as´ ıncro-
+nas.
+20 %
+Cuadro 1: Matriz de Evaluaci´ on - Entregable 2
+4. Bono de Excelencia Arquitect´ onica
+Exenci´ on de Parcial 02
+Aquellos equipos que logren llevar su arquitectura m´ as all´ a del requerimiento m´ ınimo
+y migrenm´ as del 70 % de sus servicios y l´ ogica de negocio a microservicios
+funcionales e independientes, quedar´ an autom´ aticamenteeximidos de presentar
+el Parcial 02de la asignatura.
+5. Instrucciones de Entrega
+1. Comparta el enlace del repositorio (ramamain) y la IP el´ astica de AWS en la plataforma
+institucional.
+2.Evidencia de Trabajo:Estudiante sincommitsen el repositorio tiene nota de 0.0.
+3. La instancia deAWS EC2debe estar encendida para la sustentaci´ on.
+2
+

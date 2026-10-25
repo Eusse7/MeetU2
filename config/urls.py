@@ -14,10 +14,12 @@ from apps.shared.api.health import HealthView
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("healthz", HealthView.as_view(), name="health"),
+    path("i18n/", include("django.conf.urls.i18n")),
     path("api/v1/identidad/", include("apps.identidad.api.urls")),
     path("api/v1/catalogo/", include("apps.catalogo.api.urls")),
     path("api/v1/reservas/", include("apps.reservas.api.urls")),
     path("api/v1/social/", include("apps.social.api.urls")),
+    path("api/v1/integracion/", include("apps.integraciones.api.urls")),
     # El front va de ultimo: captura la raiz sin ensombrecer la API.
     path("", include("apps.frontend.urls")),
 ]
