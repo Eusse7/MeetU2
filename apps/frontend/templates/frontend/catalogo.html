@@ -1,89 +1,176 @@
 {% extends "frontend/base.html" %}
-{% block titulo %}Descubrir experiencias — MeetU2{% endblock %}
+{% load static %}
+{% block titulo %}MeetU2 — Sal de la rutina. Conecta de verdad.{% endblock %}
 
 {% block contenido %}
-<h1>Descubrir experiencias</h1>
+<!-- ================================================================= Hero Section (Image 1) -->
+<section class="hero-section">
+  <div class="hero-content">
+    <div class="eyebrow-tag">
+      <span class="dot"></span> PLANES REALES. GENTE NUEVA.
+    </div>
 
-<section class="card">
-  <h2>Tu sesion</h2>
-  <div class="fila">
-    <div>
-      <label for="nombre">Nombre</label>
-      <input id="nombre" placeholder="Andres Asistente">
+    <h1 class="hero-headline">
+      Sal de la rutina.<br>
+      <span class="hero-violet">Conecta de verdad.</span>
+    </h1>
+
+    <div class="hero-sparkle" aria-hidden="true">✦</div>
+
+    <p class="hero-subtext">
+      Descubre experiencias creadas para compartir, pasarlo bien y conocer a tu próxima persona favorita.
+    </p>
+
+    <!-- Search Bar Card -->
+    <div class="search-pill-card">
+      <div class="search-field">
+        <label class="search-label" for="f-texto">¿QUÉ TE APETECE?</label>
+        <input id="f-texto" class="search-input" placeholder="Cocinar, bailar, crear...">
+      </div>
+      <div class="search-divider"></div>
+      <div class="search-field">
+        <label class="search-label" for="f-ciudad">¿DÓNDE?</label>
+        <input id="f-ciudad" class="search-input" placeholder="Madrid, Medellín...">
+      </div>
+      <button id="btn-buscar" class="btn-search-arrow" title="Buscar planes">→</button>
     </div>
-    <div>
-      <label for="correo">Correo</label>
-      <input id="correo" type="email" placeholder="andres@meetu2.co">
+
+    <!-- Social Proof -->
+    <div class="hero-social-proof">
+      <div class="avatar-group">
+        <div class="avatar-bubble avatar-peach">J</div>
+        <div class="avatar-bubble avatar-lime">M</div>
+        <div class="avatar-bubble avatar-purple">L</div>
+        <div class="avatar-bubble avatar-dark">+2k</div>
+      </div>
+      <div class="social-proof-text">
+        <b>4,9 ★</b> Más de 2.000 personas ya conectaron
+      </div>
     </div>
-    <button id="btn-registrar">Registrarme</button>
-    <button id="btn-entrar" class="secundario">Entrar</button>
-    <button id="btn-salir" class="secundario">Salir</button>
   </div>
-  <p class="hint">
-    Registrar dos veces el mismo correo devuelve <code>409 correo_ya_registrado</code>.
-    "Entrar" busca el usuario por correo mientras no exista autenticacion real.
-  </p>
+
+  <!-- Organic Pebble Image & Floating Badges -->
+  <div class="hero-visual-wrapper">
+    <!-- Floating Badge Top Right -->
+    <div class="floating-badge-top">
+      <span class="badge-tag-purple">HOY</span>
+      <h4 class="badge-title">Club de running</h4>
+      <p class="badge-sub">12 personas se apuntaron</p>
+    </div>
+
+    <!-- Organic Container with Campfire Photo -->
+    <div class="hero-blob-container">
+      <img src="{% static 'frontend/img/hero_campfire.jpg' %}" alt="Grupo de amigos al aire libre" class="hero-blob-image">
+    </div>
+
+    <!-- Floating Badge Bottom Left -->
+    <div class="floating-badge-bottom" id="btn-hero-match" title="Haz clic para ver recomendaciones afines a tus gustos">
+      <div class="badge-percent-lime">98%</div>
+      <div>
+        <h4 class="badge-title">Tu match ideal</h4>
+        <p class="badge-sub">Según tus intereses</p>
+      </div>
+    </div>
+  </div>
 </section>
 
-<section class="card">
-  <h2>Tus intereses</h2>
-  <div class="fila">
+
+<!-- ========================================================== Catalogue Section (Image 2) -->
+<section class="catalogue-section" id="catalogo">
+  <div class="catalogue-header">
     <div>
-      <label for="categoria">Categoria</label>
-      <select id="categoria"></select>
+      <div class="catalogue-eyebrow">CERCA DE TI</div>
+      <h2 class="catalogue-title">Tu próximo plan empieza aquí</h2>
     </div>
-    <div>
-      <label for="nivel">Afinidad (1-5)</label>
-      <input id="nivel" type="number" min="1" max="5" value="5">
-    </div>
-    <button id="btn-interes" class="secundario">Vincular interes</button>
+    <a href="javascript:void(0)" id="btn-ver-todas" class="link-see-all">Ver todas →</a>
   </div>
-  <p class="hint" id="mis-intereses">Sin intereses declarados.</p>
+
+  <!-- Category Pills Filter Bar -->
+  <div class="category-filter-bar" id="category-pills">
+    <button class="cat-pill active" data-cat="TODO">Todo</button>
+    <button class="cat-pill" data-cat="Gastronomia">Gastronomía</button>
+    <button class="cat-pill" data-cat="Aire libre">Aventura</button>
+    <button class="cat-pill" data-cat="Arte">Creatividad</button>
+    <button class="cat-pill" data-cat="Bienestar">Bienestar</button>
+    <button class="cat-pill" data-cat="Musica">Música</button>
+    <button class="cat-pill" data-cat="Juegos de mesa">Juegos de mesa</button>
+  </div>
+
+  <!-- Experience Cards Grid -->
+  <div id="resultado" class="experience-grid"></div>
 </section>
 
-<section class="card">
-  <h2>Filtros</h2>
-  <div class="fila">
-    <div>
-      <label for="f-texto">Texto</label>
-      <input id="f-texto" placeholder="cafe, caminata...">
-    </div>
-    <div>
-      <label for="f-ciudad">Ciudad</label>
-      <input id="f-ciudad" placeholder="Medellin">
-    </div>
-    <div>
-      <label for="f-precio">Precio maximo</label>
-      <input id="f-precio" type="number" min="0" placeholder="50000">
-    </div>
-    <button id="btn-buscar">Buscar</button>
-    <button id="btn-recomendadas" class="secundario">Recomendadas para mi</button>
+
+<!-- ============================================================ Host CTA Banner (Image 3) -->
+<section class="host-cta-banner">
+  <div class="host-cta-text">
+    <span class="host-tag-lime">PARA HOSTS</span>
+    <h2 class="host-cta-heading">¿Tienes un plan que merece ser compartido?</h2>
   </div>
+  <a href="{% url 'frontend:organizador' %}" class="btn-host-lime">
+    Publica tu experiencia →
+  </a>
 </section>
 
-<section class="card" id="seccion-muro-resenas">
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-    <h2>⭐ Reseñas recientes de la comunidad</h2>
-    <span class="meta" id="total-resenas-muro"></span>
+
+<!-- ======================================================== Community Reviews Wall -->
+<section class="community-wall-section" id="seccion-muro-resenas">
+  <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 0.5rem;">
+    <div>
+      <div class="catalogue-eyebrow">OPINIONES VERIFICADAS</div>
+      <h2 class="community-wall-title">Reseñas de la comunidad</h2>
+    </div>
+    <span class="hint" id="total-resenas-muro" style="margin: 0;"></span>
   </div>
-  <p class="hint">
-    Calificaciones de experiencias dejadas por asistentes con asistencia comprobada (check-in verificado).
-  </p>
   <div id="muro-resenas" class="resenas-grid"></div>
 </section>
 
-<h2>Experiencias disponibles</h2>
-<div id="resultado" class="lista"></div>
 
-<!-- Modal para ver reseñas de una experiencia -->
+<!-- ============================================================ Modal: Reservar Experiencia -->
+<div id="modal-reservar" class="modal-overlay oculto">
+  <div class="modal-contenido">
+    <div class="modal-header">
+      <h3 id="modal-res-titulo">Reservar plaza</h3>
+      <button class="modal-cerrar" onclick="cerrarModalReservar()">&times;</button>
+    </div>
+    <div id="modal-res-preview" style="display: flex; gap: 1rem; align-items: center; background: #faf8f5; padding: 1rem; border-radius: 14px;">
+      <!-- Populated dynamically -->
+    </div>
+    
+    <div style="display: flex; justify-content: space-between; align-items: center; margin: 0.5rem 0;">
+      <div>
+        <label for="res-cupos-num" style="margin:0;">Número de personas</label>
+        <span class="hint" style="margin:0;">Cupos disponibles: <b id="modal-res-cupo-max">-</b></span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <button class="secundario" style="width: 38px; height: 38px; padding: 0; font-size: 1.2rem; border-radius: 50%;" onclick="cambiarCupos(-1)">-</button>
+        <input id="res-cupos-num" type="number" min="1" max="10" value="1" style="width: 55px; text-align: center; margin: 0; font-weight: 700;" readonly>
+        <button class="secundario" style="width: 38px; height: 38px; padding: 0; font-size: 1.2rem; border-radius: 50%;" onclick="cambiarCupos(1)">+</button>
+      </div>
+    </div>
+
+    <div style="border-top: 1px solid var(--border); padding-top: 1rem; display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <span style="font-size: 0.85rem; color: var(--txt-muted);">Total a pagar:</span>
+        <div id="modal-res-total" style="font-size: 1.6rem; font-weight: 800; color: var(--txt);">-</div>
+      </div>
+      <button id="btn-confirmar-reserva" class="btn-black-pill" style="padding: 0.85rem 1.6rem; font-size: 1rem;">
+        Confirmar reserva →
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ============================================================ Modal: Reseñas de Experiencia -->
 <div id="modal-resenas" class="modal-overlay oculto">
   <div class="modal-contenido">
     <div class="modal-header">
-      <h3 id="modal-titulo">Reseñas de la experiencia</h3>
+      <h3 id="modal-titulo">Reseñas de la comunidad</h3>
       <button class="modal-cerrar" onclick="cerrarModalResenas()">&times;</button>
     </div>
-    <div id="modal-metricas" class="card" style="margin: 0; background: var(--card-alt);"></div>
-    <div id="modal-lista" style="display: flex; flex-direction: column; gap: 0.75rem;"></div>
+    <div id="modal-metricas" class="card" style="margin: 0; background: #faf8f5;"></div>
+    <div id="modal-lista" style="display: flex; flex-direction: column; gap: 0.75rem; max-height: 45vh; overflow-y: auto;"></div>
   </div>
 </div>
 {% endblock %}
@@ -91,66 +178,128 @@
 {% block scripts %}
 <script>
 const contenedor = $("resultado");
+let categoriaFiltroActiva = "TODO";
+let experienciaSeleccionadaParaReserva = null;
+let catalogoCache = [];
 
-function tarjeta(exp, afinidad) {
+// Mapeo inteligente de imágenes según temática para recrear con fidelidad las imágenes 1 y 2
+const IMAGENES_DISPONIBLES = [
+  "{% static 'frontend/img/card_pottery.jpg' %}",
+  "{% static 'frontend/img/card_dinner.jpg' %}",
+  "{% static 'frontend/img/card_picnic.jpg' %}",
+  "{% static 'frontend/img/hero_campfire.jpg' %}",
+];
+
+function seleccionarImagenExperiencia(exp, idx) {
+  const texto = `${exp.titulo} ${exp.descripcion}`.toLowerCase();
+  if (texto.includes("cerámica") || texto.includes("arcilla") || texto.includes("arte") || texto.includes("taller") || texto.includes("creatividad")) {
+    return "{% static 'frontend/img/card_pottery.jpg' %}";
+  }
+  if (texto.includes("cena") || texto.includes("cafe") || texto.includes("café") || texto.includes("barismo") || texto.includes("cocina") || texto.includes("pasta") || texto.includes("vino") || texto.includes("gastronomia")) {
+    return "{% static 'frontend/img/card_dinner.jpg' %}";
+  }
+  if (texto.includes("sierra") || texto.includes("caminata") || texto.includes("picnic") || texto.includes("arvi") || texto.includes("aire libre") || texto.includes("aventura")) {
+    return "{% static 'frontend/img/card_picnic.jpg' %}";
+  }
+  if (texto.includes("running") || texto.includes("juegos") || texto.includes("musica") || texto.includes("jam")) {
+    return "{% static 'frontend/img/hero_campfire.jpg' %}";
+  }
+  return IMAGENES_DISPONIBLES[idx % IMAGENES_DISPONIBLES.length];
+}
+
+function tarjeta(exp, afinidad, idx = 0) {
   const agotada = exp.cupo_disponible === 0;
-  const insignia = afinidad !== undefined && afinidad > 0
-    ? `<span class="etiqueta ok">afinidad ${(afinidad * 100).toFixed(0)}%</span>`
+  const imagenUrl = seleccionarImagenExperiencia(exp, idx);
+  const fechaTexto = typeof fechaTarjeta === "function" ? fechaTarjeta(exp.fecha_hora) : fecha(exp.fecha_hora);
+  const hostNombre = exp.organizador_nombre || "Host de la comunidad";
+  const hostInicial = (hostNombre.charAt(0) || "H").toUpperCase();
+
+  const afinidadBadge = afinidad !== undefined && afinidad > 0
+    ? `<span class="etiqueta ok" style="margin-left: 0.4rem;">${(afinidad * 100).toFixed(0)}% afín</span>`
     : "";
 
   const div = document.createElement("article");
-  div.className = "experiencia";
+  div.className = "exp-card";
   div.innerHTML = `
-    <h3>${exp.titulo}</h3>
-    <div class="meta">${fecha(exp.fecha_hora)} · ${exp.ubicacion.ciudad}</div>
-    <div class="meta">${exp.ubicacion.nombre} — ${exp.ubicacion.direccion}</div>
-    <div class="rating-box" id="rating-exp-${exp.id}">
-      <span class="meta" style="font-size: 0.8rem;">Cargando calificación...</span>
+    <div class="exp-card-media">
+      <img src="${imagenUrl}" alt="${exp.titulo}" class="exp-card-img" loading="lazy">
+      <button class="btn-favorite-heart" title="Guardar en favoritos" onclick="toggleFavorito(this, event)">♥</button>
+      <div class="badge-availability-lime ${agotada ? 'soldout' : ''}">
+        ${agotada ? 'Agotada' : `Quedan ${exp.cupo_disponible} plazas`}
+      </div>
     </div>
-    <div><span class="precio">${dinero(exp.precio)}</span>
-         <span class="etiqueta ${agotada ? "err" : ""}">
-           ${agotada ? "agotada" : exp.cupo_disponible + " cupos"}
-         </span> ${insignia}</div>
-    <footer>
-      <input type="number" min="1" max="5" value="1" style="width:70px;margin:0">
-      <button ${agotada ? "disabled" : ""}>Reservar</button>
-      <button class="secundario btn-ver-resenas" style="font-size:0.8rem;padding:0.4rem 0.6rem;">⭐ Reseñas</button>
-    </footer>`;
 
-  const [entrada, boton, btnResenas] = [
-    div.querySelector("input"),
-    div.querySelector("button:not(.secundario)"),
-    div.querySelector(".btn-ver-resenas")
-  ];
-  boton.onclick = () => reservar(exp, Number(entrada.value), boton);
+    <div class="exp-card-body">
+      <div class="exp-date-tag">${fechaTexto}</div>
+      <h3 class="exp-card-title">${exp.titulo}</h3>
+      <div class="exp-location">${exp.ubicacion ? `${exp.ubicacion.nombre}, ${exp.ubicacion.ciudad}` : 'Medellín'}</div>
+
+      <div class="exp-rating-row" id="rating-exp-${exp.id}">
+        <span class="hint" style="margin: 0; font-size: 0.8rem;">Cargando opiniones...</span>
+      </div>
+
+      <div class="exp-card-footer">
+        <div class="exp-host-info">
+          <div class="host-avatar">${hostInicial}</div>
+          <div class="host-name">Por <b>${hostNombre}</b></div>
+        </div>
+        <div class="exp-price-box">
+          <span class="price-from">desde</span>
+          <span class="price-value">${dinero(exp.precio)}</span>
+          ${afinidadBadge}
+        </div>
+      </div>
+
+      <div class="exp-card-actions">
+        <button class="btn-card-reserve" ${agotada ? "disabled" : ""}>
+          ${agotada ? "Plazas agotadas" : "Reservar plaza"}
+        </button>
+        <button class="btn-card-reviews btn-ver-resenas" title="Ver opiniones de asistentes">
+          ⭐ Reseñas
+        </button>
+      </div>
+    </div>
+  `;
+
+  const btnReservar = div.querySelector(".btn-card-reserve");
+  const btnResenas = div.querySelector(".btn-ver-resenas");
+
+  btnReservar.onclick = () => abrirModalReservar(exp);
   btnResenas.onclick = () => abrirModalResenas(exp);
 
-  // Consultar metricas del contexto social para esta experiencia de forma segura
+  // Consultar metricas sociales (reseñas y estrellas) de forma reactiva
   if (typeof api?.metricasExperiencia === "function") {
     api.metricasExperiencia(exp.id).then((m) => {
       const box = div.querySelector(`#rating-exp-${exp.id}`);
       if (!box) return;
       if (m && m.total_resenas > 0) {
-        box.innerHTML = `<span class="rating-item" title="Click para ver las opiniones">
-          <span class="estrellas">★</span> <b>${m.calificacion_promedio}</b>
-          <span class="meta">(${m.total_resenas} ${m.total_resenas === 1 ? 'reseña' : 'reseñas'})</span>
-        </span>`;
+        box.innerHTML = `
+          <span class="exp-rating-star">★</span>
+          <span class="exp-rating-val">${m.calificacion_promedio}</span>
+          <span class="exp-rating-count">(${m.total_resenas} ${m.total_resenas === 1 ? 'opinión' : 'opiniones'})</span>
+        `;
         box.onclick = () => abrirModalResenas(exp);
       } else {
-        box.innerHTML = `<span class="meta" style="font-size: 0.8rem;">★ Sin reseñas todavía</span>`;
+        box.innerHTML = `<span class="hint" style="margin: 0; font-size: 0.8rem;">★ Nuevo en MeetU2</span>`;
       }
     }).catch(() => {
       const box = div.querySelector(`#rating-exp-${exp.id}`);
-      if (box) box.innerHTML = "";
+      if (box) box.innerHTML = `<span class="hint" style="margin: 0; font-size: 0.8rem;">★ Nuevo</span>`;
     });
-  } else {
-    const box = div.querySelector(`#rating-exp-${exp.id}`);
-    if (box) box.innerHTML = "";
   }
 
   return div;
 }
 
+function toggleFavorito(btn, ev) {
+  ev.stopPropagation();
+  btn.classList.toggle("active");
+  if (btn.classList.contains("active")) {
+    toast("Guardado en tus planes favoritos ♥");
+  }
+}
+
+// ------------------------------------------------------------- Muro de Reseñas
 async function cargarMuroResenas() {
   const caja = $("muro-resenas");
   if (!caja) return;
@@ -165,24 +314,24 @@ async function cargarMuroResenas() {
       return;
     }
     $("seccion-muro-resenas").classList.remove("oculto");
-    $("total-resenas-muro").textContent = `${resenas.length} reseñas verificadas`;
-    caja.innerHTML = resenas.slice(0, 4).map((r) => `
+    $("total-resenas-muro").textContent = `${resenas.length} reseñas con asistencia comprobada`;
+    caja.innerHTML = resenas.slice(0, 3).map((r) => `
       <div class="resena-tarjeta">
         <div class="autor">
           <span>${r.usuario_nombre || 'Asistente'}</span>
           <span class="badge-verificado">✓ Check-in verificado</span>
         </div>
-        <div style="font-size: 0.8rem; color: var(--txt-suave); font-weight: 500;">
+        <div style="font-size: 0.82rem; color: var(--primary); font-weight: 700;">
           ${r.experiencia_titulo || 'Experiencia'}
         </div>
         <div class="estrellas">
           ${'★'.repeat(r.calificacion)}${'☆'.repeat(5 - r.calificacion)}
-          <span style="font-size: 0.85rem; color: var(--txt-suave); font-weight: normal; margin-left: 0.25rem;">
+          <span style="font-size: 0.85rem; color: var(--txt-muted); font-weight: normal; margin-left: 0.25rem;">
             ${r.calificacion}/5
           </span>
         </div>
-        ${r.comentario ? `<div class="comentario">“${r.comentario}”</div>` : '<div class="meta" style="font-size:0.8rem;">Sin comentario</div>'}
-        <div class="meta" style="font-size: 0.75rem; margin-top: auto;">${fecha(r.creado_en)}</div>
+        ${r.comentario ? `<div class="comentario">“${r.comentario}”</div>` : '<div class="hint" style="margin:0;">Sin comentario escrito</div>'}
+        <div class="hint" style="font-size: 0.75rem; margin-top: auto; margin-bottom: 0;">${fecha(r.creado_en)}</div>
       </div>
     `).join("");
   } catch (e) {
@@ -190,10 +339,11 @@ async function cargarMuroResenas() {
   }
 }
 
+// ------------------------------------------------------------- Modal Reseñas
 async function abrirModalResenas(exp) {
-  $("modal-titulo").textContent = `Reseñas: ${exp.titulo}`;
+  $("modal-titulo").textContent = `Opiniones: ${exp.titulo}`;
   $("modal-metricas").innerHTML = '<p class="hint">Cargando métricas...</p>';
-  $("modal-lista").innerHTML = '<p class="hint">Cargando opiniones...</p>';
+  $("modal-lista").innerHTML = '<p class="hint">Cargando comentarios...</p>';
   $("modal-resenas").classList.remove("oculto");
 
   try {
@@ -202,25 +352,25 @@ async function abrirModalResenas(exp) {
       api.resenasDeExperiencia(exp.id),
     ]);
 
-    if (metricas.total_resenas > 0) {
+    if (metricas && metricas.total_resenas > 0) {
       $("modal-metricas").innerHTML = `
         <div style="display: flex; align-items: center; justify-content: space-between;">
           <div>
-            <div style="font-size: 1.8rem; font-weight: 700; line-height: 1;">
+            <div style="font-size: 2rem; font-weight: 800; line-height: 1; color: var(--txt);">
               <span class="estrellas">★</span> ${metricas.calificacion_promedio}
-              <span style="font-size: 0.9rem; color: var(--txt-suave); font-weight: normal;">/ 5.0</span>
+              <span style="font-size: 0.95rem; color: var(--txt-muted); font-weight: 500;">/ 5.0</span>
             </div>
-            <div class="meta">${metricas.total_resenas} ${metricas.total_resenas === 1 ? 'opinión verificada' : 'opiniones verificadas'}</div>
+            <div class="hint" style="margin: 0.25rem 0 0;">${metricas.total_resenas} ${metricas.total_resenas === 1 ? 'opinión verificada' : 'opiniones verificadas'}</div>
           </div>
           <span class="badge-verificado">✓ Solo asistentes con check-in</span>
         </div>
       `;
     } else {
-      $("modal-metricas").innerHTML = '<p class="hint">Esta experiencia aún no tiene calificaciones registradas.</p>';
+      $("modal-metricas").innerHTML = '<p class="hint" style="margin:0;">Esta experiencia aún no tiene calificaciones registradas.</p>';
     }
 
-    if (!resenas.length) {
-      $("modal-lista").innerHTML = '<p class="vacio">No hay comentarios todavía.</p>';
+    if (!resenas || !resenas.length) {
+      $("modal-lista").innerHTML = '<p class="vacio">Sé la primera persona en asistir y calificar este plan.</p>';
       return;
     }
 
@@ -232,12 +382,9 @@ async function abrirModalResenas(exp) {
         </div>
         <div class="estrellas">
           ${'★'.repeat(r.calificacion)}${'☆'.repeat(5 - r.calificacion)}
-          <span style="font-size: 0.85rem; color: var(--txt-suave); font-weight: normal; margin-left: 0.25rem;">
-            ${r.calificacion}/5
-          </span>
         </div>
-        ${r.comentario ? `<div class="comentario">“${r.comentario}”</div>` : '<div class="meta" style="font-size:0.8rem;">Sin comentario escrito</div>'}
-        <div class="meta" style="font-size: 0.75rem;">${fecha(r.creado_en)}</div>
+        ${r.comentario ? `<div class="comentario">“${r.comentario}”</div>` : '<div class="hint" style="margin:0;">Sin comentario escrito</div>'}
+        <div class="hint" style="font-size: 0.75rem; margin: 0;">${fecha(r.creado_en)}</div>
       </div>
     `).join("");
   } catch (e) {
@@ -249,141 +396,185 @@ function cerrarModalResenas() {
   $("modal-resenas").classList.add("oculto");
 }
 
-async function reservar(exp, cantidad, boton) {
+// ----------------------------------------------------------- Modal Reservar
+function abrirModalReservar(exp) {
   const usuario = sesion.get();
-  if (!usuario) return toast("Primero registrate o entra con tu correo", "error");
+  if (!usuario) {
+    abrirModalAuth('login');
+    toast("Inicia sesión o regístrate para reservar tu cupo", "info");
+    return;
+  }
 
+  experienciaSeleccionadaParaReserva = exp;
+  $("modal-res-titulo").textContent = `Reservar: ${exp.titulo}`;
+  $("modal-res-cupo-max").textContent = `${exp.cupo_disponible} disponibles`;
+  $("res-cupos-num").value = 1;
+  $("res-cupos-num").max = exp.cupo_disponible;
+
+  const preview = $("modal-res-preview");
+  preview.innerHTML = `
+    <div>
+      <div style="font-weight: 700; font-size: 1rem; color: var(--txt);">${exp.titulo}</div>
+      <div style="font-size: 0.85rem; color: var(--primary); font-weight: 700;">${typeof fechaTarjeta === "function" ? fechaTarjeta(exp.fecha_hora) : fecha(exp.fecha_hora)}</div>
+      <div style="font-size: 0.82rem; color: var(--txt-muted);">${exp.ubicacion ? `${exp.ubicacion.nombre} · ${exp.ubicacion.ciudad}` : 'Medellín'}</div>
+    </div>
+  `;
+
+  actualizarTotalReserva();
+  $("modal-reservar").classList.remove("oculto");
+}
+
+function cerrarModalReservar() {
+  $("modal-reservar").classList.add("oculto");
+  experienciaSeleccionadaParaReserva = null;
+}
+
+function cambiarCupos(delta) {
+  if (!experienciaSeleccionadaParaReserva) return;
+  const entrada = $("res-cupos-num");
+  let val = parseInt(entrada.value, 10) + delta;
+  if (val < 1) val = 1;
+  if (val > experienciaSeleccionadaParaReserva.cupo_disponible) {
+    val = experienciaSeleccionadaParaReserva.cupo_disponible;
+  }
+  entrada.value = val;
+  actualizarTotalReserva();
+}
+
+function actualizarTotalReserva() {
+  if (!experienciaSeleccionadaParaReserva) return;
+  const cupos = parseInt($("res-cupos-num").value, 10) || 1;
+  const precioUnitario = Number(experienciaSeleccionadaParaReserva.precio) || 0;
+  $("modal-res-total").textContent = dinero(precioUnitario * cupos);
+}
+
+$("btn-confirmar-reserva").onclick = async () => {
+  const usuario = sesion.get();
+  if (!usuario) {
+    cerrarModalReservar();
+    abrirModalAuth('login');
+    return;
+  }
+  if (!experienciaSeleccionadaParaReserva) return;
+
+  const boton = $("btn-confirmar-reserva");
   boton.disabled = true;
+  boton.textContent = "Procesando...";
+
   try {
+    const cupos = parseInt($("res-cupos-num").value, 10);
     const reserva = await api.reservar({
       id_usuario: usuario.id,
-      id_experiencia: exp.id,
-      cantidad_cupos: cantidad,
+      id_experiencia: experienciaSeleccionadaParaReserva.id,
+      cantidad_cupos: cupos,
     });
-    toast(`Cupo apartado. Ticket ${reserva.codigo_ticket}. Paga en "Mis reservas".`);
+    toast(`¡Cupo apartado con éxito! Ticket ${reserva.codigo_ticket}. Ve a 'Mis reservas' para completar el pago.`);
+    cerrarModalReservar();
     buscar();
   } catch (e) {
     mostrarError(e);
+  } finally {
     boton.disabled = false;
+    boton.textContent = "Confirmar reserva →";
   }
-}
+};
 
+// --------------------------------------------------------- Renderizar Catálogo
 function pintar(items) {
   contenedor.replaceChildren();
-  if (!items.length) {
-    contenedor.innerHTML = '<p class="vacio">No hay experiencias que coincidan.</p>';
+  catalogoCache = items;
+
+  let filtrados = items;
+  if (categoriaFiltroActiva !== "TODO") {
+    filtrados = items.filter(item => {
+      const exp = item.experiencia || item;
+      const texto = `${exp.titulo} ${exp.descripcion}`.toLowerCase();
+      return texto.includes(categoriaFiltroActiva.toLowerCase());
+    });
+  }
+
+  if (!filtrados.length) {
+    contenedor.innerHTML = '<p class="vacio" style="grid-column: 1 / -1;">No encontramos experiencias para este filtro. ¡Prueba buscando otra palabra o categoría!</p>';
     return;
   }
-  items.forEach((item) =>
-    contenedor.append(
-      item.experiencia ? tarjeta(item.experiencia, item.afinidad) : tarjeta(item)
-    )
-  );
+
+  filtrados.forEach((item, idx) => {
+    const tarjetaEl = item.experiencia
+      ? tarjeta(item.experiencia, item.afinidad, idx)
+      : tarjeta(item, undefined, idx);
+    contenedor.append(tarjetaEl);
+  });
 }
 
 async function buscar() {
   try {
-    pintar(
-      await api.listarExperiencias({
-        texto: $("f-texto").value,
-        ciudad: $("f-ciudad").value,
-        precio_maximo: $("f-precio").value,
-      })
-    );
+    const datos = await api.listarExperiencias({
+      texto: $("f-texto").value.trim(),
+      ciudad: $("f-ciudad").value.trim(),
+    });
+    pintar(datos);
   } catch (e) {
     mostrarError(e);
   }
 }
 
-async function cargarCategorias() {
-  try {
-    const categorias = await api.listarCategorias();
-    $("categoria").replaceChildren(
-      ...categorias.map((c) => new Option(c.nombre, c.id))
-    );
-  } catch (e) {
-    mostrarError(e);
-  }
-}
+// Interacción de píldoras de categorías (Image 2)
+document.querySelectorAll(".category-filter-bar .cat-pill").forEach(pill => {
+  pill.addEventListener("click", () => {
+    document.querySelectorAll(".category-filter-bar .cat-pill").forEach(p => p.classList.remove("active"));
+    pill.classList.add("active");
+    categoriaFiltroActiva = pill.dataset.cat || "TODO";
+    pintar(catalogoCache);
+  });
+});
 
-async function cargarIntereses() {
+$("btn-buscar").onclick = () => {
+  buscar();
+  document.getElementById("catalogo").scrollIntoView({ behavior: "smooth" });
+};
+
+$("f-texto").addEventListener("keydown", (e) => {
+  if (e.key === "Enter") $("btn-buscar").click();
+});
+$("f-ciudad").addEventListener("keydown", (e) => {
+  if (e.key === "Enter") $("btn-buscar").click();
+});
+
+$("btn-ver-todas").onclick = () => {
+  $("f-texto").value = "";
+  $("f-ciudad").value = "";
+  categoriaFiltroActiva = "TODO";
+  document.querySelectorAll(".category-filter-bar .cat-pill").forEach(p => {
+    if (p.dataset.cat === "TODO") p.classList.add("active");
+    else p.classList.remove("active");
+  });
+  buscar();
+};
+
+// "Tu match ideal" (Image 1 bottom floating badge)
+$("btn-hero-match").onclick = async () => {
   const usuario = sesion.get();
-  if (!usuario) return ($("mis-intereses").textContent = "Sin sesion activa.");
-  try {
-    const intereses = await api.listarIntereses(usuario.id);
-    const nombres = Object.fromEntries(
-      [...$("categoria").options].map((o) => [o.value, o.text])
-    );
-    $("mis-intereses").textContent = intereses.length
-      ? "Intereses: " +
-        intereses.map((i) => `${nombres[i.categoria_id] ?? i.categoria_id} (${i.nivel_afinidad})`).join(", ")
-      : "Sin intereses declarados.";
-  } catch (e) {
-    mostrarError(e);
+  if (!usuario) {
+    toast("Inicia sesión para calcular tus planes recomendados según tus intereses", "info");
+    abrirModalAuth('login');
+    return;
   }
-}
-
-$("btn-registrar").onclick = async () => {
   try {
-    sesion.set(
-      await api.registrarUsuario({
-        nombre: $("nombre").value,
-        correo: $("correo").value,
-      })
-    );
-    toast("Usuario creado. Sesion iniciada.");
-    cargarIntereses();
+    const recs = await api.recomendaciones(usuario.id);
+    pintar(recs);
+    toast("Catálogo personalizado con afinidad según tus gustos.");
+    document.getElementById("catalogo").scrollIntoView({ behavior: "smooth" });
   } catch (e) {
     mostrarError(e);
   }
 };
 
-$("btn-entrar").onclick = async () => {
-  try {
-    sesion.set(await api.buscarUsuarioPorCorreo($("correo").value));
-    toast("Sesion iniciada.");
-    cargarIntereses();
-  } catch (e) {
-    mostrarError(e);
-  }
+window.onSesionCambiada = () => {
+  buscar();
+  cargarMuroResenas();
 };
 
-$("btn-salir").onclick = () => {
-  sesion.limpiar();
-  toast("Sesion cerrada.");
-  cargarIntereses();
-};
-
-$("btn-interes").onclick = async () => {
-  const usuario = sesion.get();
-  if (!usuario) return toast("Necesitas una sesion activa", "error");
-  try {
-    await api.vincularInteres(
-      usuario.id,
-      $("categoria").value,
-      Number($("nivel").value)
-    );
-    toast("Interes vinculado.");
-    cargarIntereses();
-  } catch (e) {
-    mostrarError(e);
-  }
-};
-
-$("btn-buscar").onclick = buscar;
-
-$("btn-recomendadas").onclick = async () => {
-  const usuario = sesion.get();
-  if (!usuario) return toast("Necesitas una sesion activa", "error");
-  try {
-    pintar(await api.recomendaciones(usuario.id));
-    toast("Catalogo ordenado por afinidad con tus intereses.");
-  } catch (e) {
-    mostrarError(e);
-  }
-};
-
-cargarCategorias().then(cargarIntereses);
+// Inicialización
 buscar();
 cargarMuroResenas();
 </script>

@@ -4,20 +4,156 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block titulo %}MeetU2{% endblock %}</title>
-  <link rel="stylesheet" href="{% static 'frontend/app.css' %}?v=2">
+  <title>{% block titulo %}MeetU2 — Sal de la rutina. Conecta de verdad.{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'frontend/app.css' %}?v=3">
 </head>
 <body data-pagos-v2="{{ pagos_v2_habilitado|yesno:'1,0' }}">
-  <nav>
-    <span class="marca">MeetU2</span>
-    <a href="{% url 'frontend:catalogo' %}">Descubrir</a>
-    <a href="{% url 'frontend:reservas' %}">Mis reservas</a>
-    <a href="{% url 'frontend:organizador' %}">Soy organizador</a>
-    <span class="sesion">Sesion: <b id="sesion-actual">sin sesion</b></span>
-  </nav>
-  <main>{% block contenido %}{% endblock %}</main>
+
+  <!-- Top Navigation Header -->
+  <header class="header-nav">
+    <div class="nav-left">
+      <a href="{% url 'frontend:catalogo' %}" class="logo">
+        meetu<span class="logo-violet">2</span>
+      </a>
+      <nav class="nav-links">
+        <a href="{% url 'frontend:catalogo' %}" class="nav-link">Explorar</a>
+        <a href="javascript:void(0)" onclick="abrirModalComoFunciona()" class="nav-link">Cómo funciona</a>
+        <a href="{% url 'frontend:organizador' %}" class="nav-link">Organiza</a>
+        <a href="{% url 'frontend:reservas' %}" class="nav-link">Mis reservas</a>
+      </nav>
+    </div>
+    
+    <div class="nav-right" id="nav-auth-container">
+      <!-- Populated dynamically by api.js pintarSesion() -->
+      <button class="btn-link" onclick="abrirModalAuth('login')">Iniciar sesión</button>
+      <button class="btn-black-pill" onclick="abrirModalAuth('registro')">Crear cuenta</button>
+    </div>
+  </header>
+
+  <!-- Main Content Wrapper -->
+  <main class="site-main">
+    {% block contenido %}{% endblock %}
+  </main>
+
+  <!-- Toast Notification -->
   <div id="toast" class="toast oculto"></div>
-  <script src="{% static 'frontend/api.js' %}?v=2"></script>
+
+  <!-- Global Modal: Autenticación / Sesión -->
+  <div id="modal-global-auth" class="modal-overlay oculto">
+    <div class="modal-contenido" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3 id="auth-modal-title">Acceso a MeetU2</h3>
+        <button class="modal-cerrar" onclick="cerrarModalAuth()">&times;</button>
+      </div>
+
+      <!-- Tabs de selección -->
+      <div style="display: flex; gap: 0.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.75rem;">
+        <button id="auth-tab-login" class="cat-pill active" onclick="abrirModalAuth('login')">Iniciar sesión</button>
+        <button id="auth-tab-registro" class="cat-pill" onclick="abrirModalAuth('registro')">Crear cuenta</button>
+      </div>
+
+      <!-- Panel Iniciar Sesión -->
+      <div id="auth-panel-login">
+        <label for="auth-correo-login">Tu correo electrónico</label>
+        <input id="auth-correo-login" type="email" placeholder="andres@meetu2.co">
+        <button id="btn-modal-login" style="width: 100%; margin-top: 0.5rem;">Entrar</button>
+
+        <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px dashed var(--border);">
+          <div style="font-size: 0.78rem; font-weight: 700; color: var(--txt-muted); text-transform: uppercase; margin-bottom: 0.5rem;">Cuentas de demostración:</div>
+          <div style="display: flex; flex-direction: column; gap: 0.4rem;">
+            <button class="btn-card-reviews" style="text-align: left; font-size: 0.82rem;" onclick="autollenarLogin('andres@meetu2.co')">
+              👤 <b>Andrés Asistente</b> (andres@meetu2.co)
+            </button>
+            <button class="btn-card-reviews" style="text-align: left; font-size: 0.82rem;" onclick="autollenarLogin('laura@meetu2.co')">
+              ⭐ <b>Laura Host</b> (laura@meetu2.co)
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel Registro -->
+      <div id="auth-panel-registro" class="oculto">
+        <label for="auth-nombre-reg">Nombre completo</label>
+        <input id="auth-nombre-reg" placeholder="Ej. Camila Morales">
+        <label for="auth-correo-reg">Correo electrónico</label>
+        <input id="auth-correo-reg" type="email" placeholder="camila@ejemplo.co">
+        <button id="btn-modal-registro" style="width: 100%; margin-top: 0.5rem;">Crear mi cuenta</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Global Modal: Cómo Funciona -->
+  <div id="modal-como-funciona" class="modal-overlay oculto">
+    <div class="modal-contenido" style="max-width: 500px;">
+      <div class="modal-header">
+        <h3>Cómo funciona MeetU2</h3>
+        <button class="modal-cerrar" onclick="cerrarModalComoFunciona()">&times;</button>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 1.5rem; padding: 0.5rem 0;">
+        <div style="display: flex; gap: 1rem; align-items: flex-start;">
+          <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--lime); color: var(--lime-txt); display: flex; align-items: center; justify-content: center; font-weight: 800; flex-shrink: 0;">1</div>
+          <div>
+            <div style="font-weight: 700; font-size: 1.05rem; margin-bottom: 0.2rem;">Explora planes auténticos</div>
+            <div style="font-size: 0.9rem; color: var(--txt-muted);">Actividades creadas por anfitriones apasionados en gastronomía, aventura, arte y más, pensadas para grupos pequeños.</div>
+          </div>
+        </div>
+        <div style="display: flex; gap: 1rem; align-items: flex-start;">
+          <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center; font-weight: 800; flex-shrink: 0;">2</div>
+          <div>
+            <div style="font-weight: 700; font-size: 1.05rem; margin-bottom: 0.2rem;">Reserva con cupo garantizado</div>
+            <div style="font-size: 0.9rem; color: var(--txt-muted);">Aparta tu lugar al instante. Pagos seguros con microservicio y políticas transparentes de reembolso.</div>
+          </div>
+        </div>
+        <div style="display: flex; gap: 1rem; align-items: flex-start;">
+          <div style="width: 40px; height: 40px; border-radius: 50%; background: #ffaa94; color: #5c1e0f; display: flex; align-items: center; justify-content: center; font-weight: 800; flex-shrink: 0;">3</div>
+          <div>
+            <div style="font-weight: 700; font-size: 1.05rem; margin-bottom: 0.2rem;">Conecta y comparte tu opinión</div>
+            <div style="font-size: 0.9rem; color: var(--txt-muted);">Haz check-in con tu código de ticket al llegar, conoce a tu próxima persona favorita y deja tu reseña verificada.</div>
+          </div>
+        </div>
+      </div>
+      <button class="btn-black-pill" style="justify-content: center; width: 100%; margin-top: 0.5rem;" onclick="cerrarModalComoFunciona()">
+        ¡Entendido! Explorar planes
+      </button>
+    </div>
+  </div>
+
+  <script src="{% static 'frontend/api.js' %}?v=3"></script>
+  <script>
+    function autollenarLogin(correo) {
+      document.getElementById('auth-correo-login').value = correo;
+      document.getElementById('btn-modal-login').click();
+    }
+
+    document.getElementById("btn-modal-login")?.addEventListener("click", async () => {
+      const correo = document.getElementById("auth-correo-login").value.trim();
+      if (!correo) return toast("Ingresa un correo", "error");
+      try {
+        const u = await api.buscarUsuarioPorCorreo(correo);
+        sesion.set(u);
+        toast(`Bienvenido de nuevo, ${u.nombre}`);
+        cerrarModalAuth();
+        if (typeof window.onSesionCambiada === "function") window.onSesionCambiada(u);
+      } catch (e) {
+        mostrarError(e);
+      }
+    });
+
+    document.getElementById("btn-modal-registro")?.addEventListener("click", async () => {
+      const nombre = document.getElementById("auth-nombre-reg").value.trim();
+      const correo = document.getElementById("auth-correo-reg").value.trim();
+      if (!nombre || !correo) return toast("Completa nombre y correo", "error");
+      try {
+        const u = await api.registrarUsuario({ nombre, correo });
+        sesion.set(u);
+        toast(`¡Cuenta creada con éxito! Bienvenido, ${u.nombre}`);
+        cerrarModalAuth();
+        if (typeof window.onSesionCambiada === "function") window.onSesionCambiada(u);
+      } catch (e) {
+        mostrarError(e);
+      }
+    });
+  </script>
   {% block scripts %}{% endblock %}
 </body>
 </html>

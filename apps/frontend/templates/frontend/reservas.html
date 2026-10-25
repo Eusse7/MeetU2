@@ -2,67 +2,83 @@
 {% block titulo %}Mis reservas — MeetU2{% endblock %}
 
 {% block contenido %}
-<h1>Mis reservas</h1>
-
-<section class="card">
-  <p class="hint">
-    Una reserva nace en <code>PENDIENTE_PAGO</code> y retiene el cupo durante la
-    ventana de pago. Al confirmarla pasa a <code>CONFIRMADA</code>; al cancelarla
-    se devuelve el cupo al catalogo y se calcula el reembolso segun la antelacion
-    (100 % con mas de 48 h, 50 % entre 24 y 48 h, 0 % despues).
+<div style="margin-bottom: 2rem;">
+  <div class="catalogue-eyebrow">ASISTENCIA Y TICKETS</div>
+  <h1 style="font-size: 2.25rem; font-weight: 800; letter-spacing: -0.03em; margin: 0 0 0.5rem;">Mis reservas</h1>
+  <p class="hint" style="max-width: 680px; margin: 0;">
+    Gestiona tus experiencias confirmadas, aparta el pago de tus cupos retenidos y califica las actividades a las que ya asististe.
   </p>
+</div>
+
+<!-- Configuración de pago simulado (Microservicio de Pagos v2 / Strangler) -->
+<section class="card" id="card-config-pago">
+  <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
+    <div>
+      <h2 style="margin: 0; font-size: 1.15rem;">Canal de pago seguro</h2>
+      <p class="hint" id="modo-pago" style="margin: 0.2rem 0 0;"></p>
+    </div>
+    <button id="btn-recargar" class="secundario" style="font-size: 0.85rem; padding: 0.5rem 1rem;">
+      ↻ Actualizar estado
+    </button>
+  </div>
+
   <div class="fila" id="opciones-pago" hidden>
     <div>
-      <label for="medio-pago">Medio de pago</label>
+      <label for="medio-pago">Método de pago preferido</label>
       <select id="medio-pago">
-        <option value="TARJETA">Tarjeta</option>
-        <option value="PSE">PSE</option>
-        <option value="NEQUI">Nequi</option>
+        <option value="TARJETA">💳 Tarjeta Débito / Crédito</option>
+        <option value="PSE">🏦 Transferencia PSE</option>
+        <option value="NEQUI">📱 Nequi / Billetera Digital</option>
       </select>
     </div>
     <div>
-      <label for="token-pago">Resultado simulado (sandbox)</label>
+      <label for="token-pago">Respuesta simulada (Sandbox de pagos)</label>
       <select id="token-pago">
-        <option value="tok_aprobada">Aprobado</option>
-        <option value="tok_rechazada">Rechazado por el emisor</option>
-        <option value="tok_fondos_insuficientes">Fondos insuficientes</option>
+        <option value="tok_aprobada">✓ Aprobado exitoso</option>
+        <option value="tok_rechazada">✗ Rechazado por el banco</option>
+        <option value="tok_fondos_insuficientes">✗ Fondos insuficientes</option>
       </select>
     </div>
   </div>
-  <p class="hint" id="modo-pago"></p>
-  <button id="btn-recargar" class="secundario">Recargar</button>
+
+  <div style="background: #faf8f5; border: 1px dashed var(--border); border-radius: 10px; padding: 0.75rem 1rem; font-size: 0.82rem; color: var(--txt-muted); margin-top: 0.5rem;">
+    ℹ️ <b>Política de cancelación transparente:</b> 100% de reembolso si cancelas con más de 48h de antelación; 50% entre 24h y 48h; 0% a menos de 24h del evento.
+  </div>
 </section>
 
-<div id="tabla" class="card"></div>
+<!-- Listado de Reservas -->
+<div id="tabla" class="card" style="padding: 0; overflow: hidden;"></div>
 
-<!-- Modal para calificar experiencia (Modulo Social) -->
+<!-- Modal para calificar experiencia (Módulo Social) -->
 <div id="modal-calificar" class="modal-overlay oculto">
   <div class="modal-contenido">
     <div class="modal-header">
       <h3 id="calificar-titulo">⭐ Calificar Experiencia</h3>
       <button class="modal-cerrar" onclick="cerrarModalCalificar()">&times;</button>
     </div>
-    <p class="hint">
-      Como asistente verificado (check-in registrado), tu reseña ayuda a la comunidad y actualiza la reputación del organizador.
+    <p class="hint" style="margin: 0;">
+      Tu check-in fue verificado por el organizador. Tu opinión sincera ayuda a la comunidad y actualiza la reputación del anfitrión.
     </p>
-    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+    <div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 0.5rem;">
       <div>
         <label for="calificar-estrellas">Puntuación</label>
-        <select id="calificar-estrellas" style="font-size: 1.05rem; padding: 0.5rem;">
-          <option value="5">★★★★★ (5 estrellas - Excelente)</option>
+        <select id="calificar-estrellas" style="font-size: 1.05rem; padding: 0.6rem;">
+          <option value="5">★★★★★ (5 estrellas - Excelente experiencia)</option>
           <option value="4">★★★★☆ (4 estrellas - Muy buena)</option>
           <option value="3">★★★☆☆ (3 estrellas - Regular)</option>
-          <option value="2">★★☆☆☆ (2 estrellas - Mala)</option>
-          <option value="1">★☆☆☆☆ (1 estrella - Pésima)</option>
+          <option value="2">★★☆☆☆ (2 estrellas - Podría mejorar)</option>
+          <option value="1">★☆☆☆☆ (1 estrella - No me gustó)</option>
         </select>
       </div>
       <div>
-        <label for="calificar-comentario">Tu opinión o comentario (opcional)</label>
-        <textarea id="calificar-comentario" rows="3" placeholder="¿Qué tal estuvo la actividad? Cuéntale a otros asistentes..."></textarea>
+        <label for="calificar-comentario">Tu comentario u opinión pública (opcional)</label>
+        <textarea id="calificar-comentario" rows="3" placeholder="¿Cómo estuvo el ambiente, la puntualidad y las actividades?"></textarea>
       </div>
-      <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 0.5rem;">
+      <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.5rem;">
         <button class="secundario" onclick="cerrarModalCalificar()">Cancelar</button>
-        <button id="btn-enviar-calificacion">Publicar reseña</button>
+        <button id="btn-enviar-calificacion" class="btn-black-pill" style="padding: 0.7rem 1.4rem;">
+          Publicar reseña verificada
+        </button>
       </div>
     </div>
   </div>
@@ -85,15 +101,26 @@ async function cargar() {
   const caja = $("tabla");
 
   if (!usuario) {
-    caja.innerHTML =
-      '<p class="vacio">Inicia sesion desde <b>Descubrir</b> para ver tus reservas.</p>';
+    caja.innerHTML = `
+      <div class="vacio" style="padding: 3rem 1.5rem;">
+        <p style="font-size: 1.1rem; font-weight: 700; color: var(--txt); margin-bottom: 0.5rem;">Inicia sesión para consultar tus reservas</p>
+        <p class="hint" style="margin-bottom: 1.25rem;">Accede con tu correo para ver tus tickets de asistencia y estado de pagos.</p>
+        <button class="btn-black-pill" onclick="abrirModalAuth('login')">Iniciar sesión ahora</button>
+      </div>
+    `;
     return;
   }
 
   try {
     const reservas = await api.misReservas(usuario.id);
     if (!reservas.length) {
-      caja.innerHTML = '<p class="vacio">Todavia no has reservado nada.</p>';
+      caja.innerHTML = `
+        <div class="vacio" style="padding: 3rem 1.5rem;">
+          <p style="font-size: 1.1rem; font-weight: 700; color: var(--txt); margin-bottom: 0.5rem;">Aún no tienes reservas activas</p>
+          <p class="hint" style="margin-bottom: 1.25rem;">Explora los planes recomendados y asegura tu plaza en la comunidad.</p>
+          <a href="{% url 'frontend:catalogo' %}" class="btn-black-pill">Explorar catálogo →</a>
+        </div>
+      `;
       return;
     }
 
@@ -101,31 +128,54 @@ async function cargar() {
     const tabla = document.createElement("table");
     tabla.innerHTML = `
       <thead><tr>
-        <th>Experiencia</th><th>Cuando</th><th>Ticket</th>
-        <th>Cupos</th><th>Total</th><th>Estado</th><th></th>
-      </tr></thead><tbody></tbody>`;
+        <th>Experiencia</th>
+        <th>Fecha y hora</th>
+        <th>Ticket</th>
+        <th>Plazas</th>
+        <th>Total</th>
+        <th>Estado</th>
+        <th style="text-align: right;">Acciones</th>
+      </tr></thead>
+      <tbody></tbody>`;
 
     reservas.forEach((item) => {
       const r = item.reserva;
       const fila = document.createElement("tr");
+      const fechaTexto = typeof fechaTarjeta === "function" ? fechaTarjeta(item.experiencia_fecha) : fecha(item.experiencia_fecha);
+
       fila.innerHTML = `
-        <td>${item.experiencia_titulo || "-"}<div class="meta">${item.experiencia_ciudad}</div></td>
-        <td>${fecha(item.experiencia_fecha)}</td>
-        <td><code>${r.codigo_ticket}</code></td>
-        <td>${r.cantidad_cupos}</td>
-        <td>${dinero(r.monto_total)}
-            ${Number(r.monto_reembolsado) > 0
-              ? `<div class="meta">reembolso ${dinero(r.monto_reembolsado)}</div>`
-              : ""}</td>
-        <td><span class="etiqueta ${ETIQUETAS[r.estado] ?? ""}">${r.estado}</span></td>
-        <td></td>`;
+        <td>
+          <div style="font-weight: 700; color: var(--txt);">${item.experiencia_titulo || "-"}</div>
+          <div class="hint" style="margin: 0; font-size: 0.8rem;">📍 ${item.experiencia_ciudad || "Medellín"}</div>
+        </td>
+        <td style="font-weight: 600; color: var(--primary); font-size: 0.88rem;">
+          ${fechaTexto}
+        </td>
+        <td>
+          <code style="background: #faf8f5; border: 1px solid var(--border); padding: 0.25rem 0.5rem; letter-spacing: 0.05em; font-weight: 800;">
+            ${r.codigo_ticket}
+          </code>
+        </td>
+        <td style="font-weight: 600;">${r.cantidad_cupos}</td>
+        <td>
+          <div style="font-weight: 700;">${dinero(r.monto_total)}</div>
+          ${Number(r.monto_reembolsado) > 0
+            ? `<div class="hint" style="margin:0; font-size:0.75rem; color: var(--ok);">Reembolso: ${dinero(r.monto_reembolsado)}</div>`
+            : ""}
+        </td>
+        <td>
+          <span class="etiqueta ${ETIQUETAS[r.estado] ?? ""}">
+            ${r.estado.replace('_', ' ')}
+          </span>
+        </td>
+        <td style="text-align: right;"></td>`;
 
       const acciones = fila.lastElementChild;
       if (r.estado === "PENDIENTE_PAGO") {
-        acciones.append(boton("Pagar", () => confirmar(r.id)));
+        acciones.append(boton("Pagar ahora", () => confirmar(r.id), "btn-black-pill", "padding: 0.4rem 0.8rem; font-size: 0.82rem;"));
       }
       if (r.estado === "PENDIENTE_PAGO" || r.estado === "CONFIRMADA") {
-        acciones.append(boton("Cancelar", () => cancelar(r.id), "peligro"));
+        acciones.append(boton("Cancelar", () => cancelar(r.id), "peligro", "font-size: 0.82rem; padding: 0.4rem 0.8rem;"));
       }
       if (r.estado === "CHECK_IN") {
         const contenedorResena = document.createElement("span");
@@ -133,13 +183,16 @@ async function cargar() {
         api.resenaDeReserva(r.id)
           .then((resena) => {
             if (resena && resena.id) {
-              contenedorResena.innerHTML = `<span class="etiqueta ok" style="cursor:pointer;" title="${resena.comentario || 'Sin comentario'}">★ ${resena.calificacion}/5 Reseña enviada</span>`;
+              contenedorResena.innerHTML = `
+                <span class="badge-verificado" title="${resena.comentario || 'Sin comentario escrito'}">
+                  ★ ${resena.calificacion}/5 Reseña publicada
+                </span>`;
             } else {
-              contenedorResena.append(boton("⭐ Calificar", () => calificar(r.id, item.experiencia_titulo)));
+              contenedorResena.append(boton("⭐ Calificar", () => calificar(r.id, item.experiencia_titulo), "btn-card-reviews", "font-size: 0.82rem; padding: 0.4rem 0.8rem;"));
             }
           })
           .catch(() => {
-            contenedorResena.append(boton("⭐ Calificar", () => calificar(r.id, item.experiencia_titulo)));
+            contenedorResena.append(boton("⭐ Calificar", () => calificar(r.id, item.experiencia_titulo), "btn-card-reviews", "font-size: 0.82rem; padding: 0.4rem 0.8rem;"));
           });
       }
       tabla.querySelector("tbody").append(fila);
@@ -151,11 +204,12 @@ async function cargar() {
   }
 }
 
-function boton(texto, alHacerClic, clase = "secundario") {
+function boton(texto, alHacerClic, clase = "secundario", estilo = "") {
   const b = document.createElement("button");
   b.textContent = texto;
   b.className = clase;
-  b.style.marginRight = ".4rem";
+  b.style.marginRight = ".35rem";
+  if (estilo) b.style.cssText += estilo;
   b.onclick = async () => {
     b.disabled = true;
     await alHacerClic();
@@ -167,18 +221,16 @@ function boton(texto, alHacerClic, clase = "secundario") {
 async function confirmar(idReserva) {
   try {
     if (pagosV2Habilitado()) {
-      // Ruta estrangulada: Flask cobra y confirma la reserva en Django.
       const pago = await api.pagar({
         id_reserva: idReserva,
         id_usuario: sesion.get().id,
         medio_pago: $("medio-pago").value,
         token_pago: $("token-pago").value,
       });
-      toast(`Pago ${pago.referencia} aprobado (${dinero(pago.monto)}). Reserva confirmada.`);
+      toast(`Pago ${pago.referencia} aprobado (${dinero(pago.monto)}). ¡Reserva confirmada!`);
     } else {
-      // Ruta legada del monolito: referencia opaca, sin cobro real.
       await api.confirmarReserva(idReserva, `TX-${Date.now()}`);
-      toast("Pago registrado. Reserva confirmada.");
+      toast("Pago registrado con éxito. ¡Reserva confirmada!");
     }
   } catch (e) {
     mostrarError(e);
@@ -191,14 +243,13 @@ async function cancelar(idReserva) {
     const resultado = await api.cancelarReserva(
       idReserva,
       usuario.id,
-      "cancelada desde el front"
+      "cancelada por el asistente"
     );
     const pct = Number(resultado.porcentaje_aplicado) * 100;
-    let detalle = `Reembolso ${pct}% = ${dinero(resultado.monto_reembolsado)}.`;
+    let detalle = `Reembolso aplicado ${pct}% (${dinero(resultado.monto_reembolsado)}).`;
     if (pagosV2Habilitado() && Number(resultado.monto_reembolsado) > 0) {
-      // Django decide cuanto se devuelve; el microservicio mueve el dinero.
       const pago = await api.reembolsar(idReserva);
-      detalle += ` Pago ${pago.referencia} -> ${pago.estado}.`;
+      detalle += ` Dispersión: ${pago.referencia} (${pago.estado}).`;
     }
     toast(`Reserva cancelada. ${detalle}`);
   } catch (e) {
@@ -247,10 +298,14 @@ $("btn-enviar-calificacion").onclick = async () => {
   }
 };
 
+window.onSesionCambiada = () => {
+  cargar();
+};
+
 $("opciones-pago").hidden = !pagosV2Habilitado();
 $("modo-pago").innerHTML = pagosV2Habilitado()
-  ? "Pagos atendidos por el microservicio Flask en <code>/api/v2/pagos</code>."
-  : "Modo legado: la confirmacion va al monolito en <code>/api/v1</code> sin cobro real.";
+  ? "Atendido por el microservicio Flask en <code>/api/v2/pagos</code> (Patrón Strangler)."
+  : "Modo monolito: confirmación de reserva en <code>/api/v1</code>.";
 
 $("btn-recargar").onclick = cargar;
 cargar();

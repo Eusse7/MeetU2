@@ -155,34 +155,57 @@ class Command(BaseCommand):
         self.stdout.write(f"  - {exp_hoy.titulo} ({exp_hoy.id}) [evento de hoy]")
 
         self.stdout.write("Creando reserva con check-in y reseña de demostracion...")
-        reserva_demo = reservas.solicitar_reserva().ejecutar(
-            SolicitarReservaDTO(
-                id_usuario=asistente.id,
-                id_experiencia=exp_hoy.id,
-                cantidad_cupos=1,
+        try:
+            reserva_demo = reservas.solicitar_reserva().ejecutar(
+                SolicitarReservaDTO(
+                    id_usuario=asistente.id,
+                    id_experiencia=exp_hoy.id,
+                    cantidad_cupos=1,
+                )
             )
-        )
-        reservas.confirmar_reserva().ejecutar(
-            ConfirmarReservaDTO(
-                id_reserva=reserva_demo.id,
-                referencia_pago="DEMO-REF-001",
+            from django.conf import settings
+            if getattr(settings, "PAGOS_V2_HABILITADO", False):
+                import json
+                import urllib.request
+                pagos_url = f"{settings.PAGOS_SERVICE_URL}/api/v2/pagos"
+                req_data = json.dumps({
+                    "id_reserva": str(reserva_demo.id),
+                    "id_usuario": str(asistente.id),
+                    "medio_pago": "TARJETA",
+                    "token_pago": "tok_aprobada",
+                }).encode("utf-8")
+                req = urllib.request.Request(
+                    pagos_url,
+                    data=req_data,
+                    headers={"Content-Type": "application/json"}
+                )
+                with urllib.request.urlopen(req, timeout=5) as resp:
+                    pass  # Flask ya confirma la reserva en Django automaticamente
+            else:
+                reservas.confirmar_reserva().ejecutar(
+                    ConfirmarReservaDTO(
+                        id_reserva=reserva_demo.id,
+                        referencia_pago="DEMO-REF-001",
+                    )
+                )
+
+            reservas.registrar_check_in().ejecutar(
+                CheckInDTO(
+                    codigo_ticket=reserva_demo.codigo_ticket,
+                    id_organizador=organizador.id,
+                )
             )
-        )
-        reservas.registrar_check_in().ejecutar(
-            CheckInDTO(
-                codigo_ticket=reserva_demo.codigo_ticket,
-                id_organizador=organizador.id,
+            resena_demo = social.crear_resena().ejecutar(
+                CrearResenaDTO(
+                    id_reserva=reserva_demo.id,
+                    id_usuario=asistente.id,
+                    calificacion=5,
+                    comentario="Increible taller de barismo! El cafe y la explicacion de Laura fueron excepcionales.",
+                )
             )
-        )
-        resena_demo = social.crear_resena().ejecutar(
-            CrearResenaDTO(
-                id_reserva=reserva_demo.id,
-                id_usuario=asistente.id,
-                calificacion=5,
-                comentario="Increible taller de barismo! El cafe y la explicacion de Laura fueron excepcionales.",
-            )
-        )
-        self.stdout.write(f"  - Resena registrada: {resena_demo.calificacion}* ({resena_demo.id})")
+            self.stdout.write(f"  - Resena registrada: {resena_demo.calificacion}* ({resena_demo.id})")
+        except Exception as e:
+            self.stdout.write(f"  - Nota de reserva demo: {e}")
 
         self.stdout.write(self.style.SUCCESS("\nEscenario de demo listo."))
         self.stdout.write(f"  Asistente   : andres@meetu2.co  ({asistente.id})")

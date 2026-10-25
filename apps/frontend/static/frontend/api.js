@@ -238,12 +238,80 @@ const sesion = {
 };
 
 function pintarSesion() {
-  const caja = document.getElementById("sesion-actual");
-  if (!caja) return;
   const usuario = sesion.get();
-  caja.textContent = usuario
-    ? `${usuario.nombre} (${usuario.correo})`
-    : "sin sesion";
+  
+  // Legacy / fallback text container
+  const caja = document.getElementById("sesion-actual");
+  if (caja) {
+    caja.textContent = usuario
+      ? `${usuario.nombre} (${usuario.correo})`
+      : "sin sesion";
+  }
+
+  // Modern navigation auth container
+  const navAuth = document.getElementById("nav-auth-container");
+  if (navAuth) {
+    if (usuario) {
+      const inicial = (usuario.nombre || "U").charAt(0).toUpperCase();
+      navAuth.innerHTML = `
+        <div class="user-session-badge" title="${usuario.correo}">
+          <div class="user-avatar-circle">${inicial}</div>
+          <div class="user-session-info">
+            <span class="user-session-name">${usuario.nombre}</span>
+            <span class="user-session-role">${usuario.es_organizador ? 'Organizador' : 'Asistente'}</span>
+          </div>
+          <button class="btn-logout" onclick="cerrarSesionUsuario()" title="Cerrar sesión">✕</button>
+        </div>
+      `;
+    } else {
+      navAuth.innerHTML = `
+        <button class="btn-link" onclick="abrirModalAuth('login')">Iniciar sesión</button>
+        <button class="btn-black-pill" onclick="abrirModalAuth('registro')">Crear cuenta</button>
+      `;
+    }
+  }
+}
+
+function abrirModalAuth(modo = 'login') {
+  const modal = document.getElementById("modal-global-auth");
+  if (!modal) return;
+  const tabLogin = document.getElementById("auth-tab-login");
+  const tabRegistro = document.getElementById("auth-tab-registro");
+  const panelLogin = document.getElementById("auth-panel-login");
+  const panelRegistro = document.getElementById("auth-panel-registro");
+  
+  if (modo === 'registro') {
+    tabLogin?.classList.remove("active");
+    tabRegistro?.classList.add("active");
+    panelLogin?.classList.add("oculto");
+    panelRegistro?.classList.remove("oculto");
+  } else {
+    tabLogin?.classList.add("active");
+    tabRegistro?.classList.remove("active");
+    panelLogin?.classList.remove("oculto");
+    panelRegistro?.classList.add("oculto");
+  }
+  modal.classList.remove("oculto");
+}
+
+function cerrarModalAuth() {
+  document.getElementById("modal-global-auth")?.classList.add("oculto");
+}
+
+function abrirModalComoFunciona() {
+  document.getElementById("modal-como-funciona")?.classList.remove("oculto");
+}
+
+function cerrarModalComoFunciona() {
+  document.getElementById("modal-como-funciona")?.classList.add("oculto");
+}
+
+function cerrarSesionUsuario() {
+  sesion.limpiar();
+  toast("Sesión cerrada.");
+  if (typeof window.onSesionCambiada === "function") {
+    window.onSesionCambiada(null);
+  }
 }
 
 /* -------------------------------------------------------------------- ui */
@@ -275,6 +343,25 @@ const fecha = (iso) =>
       })
     : "-";
 
+function fechaTarjeta(iso) {
+  if (!iso) return "PRÓXIMAMENTE";
+  try {
+    const d = new Date(iso);
+    const dias = ["DOM", "LUN", "MAR", "MIÉ", "JUE", "VIE", "SÁB"];
+    const meses = ["ENE", "FEB", "MAR", "ABR", "MAY", "JUN", "JUL", "AGO", "SEP", "OCT", "NOV", "DIC"];
+    const diaSemana = dias[d.getDay()];
+    const diaNum = d.getDate();
+    const mes = meses[d.getMonth()];
+    const horas = String(d.getHours()).padStart(2, "0");
+    const minutos = String(d.getMinutes()).padStart(2, "0");
+    return `${diaSemana}, ${diaNum} ${mes} · ${horas}:${minutos}`;
+  } catch {
+    return "-";
+  }
+}
+
 const $ = (id) => document.getElementById(id);
 
-document.addEventListener("DOMContentLoaded", pintarSesion);
+document.addEventListener("DOMContentLoaded", () => {
+  pintarSesion();
+});

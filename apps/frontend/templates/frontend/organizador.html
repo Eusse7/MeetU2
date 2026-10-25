@@ -1,85 +1,92 @@
 {% extends "frontend/base.html" %}
-{% block titulo %}Panel del organizador — MeetU2{% endblock %}
+{% block titulo %}Panel de anfitriones — MeetU2{% endblock %}
 
 {% block contenido %}
-<h1>Panel del organizador</h1>
+<div style="margin-bottom: 2rem;">
+  <div class="catalogue-eyebrow">ÁREA DE ANFITRIONES</div>
+  <h1 style="font-size: 2.25rem; font-weight: 800; letter-spacing: -0.03em; margin: 0 0 0.5rem;">Panel del organizador</h1>
+  <p class="hint" style="max-width: 680px; margin: 0;">
+    Crea tus planes, administra tus sedes y aforos, valida tickets en puerta con check-in en tiempo real y consulta tu reputación y liquidación.
+  </p>
+</div>
 
+<!-- 1. Perfil de organizador -->
 <section class="card">
   <h2>1. Perfil de organizador</h2>
   <div class="fila">
     <div>
-      <label for="nombre-comercial">Nombre comercial</label>
-      <input id="nombre-comercial" placeholder="Colectivo Cafe &amp; Ritmo">
+      <label for="nombre-comercial">Nombre comercial o de tu colectivo</label>
+      <input id="nombre-comercial" placeholder="Colectivo Café &amp; Ritmo">
     </div>
     <div>
-      <label for="cuenta">Cuenta bancaria</label>
+      <label for="cuenta">Cuenta bancaria de desembolsos</label>
       <input id="cuenta" placeholder="123456789">
     </div>
-    <button id="btn-organizador">Crear perfil</button>
+    <button id="btn-organizador" class="btn-black-pill" style="padding: 0.75rem 1.4rem;">Crear perfil</button>
     <button id="btn-verificar" class="secundario" disabled>Verificar (backoffice)</button>
   </div>
-  <p class="hint" id="estado-organizador">
-    Inicia sesion en <b>Descubrir</b> y luego crea aqui tu perfil de organizador.
-    Nace en <code>PENDIENTE</code> y no puede publicar hasta estar
-    <code>VERIFICADO</code>: intentarlo antes devuelve <code>409</code>.
+  <p class="hint" id="estado-organizador" style="margin-top: 0.5rem;">
+    Inicia sesión en la parte superior y luego crea aquí tu perfil de organizador.
   </p>
 </section>
 
+<!-- 2. Ubicación y categorías -->
 <section class="card">
-  <h2>2. Ubicacion y categorias</h2>
+  <h2>2. Sedes, aforos y categorías</h2>
   <div class="fila">
     <div>
       <label for="u-nombre">Nombre del sitio</label>
-      <input id="u-nombre" placeholder="Casa Rose">
+      <input id="u-nombre" placeholder="Casa Rosé">
     </div>
     <div>
-      <label for="u-direccion">Direccion</label>
+      <label for="u-direccion">Dirección</label>
       <input id="u-direccion" placeholder="Cra 35 #8A-3">
     </div>
     <div>
       <label for="u-ciudad">Ciudad</label>
-      <input id="u-ciudad" placeholder="Medellin" value="Medellin">
+      <input id="u-ciudad" placeholder="Medellín" value="Medellín">
     </div>
     <div>
-      <label for="u-aforo">Aforo</label>
+      <label for="u-aforo">Aforo máximo</label>
       <input id="u-aforo" type="number" min="1" value="30">
     </div>
-    <button id="btn-ubicacion" class="secundario">Crear ubicacion</button>
+    <button id="btn-ubicacion" class="secundario">Crear sede</button>
   </div>
-  <div class="fila">
+  <div class="fila" style="margin-top: 1rem; padding-top: 1rem; border-top: 1px dashed var(--border);">
     <div>
-      <label for="c-nombre">Nueva categoria</label>
-      <input id="c-nombre" placeholder="Gastronomia">
+      <label for="c-nombre">Nueva categoría</label>
+      <input id="c-nombre" placeholder="Ej. Cerámica y Vino">
     </div>
-    <button id="btn-categoria" class="secundario">Crear categoria</button>
+    <button id="btn-categoria" class="secundario">Crear categoría</button>
   </div>
 </section>
 
+<!-- 3. Publicar experiencia -->
 <section class="card">
-  <h2>3. Publicar experiencia</h2>
+  <h2>3. Publicar nueva experiencia</h2>
   <div class="fila">
     <div>
-      <label for="titulo">Titulo</label>
-      <input id="titulo" placeholder="Cata de cafes de origen">
+      <label for="titulo">Título de la actividad</label>
+      <input id="titulo" placeholder="Cata de cafés de origen y jazz">
     </div>
     <div>
-      <label for="ubicacion">Ubicacion</label>
+      <label for="ubicacion">Sede / Ubicación</label>
       <select id="ubicacion"></select>
     </div>
   </div>
-  <label for="descripcion">Descripcion</label>
-  <textarea id="descripcion" rows="2" placeholder="Cuatro origenes colombianos."></textarea>
+  <label for="descripcion">Descripción de la propuesta</label>
+  <textarea id="descripcion" rows="2" placeholder="Describe qué harán, qué incluye y qué van a experimentar..."></textarea>
   <div class="fila">
     <div>
-      <label for="fecha">Fecha y hora</label>
+      <label for="fecha">Fecha y hora (mínimo 2h adelante)</label>
       <input id="fecha" type="datetime-local">
     </div>
     <div>
-      <label for="precio">Precio</label>
+      <label for="precio">Precio por persona ($)</label>
       <input id="precio" type="number" min="0" placeholder="45000">
     </div>
     <div>
-      <label for="cupo">Cupo maximo</label>
+      <label for="cupo">Cupo máximo (menor o igual al aforo)</label>
       <input id="cupo" type="number" min="1" placeholder="12">
     </div>
     <div>
@@ -89,53 +96,62 @@
   </div>
   <div class="fila">
     <div>
-      <label for="categorias">Categorias</label>
-      <select id="categorias" multiple size="4"></select>
+      <label for="categorias">Categorías de interés vinculadas</label>
+      <select id="categorias" multiple size="3"></select>
     </div>
-    <button id="btn-publicar" disabled>Publicar experiencia</button>
+    <button id="btn-publicar" class="btn-black-pill" style="padding: 0.8rem 1.6rem;" disabled>
+      Publicar experiencia →
+    </button>
   </div>
-  <p class="hint">
-    El <b>ExperienciaBuilder</b> valida por pasos: cupo mayor al aforo devuelve
-    <code>400 aforo_excedido</code> y una fecha con menos de 2 horas de
-    antelacion devuelve <code>400 datos_experiencia_invalidos</code>.
+  <p class="hint" style="margin-top: 0.5rem;">
+    El <b>ExperienciaBuilder</b> valida automáticamente la antelación de tiempo y que los cupos no superen el aforo máximo de la sede seleccionada.
   </p>
 </section>
 
+<!-- 4. Check-in de asistentes en puerta -->
 <section class="card">
-  <h2>4. Check-in de asistentes</h2>
+  <h2>4. Control de acceso (Check-in en puerta)</h2>
   <div class="fila">
-    <div>
-      <label for="ticket">Codigo de ticket</label>
-      <input id="ticket" placeholder="X3CY62XK">
+    <div style="max-width: 380px;">
+      <label for="ticket">Código de ticket del asistente</label>
+      <input id="ticket" placeholder="Ej. X3CY62XK" style="text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em;">
     </div>
-    <button id="btn-checkin" class="secundario" disabled>Registrar check-in</button>
+    <button id="btn-checkin" class="btn-black-pill" style="padding: 0.75rem 1.4rem;" disabled>
+      ✓ Validar y registrar check-in
+    </button>
   </div>
-  <p class="hint">
-    Solo se habilita dentro de la ventana de 3 horas alrededor del evento; fuera
-    de ella devuelve <code>409 check_in_fuera_de_ventana</code>.
+  <p class="hint" style="margin-top: 0.5rem;">
+    Habilitado dentro de la ventana de 3 horas alrededor del horario del evento. Al validar, habilita al asistente para publicar su reseña verificada.
   </p>
 </section>
 
+<!-- 5. Liquidación (Strangler Flask) -->
 <section class="card" id="card-liquidacion" hidden>
-  <h2>Liquidacion (microservicio de pagos)</h2>
+  <h2>5. Liquidación de ingresos (Microservicio de pagos)</h2>
   <p class="hint">
-    Servido por Flask en <code>/api/v2/pagos/organizadores/{id}/liquidacion</code>:
-    lo cobrado menos la comision de plataforma y los reembolsos.
+    Cálculo en tiempo real atendido por Flask en <code>/api/v2/pagos/organizadores/{id}/liquidacion</code>: ingresos cobrados, comisión de la plataforma y reembolsos aplicados.
   </p>
   <div id="liquidacion"></div>
 </section>
 
+<!-- 6. Reseñas y Reputación (Módulo Social) -->
 <section class="card" id="card-resenas" hidden>
-  <h2>Reseñas de asistentes (contexto social)</h2>
+  <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 0.5rem;">
+    <h2>6. Reputación y reseñas de tus asistentes</h2>
+    <span class="badge-verificado">✓ Solo asistentes con check-in</span>
+  </div>
   <p class="hint">
-    Calificaciones de 1 a 5 estrellas dejadas por asistentes con check-in confirmado.
+    Calificaciones de 1 a 5 estrellas dejadas por asistentes comprobados al terminar la actividad.
   </p>
   <div id="metricas-resenas"></div>
   <div id="lista-resenas" style="margin-top: 1rem;"></div>
 </section>
 
-<section class="card">
-  <h2>Mis experiencias</h2>
+<!-- 7. Mis experiencias publicadas -->
+<section class="card" style="padding: 0; overflow: hidden;">
+  <div style="padding: 1.25rem 1.5rem 0.5rem;">
+    <h2>7. Experiencias activas en catálogo</h2>
+  </div>
   <div id="mis-experiencias"></div>
 </section>
 {% endblock %}
@@ -150,8 +166,8 @@ function pintarOrganizador() {
 
   if (organizador) {
     const estrellas = Number(organizador.calificacion_promedio) > 0
-      ? `<span class="etiqueta ok">★ ${organizador.calificacion_promedio}</span>`
-      : `<span class="etiqueta">Sin calificaciones</span>`;
+      ? `<span class="badge-verificado" style="margin-left: 0.5rem;">★ ${organizador.calificacion_promedio} reputación</span>`
+      : `<span class="etiqueta" style="margin-left: 0.5rem;">Sin calificaciones todavía</span>`;
     caja.innerHTML =
       `Perfil: <b>${organizador.nombre_comercial}</b> ` +
       `<span class="etiqueta ${listo ? "ok" : "warn"}">${organizador.estado_verificacion}</span> ` +
@@ -165,7 +181,12 @@ function pintarOrganizador() {
 
 async function cargarPerfil() {
   const usuario = sesion.get();
-  if (!usuario) return;
+  if (!usuario) {
+    $("estado-organizador").innerHTML = `
+      <span style="color: var(--err);">Inicia sesión primero para vincular o ver tu perfil de organizador.</span>
+    `;
+    return;
+  }
   try {
     const datos = await api.perfilOrganizador(usuario.id);
     organizador = datos && datos.id ? datos : null;
@@ -189,13 +210,21 @@ async function cargarResenasOrganizador() {
       api.resenasDeOrganizador(organizador.id),
     ]);
     $("metricas-resenas").innerHTML = `
-      <div class="fila" style="gap: 2rem;">
-        <div><b>Calificación promedio:</b> ★ ${metricas.calificacion_promedio} / 5.00</div>
-        <div><b>Total reseñas:</b> ${metricas.total_resenas}</div>
+      <div style="display: flex; gap: 2rem; background: #faf8f5; padding: 1rem 1.25rem; border-radius: 12px; border: 1px solid var(--border);">
+        <div>
+          <div style="font-size: 0.8rem; color: var(--txt-muted); font-weight: 700; text-transform: uppercase;">Calificación Promedio</div>
+          <div style="font-size: 1.6rem; font-weight: 800; color: var(--txt);">
+            <span class="estrellas">★</span> ${metricas.calificacion_promedio} <span style="font-size: 0.9rem; color: var(--txt-muted); font-weight: normal;">/ 5.0</span>
+          </div>
+        </div>
+        <div>
+          <div style="font-size: 0.8rem; color: var(--txt-muted); font-weight: 700; text-transform: uppercase;">Total Evaluaciones</div>
+          <div style="font-size: 1.6rem; font-weight: 800; color: var(--txt);">${metricas.total_resenas}</div>
+        </div>
       </div>
     `;
     if (!resenas.length) {
-      $("lista-resenas").innerHTML = '<p class="vacio">Aún no has recibido reseñas.</p>';
+      $("lista-resenas").innerHTML = '<p class="vacio">Tus asistentes aún no han publicado reseñas para tus planes.</p>';
       return;
     }
     $("lista-resenas").innerHTML = `<div class="resenas-grid">` + resenas.map(r => `
@@ -204,17 +233,17 @@ async function cargarResenasOrganizador() {
           <span>${r.usuario_nombre || 'Asistente'}</span>
           <span class="badge-verificado">✓ Check-in verificado</span>
         </div>
-        <div style="font-size: 0.8rem; color: var(--txt-suave); font-weight: 500;">
+        <div style="font-size: 0.82rem; color: var(--primary); font-weight: 700;">
           ${r.experiencia_titulo || 'Experiencia'}
         </div>
         <div class="estrellas">
           ${'★'.repeat(r.calificacion)}${'☆'.repeat(5 - r.calificacion)}
-          <span style="font-size: 0.85rem; color: var(--txt-suave); font-weight: normal; margin-left: 0.25rem;">
+          <span style="font-size: 0.85rem; color: var(--txt-muted); font-weight: normal; margin-left: 0.25rem;">
             ${r.calificacion}/5
           </span>
         </div>
-        ${r.comentario ? `<div class="comentario">“${r.comentario}”</div>` : '<div class="meta" style="font-size:0.8rem;">Sin comentario</div>'}
-        <div class="meta" style="font-size: 0.75rem; margin-top: auto;">${fecha(r.creado_en)}</div>
+        ${r.comentario ? `<div class="comentario">“${r.comentario}”</div>` : '<div class="hint" style="margin:0;">Sin comentario escrito</div>'}
+        <div class="hint" style="font-size: 0.75rem; margin-top: auto; margin-bottom: 0;">${fecha(r.creado_en)}</div>
       </div>
     `).join("") + `</div>`;
   } catch (e) {
@@ -229,11 +258,14 @@ async function cargarLiquidacion() {
     const l = await api.liquidacionOrganizador(organizador.id);
     $("liquidacion").innerHTML = `
       <table><tbody>
-        <tr><td>Pagos considerados</td><td>${l.pagos_considerados}</td></tr>
-        <tr><td>Total cobrado</td><td>${dinero(l.total_cobrado)}</td></tr>
-        <tr><td>Reembolsado</td><td>${dinero(l.total_reembolsado)}</td></tr>
-        <tr><td>Comision plataforma</td><td>${dinero(l.comision_plataforma)}</td></tr>
-        <tr><td><b>Neto a desembolsar</b></td><td><b>${dinero(l.neto_a_desembolsar)}</b></td></tr>
+        <tr><td>Pagos procesados</td><td style="font-weight: 600;">${l.pagos_considerados} transacciones</td></tr>
+        <tr><td>Total recaudado bruto</td><td style="font-weight: 600;">${dinero(l.total_cobrado)}</td></tr>
+        <tr><td>Reembolsos por cancelaciones</td><td style="color: var(--err);">${dinero(l.total_reembolsado)}</td></tr>
+        <tr><td>Comisión de plataforma (10%)</td><td style="color: var(--txt-muted);">${dinero(l.comision_plataforma)}</td></tr>
+        <tr style="background: #faf8f5;">
+          <td><b style="font-size: 1rem;">Neto a desembolsar</b></td>
+          <td><b style="font-size: 1.15rem; color: var(--ok);">${dinero(l.neto_a_desembolsar)}</b></td>
+        </tr>
       </tbody></table>`;
   } catch (e) {
     mostrarError(e);
@@ -247,7 +279,7 @@ async function cargarListas() {
       api.listarCategorias(),
     ]);
     $("ubicacion").replaceChildren(
-      ...ubicaciones.map((u) => new Option(`${u.nombre} (aforo ${u.aforo_maximo})`, u.id))
+      ...ubicaciones.map((u) => new Option(`${u.nombre} (aforo máx: ${u.aforo_maximo})`, u.id))
     );
     $("categorias").replaceChildren(
       ...categorias.map((c) => new Option(c.nombre, c.id))
@@ -263,33 +295,42 @@ async function cargarExperiencias() {
     const experiencias = await api.experienciasDeOrganizador(organizador.id);
     const caja = $("mis-experiencias");
     if (!experiencias.length) {
-      caja.innerHTML = '<p class="vacio">Aun no has publicado experiencias.</p>';
+      caja.innerHTML = '<p class="vacio">Aún no has publicado experiencias.</p>';
       return;
     }
     const tabla = document.createElement("table");
     tabla.innerHTML = `
       <thead><tr>
-        <th>Titulo</th><th>Cuando</th><th>Precio</th>
-        <th>Cupos</th><th>Estado</th><th></th>
-      </tr></thead><tbody></tbody>`;
+        <th>Título</th>
+        <th>Fecha y hora</th>
+        <th>Precio</th>
+        <th>Plazas</th>
+        <th>Estado</th>
+        <th style="text-align: right;">Acciones</th>
+      </tr></thead>
+      <tbody></tbody>`;
 
     experiencias.forEach((exp) => {
       const fila = document.createElement("tr");
+      const fechaTexto = typeof fechaTarjeta === "function" ? fechaTarjeta(exp.fecha_hora) : fecha(exp.fecha_hora);
+
       fila.innerHTML = `
-        <td>${exp.titulo}</td>
-        <td>${fecha(exp.fecha_hora)}</td>
-        <td>${dinero(exp.precio)}</td>
-        <td>${exp.cupo_disponible} / ${exp.cupo_maximo}</td>
-        <td><span class="etiqueta">${exp.estado}</span></td>
-        <td></td>`;
+        <td style="font-weight: 700;">${exp.titulo}</td>
+        <td style="color: var(--primary); font-weight: 600; font-size: 0.85rem;">${fechaTexto}</td>
+        <td style="font-weight: 700;">${dinero(exp.precio)}</td>
+        <td><span class="badge-availability-lime" style="position:static;">${exp.cupo_disponible} / ${exp.cupo_maximo} libres</span></td>
+        <td><span class="etiqueta ${exp.estado === 'PUBLICADA' ? 'ok' : ''}">${exp.estado}</span></td>
+        <td style="text-align: right;"></td>`;
 
       if (exp.estado !== "CANCELADA" && exp.estado !== "FINALIZADA") {
         const b = document.createElement("button");
-        b.textContent = "Cancelar";
+        b.textContent = "Cancelar plan";
         b.className = "peligro";
+        b.style.fontSize = "0.8rem";
+        b.style.padding = "0.35rem 0.75rem";
         b.onclick = async () => {
           try {
-            await api.cancelarExperiencia(exp.id, organizador.id, "cancelada por el host");
+            await api.cancelarExperiencia(exp.id, organizador.id, "cancelada por el anfitrión");
             toast("Experiencia cancelada.");
             cargarExperiencias();
           } catch (e) {
@@ -309,13 +350,13 @@ async function cargarExperiencias() {
 
 $("btn-organizador").onclick = async () => {
   const usuario = sesion.get();
-  if (!usuario) return toast("Primero inicia sesion en Descubrir", "error");
+  if (!usuario) return toast("Primero inicia sesión en la parte superior", "error");
   try {
     organizador = await api.convertirEnOrganizador(usuario.id, {
       nombre_comercial: $("nombre-comercial").value,
       cuenta_bancaria: $("cuenta").value,
     });
-    toast("Perfil creado en estado PENDIENTE.");
+    toast("Perfil de organizador creado en estado PENDIENTE.");
     pintarOrganizador();
   } catch (e) {
     mostrarError(e);
@@ -325,7 +366,7 @@ $("btn-organizador").onclick = async () => {
 $("btn-verificar").onclick = async () => {
   try {
     organizador = await api.verificarOrganizador(organizador.id, true);
-    toast("Organizador VERIFICADO: ya puede publicar.");
+    toast("Organizador VERIFICADO: ¡ya puedes publicar experiencias!");
     pintarOrganizador();
   } catch (e) {
     mostrarError(e);
@@ -342,7 +383,7 @@ $("btn-ubicacion").onclick = async () => {
       longitud: -75.5675,
       aforo_maximo: Number($("u-aforo").value),
     });
-    toast("Ubicacion creada.");
+    toast("Sede de eventos creada con éxito.");
     cargarListas();
   } catch (e) {
     mostrarError(e);
@@ -352,7 +393,7 @@ $("btn-ubicacion").onclick = async () => {
 $("btn-categoria").onclick = async () => {
   try {
     await api.crearCategoria({ nombre: $("c-nombre").value });
-    toast("Categoria creada.");
+    toast("Categoría creada.");
     cargarListas();
   } catch (e) {
     mostrarError(e);
@@ -372,7 +413,7 @@ $("btn-publicar").onclick = async () => {
       descuento_porcentaje: $("descuento").value,
       categorias: [...$("categorias").selectedOptions].map((o) => o.value),
     });
-    toast(`Publicada: ${exp.titulo} (${dinero(exp.precio)}).`);
+    toast(`¡Plan publicado con éxito! "${exp.titulo}" (${dinero(exp.precio)}).`);
     cargarExperiencias();
   } catch (e) {
     mostrarError(e);
@@ -381,11 +422,16 @@ $("btn-publicar").onclick = async () => {
 
 $("btn-checkin").onclick = async () => {
   try {
-    const reserva = await api.checkIn($("ticket").value, organizador.id);
-    toast(`Check-in registrado para el ticket ${reserva.codigo_ticket}.`);
+    const reserva = await api.checkIn($("ticket").value.trim(), organizador.id);
+    toast(`✓ Check-in verificado para el ticket ${reserva.codigo_ticket}. Asistente confirmado.`);
+    $("ticket").value = "";
   } catch (e) {
     mostrarError(e);
   }
+};
+
+window.onSesionCambiada = () => {
+  cargarPerfil();
 };
 
 cargarListas().then(cargarPerfil);
