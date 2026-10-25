@@ -183,6 +183,28 @@ const api = {
 
   liquidacionOrganizador: (idOrganizador) =>
     apiFetch(`/pagos/organizadores/${idOrganizador}/liquidacion`, {}, API_V2),
+
+  // ----------------------------------------------------------- social
+  crearResena: (datos) =>
+    apiFetch("/social/resenas", { method: "POST", body: JSON.stringify(datos) }),
+
+  resenaDeReserva: (idReserva) =>
+    apiFetch(`/social/reservas/${idReserva}/resena`),
+
+  resenasDeExperiencia: (idExperiencia) =>
+    apiFetch(`/social/experiencias/${idExperiencia}/resenas`),
+
+  metricasExperiencia: (idExperiencia) =>
+    apiFetch(`/social/experiencias/${idExperiencia}/metricas`),
+
+  resenasDeOrganizador: (idOrganizador) =>
+    apiFetch(`/social/organizadores/${idOrganizador}/resenas`),
+
+  metricasOrganizador: (idOrganizador) =>
+    apiFetch(`/social/organizadores/${idOrganizador}/metricas`),
+
+  listarResenasRecientes: () =>
+    apiFetch("/social/resenas"),
 };
 
 /* ------------------------------------------------------------------ sesion

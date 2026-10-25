@@ -47,7 +47,7 @@ python manage.py runserver
 | Salud | <http://127.0.0.1:8000/healthz> |
 
 ```bash
-pytest                          # monolito: 117 pruebas
+pytest                          # monolito: 153 pruebas
 cd services/pagos && pytest     # microservicio de pagos: 37 pruebas
 ```
 
@@ -74,6 +74,8 @@ MONOLITO_URL=http://127.0.0.1:8000 flask --app wsgi run --port 5000
 4. **Mis reservas** (`/mis-reservas/`) → pagar y confirmar, o cancelar y ver el
    reembolso calculado según la antelación.
 5. **Soy organizador** → validar el ticket con el check-in.
+6. **Social** → tras el check-in, calificar la experiencia (1 a 5★) con comentario,
+   lo cual recalcula la calificación promedio del organizador.
 
 ## Arquitectura
 
@@ -87,7 +89,7 @@ apps/
 ├── catalogo/        Experiencia · Ubicacion · CategoriaInteres   ← Builder
 ├── reservas/        Reserva · políticas de cupo, reembolso y check-in
 ├── notificaciones/  canales intercambiables                       ← Factory
-├── social/          previsto para la Entrega 2
+├── social/          Reseña · calificaciones post check-in y reputación host
 ├── pagos/           estrangulado → services/pagos (ya no se instala)
 └── frontend/        páginas que consumen la API
 

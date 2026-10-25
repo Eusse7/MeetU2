@@ -17,6 +17,7 @@ urlpatterns = [
     path("api/v1/identidad/", include("apps.identidad.api.urls")),
     path("api/v1/catalogo/", include("apps.catalogo.api.urls")),
     path("api/v1/reservas/", include("apps.reservas.api.urls")),
+    path("api/v1/social/", include("apps.social.api.urls")),
     # El front va de ultimo: captura la raiz sin ensombrecer la API.
     path("", include("apps.frontend.urls")),
 ]

@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block titulo %}MeetU2{% endblock %}</title>
-  <link rel="stylesheet" href="{% static 'frontend/app.css' %}">
+  <link rel="stylesheet" href="{% static 'frontend/app.css' %}?v=2">
 </head>
 <body data-pagos-v2="{{ pagos_v2_habilitado|yesno:'1,0' }}">
   <nav>
@@ -17,7 +17,7 @@
   </nav>
   <main>{% block contenido %}{% endblock %}</main>
   <div id="toast" class="toast oculto"></div>
-  <script src="{% static 'frontend/api.js' %}"></script>
+  <script src="{% static 'frontend/api.js' %}?v=2"></script>
   {% block scripts %}{% endblock %}
 </body>
 </html>

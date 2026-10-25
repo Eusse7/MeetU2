@@ -125,6 +125,15 @@
   <div id="liquidacion"></div>
 </section>
 
+<section class="card" id="card-resenas" hidden>
+  <h2>Reseñas de asistentes (contexto social)</h2>
+  <p class="hint">
+    Calificaciones de 1 a 5 estrellas dejadas por asistentes con check-in confirmado.
+  </p>
+  <div id="metricas-resenas"></div>
+  <div id="lista-resenas" style="margin-top: 1rem;"></div>
+</section>
+
 <section class="card">
   <h2>Mis experiencias</h2>
   <div id="mis-experiencias"></div>
@@ -140,9 +149,13 @@ function pintarOrganizador() {
   const listo = organizador?.estado_verificacion === "VERIFICADO";
 
   if (organizador) {
+    const estrellas = Number(organizador.calificacion_promedio) > 0
+      ? `<span class="etiqueta ok">★ ${organizador.calificacion_promedio}</span>`
+      : `<span class="etiqueta">Sin calificaciones</span>`;
     caja.innerHTML =
       `Perfil: <b>${organizador.nombre_comercial}</b> ` +
-      `<span class="etiqueta ${listo ? "ok" : "warn"}">${organizador.estado_verificacion}</span>`;
+      `<span class="etiqueta ${listo ? "ok" : "warn"}">${organizador.estado_verificacion}</span> ` +
+      estrellas;
   }
   $("btn-verificar").disabled = !organizador || listo;
   $("btn-publicar").disabled = !listo;
@@ -160,7 +173,50 @@ async function cargarPerfil() {
     if (organizador) {
       cargarExperiencias();
       cargarLiquidacion();
+      cargarResenasOrganizador();
     }
+  } catch (e) {
+    mostrarError(e);
+  }
+}
+
+async function cargarResenasOrganizador() {
+  if (!organizador) return;
+  $("card-resenas").hidden = false;
+  try {
+    const [metricas, resenas] = await Promise.all([
+      api.metricasOrganizador(organizador.id),
+      api.resenasDeOrganizador(organizador.id),
+    ]);
+    $("metricas-resenas").innerHTML = `
+      <div class="fila" style="gap: 2rem;">
+        <div><b>Calificación promedio:</b> ★ ${metricas.calificacion_promedio} / 5.00</div>
+        <div><b>Total reseñas:</b> ${metricas.total_resenas}</div>
+      </div>
+    `;
+    if (!resenas.length) {
+      $("lista-resenas").innerHTML = '<p class="vacio">Aún no has recibido reseñas.</p>';
+      return;
+    }
+    $("lista-resenas").innerHTML = `<div class="resenas-grid">` + resenas.map(r => `
+      <div class="resena-tarjeta">
+        <div class="autor">
+          <span>${r.usuario_nombre || 'Asistente'}</span>
+          <span class="badge-verificado">✓ Check-in verificado</span>
+        </div>
+        <div style="font-size: 0.8rem; color: var(--txt-suave); font-weight: 500;">
+          ${r.experiencia_titulo || 'Experiencia'}
+        </div>
+        <div class="estrellas">
+          ${'★'.repeat(r.calificacion)}${'☆'.repeat(5 - r.calificacion)}
+          <span style="font-size: 0.85rem; color: var(--txt-suave); font-weight: normal; margin-left: 0.25rem;">
+            ${r.calificacion}/5
+          </span>
+        </div>
+        ${r.comentario ? `<div class="comentario">“${r.comentario}”</div>` : '<div class="meta" style="font-size:0.8rem;">Sin comentario</div>'}
+        <div class="meta" style="font-size: 0.75rem; margin-top: auto;">${fecha(r.creado_en)}</div>
+      </div>
+    `).join("") + `</div>`;
   } catch (e) {
     mostrarError(e);
   }

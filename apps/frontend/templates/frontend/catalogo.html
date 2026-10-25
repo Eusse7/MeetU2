@@ -61,7 +61,31 @@
   </div>
 </section>
 
+<section class="card" id="seccion-muro-resenas">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+    <h2>⭐ Reseñas recientes de la comunidad</h2>
+    <span class="meta" id="total-resenas-muro"></span>
+  </div>
+  <p class="hint">
+    Calificaciones de experiencias dejadas por asistentes con asistencia comprobada (check-in verificado).
+  </p>
+  <div id="muro-resenas" class="resenas-grid"></div>
+</section>
+
+<h2>Experiencias disponibles</h2>
 <div id="resultado" class="lista"></div>
+
+<!-- Modal para ver reseñas de una experiencia -->
+<div id="modal-resenas" class="modal-overlay oculto">
+  <div class="modal-contenido">
+    <div class="modal-header">
+      <h3 id="modal-titulo">Reseñas de la experiencia</h3>
+      <button class="modal-cerrar" onclick="cerrarModalResenas()">&times;</button>
+    </div>
+    <div id="modal-metricas" class="card" style="margin: 0; background: var(--card-alt);"></div>
+    <div id="modal-lista" style="display: flex; flex-direction: column; gap: 0.75rem;"></div>
+  </div>
+</div>
 {% endblock %}
 
 {% block scripts %}
@@ -80,6 +104,9 @@ function tarjeta(exp, afinidad) {
     <h3>${exp.titulo}</h3>
     <div class="meta">${fecha(exp.fecha_hora)} · ${exp.ubicacion.ciudad}</div>
     <div class="meta">${exp.ubicacion.nombre} — ${exp.ubicacion.direccion}</div>
+    <div class="rating-box" id="rating-exp-${exp.id}">
+      <span class="meta" style="font-size: 0.8rem;">Cargando calificación...</span>
+    </div>
     <div><span class="precio">${dinero(exp.precio)}</span>
          <span class="etiqueta ${agotada ? "err" : ""}">
            ${agotada ? "agotada" : exp.cupo_disponible + " cupos"}
@@ -87,11 +114,139 @@ function tarjeta(exp, afinidad) {
     <footer>
       <input type="number" min="1" max="5" value="1" style="width:70px;margin:0">
       <button ${agotada ? "disabled" : ""}>Reservar</button>
+      <button class="secundario btn-ver-resenas" style="font-size:0.8rem;padding:0.4rem 0.6rem;">⭐ Reseñas</button>
     </footer>`;
 
-  const [entrada, boton] = [div.querySelector("input"), div.querySelector("button")];
+  const [entrada, boton, btnResenas] = [
+    div.querySelector("input"),
+    div.querySelector("button:not(.secundario)"),
+    div.querySelector(".btn-ver-resenas")
+  ];
   boton.onclick = () => reservar(exp, Number(entrada.value), boton);
+  btnResenas.onclick = () => abrirModalResenas(exp);
+
+  // Consultar metricas del contexto social para esta experiencia de forma segura
+  if (typeof api?.metricasExperiencia === "function") {
+    api.metricasExperiencia(exp.id).then((m) => {
+      const box = div.querySelector(`#rating-exp-${exp.id}`);
+      if (!box) return;
+      if (m && m.total_resenas > 0) {
+        box.innerHTML = `<span class="rating-item" title="Click para ver las opiniones">
+          <span class="estrellas">★</span> <b>${m.calificacion_promedio}</b>
+          <span class="meta">(${m.total_resenas} ${m.total_resenas === 1 ? 'reseña' : 'reseñas'})</span>
+        </span>`;
+        box.onclick = () => abrirModalResenas(exp);
+      } else {
+        box.innerHTML = `<span class="meta" style="font-size: 0.8rem;">★ Sin reseñas todavía</span>`;
+      }
+    }).catch(() => {
+      const box = div.querySelector(`#rating-exp-${exp.id}`);
+      if (box) box.innerHTML = "";
+    });
+  } else {
+    const box = div.querySelector(`#rating-exp-${exp.id}`);
+    if (box) box.innerHTML = "";
+  }
+
   return div;
+}
+
+async function cargarMuroResenas() {
+  const caja = $("muro-resenas");
+  if (!caja) return;
+  if (typeof api?.listarResenasRecientes !== "function") {
+    $("seccion-muro-resenas").classList.add("oculto");
+    return;
+  }
+  try {
+    const resenas = await api.listarResenasRecientes();
+    if (!resenas.length) {
+      $("seccion-muro-resenas").classList.add("oculto");
+      return;
+    }
+    $("seccion-muro-resenas").classList.remove("oculto");
+    $("total-resenas-muro").textContent = `${resenas.length} reseñas verificadas`;
+    caja.innerHTML = resenas.slice(0, 4).map((r) => `
+      <div class="resena-tarjeta">
+        <div class="autor">
+          <span>${r.usuario_nombre || 'Asistente'}</span>
+          <span class="badge-verificado">✓ Check-in verificado</span>
+        </div>
+        <div style="font-size: 0.8rem; color: var(--txt-suave); font-weight: 500;">
+          ${r.experiencia_titulo || 'Experiencia'}
+        </div>
+        <div class="estrellas">
+          ${'★'.repeat(r.calificacion)}${'☆'.repeat(5 - r.calificacion)}
+          <span style="font-size: 0.85rem; color: var(--txt-suave); font-weight: normal; margin-left: 0.25rem;">
+            ${r.calificacion}/5
+          </span>
+        </div>
+        ${r.comentario ? `<div class="comentario">“${r.comentario}”</div>` : '<div class="meta" style="font-size:0.8rem;">Sin comentario</div>'}
+        <div class="meta" style="font-size: 0.75rem; margin-top: auto;">${fecha(r.creado_en)}</div>
+      </div>
+    `).join("");
+  } catch (e) {
+    $("seccion-muro-resenas").classList.add("oculto");
+  }
+}
+
+async function abrirModalResenas(exp) {
+  $("modal-titulo").textContent = `Reseñas: ${exp.titulo}`;
+  $("modal-metricas").innerHTML = '<p class="hint">Cargando métricas...</p>';
+  $("modal-lista").innerHTML = '<p class="hint">Cargando opiniones...</p>';
+  $("modal-resenas").classList.remove("oculto");
+
+  try {
+    const [metricas, resenas] = await Promise.all([
+      api.metricasExperiencia(exp.id),
+      api.resenasDeExperiencia(exp.id),
+    ]);
+
+    if (metricas.total_resenas > 0) {
+      $("modal-metricas").innerHTML = `
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <div>
+            <div style="font-size: 1.8rem; font-weight: 700; line-height: 1;">
+              <span class="estrellas">★</span> ${metricas.calificacion_promedio}
+              <span style="font-size: 0.9rem; color: var(--txt-suave); font-weight: normal;">/ 5.0</span>
+            </div>
+            <div class="meta">${metricas.total_resenas} ${metricas.total_resenas === 1 ? 'opinión verificada' : 'opiniones verificadas'}</div>
+          </div>
+          <span class="badge-verificado">✓ Solo asistentes con check-in</span>
+        </div>
+      `;
+    } else {
+      $("modal-metricas").innerHTML = '<p class="hint">Esta experiencia aún no tiene calificaciones registradas.</p>';
+    }
+
+    if (!resenas.length) {
+      $("modal-lista").innerHTML = '<p class="vacio">No hay comentarios todavía.</p>';
+      return;
+    }
+
+    $("modal-lista").innerHTML = resenas.map(r => `
+      <div class="resena-tarjeta">
+        <div class="autor">
+          <span>${r.usuario_nombre || 'Asistente'}</span>
+          <span class="badge-verificado">✓ Asistencia verificada</span>
+        </div>
+        <div class="estrellas">
+          ${'★'.repeat(r.calificacion)}${'☆'.repeat(5 - r.calificacion)}
+          <span style="font-size: 0.85rem; color: var(--txt-suave); font-weight: normal; margin-left: 0.25rem;">
+            ${r.calificacion}/5
+          </span>
+        </div>
+        ${r.comentario ? `<div class="comentario">“${r.comentario}”</div>` : '<div class="meta" style="font-size:0.8rem;">Sin comentario escrito</div>'}
+        <div class="meta" style="font-size: 0.75rem;">${fecha(r.creado_en)}</div>
+      </div>
+    `).join("");
+  } catch (e) {
+    mostrarError(e);
+  }
+}
+
+function cerrarModalResenas() {
+  $("modal-resenas").classList.add("oculto");
 }
 
 async function reservar(exp, cantidad, boton) {
@@ -230,5 +385,6 @@ $("btn-recomendadas").onclick = async () => {
 
 cargarCategorias().then(cargarIntereses);
 buscar();
+cargarMuroResenas();
 </script>
 {% endblock %}

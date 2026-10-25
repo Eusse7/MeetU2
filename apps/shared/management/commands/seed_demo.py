@@ -25,6 +25,14 @@ from apps.identidad.application.dtos import (
     RegistrarUsuarioDTO,
     VincularInteresDTO,
 )
+from apps.reservas import container as reservas
+from apps.reservas.application.dtos import (
+    CheckInDTO,
+    ConfirmarReservaDTO,
+    SolicitarReservaDTO,
+)
+from apps.social import container as social
+from apps.social.application.dtos import CrearResenaDTO
 
 CATEGORIAS = [
     ("Gastronomia", "Catas, cenas y talleres de cocina"),
@@ -43,7 +51,19 @@ UBICACIONES = [
 class Command(BaseCommand):
     help = "Crea usuarios, categorias, ubicaciones y experiencias de ejemplo."
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            "--limpiar",
+            action="store_true",
+            help="Limpia la base de datos antes de sembrar los datos de demo.",
+        )
+
     def handle(self, *args, **opciones):
+        if opciones.get("limpiar"):
+            self.stdout.write("Limpiando base de datos...")
+            from django.core.management import call_command
+            call_command("flush", interactive=False)
+
         ahora = timezone.now()
 
         self.stdout.write("Creando categorias de interes...")
@@ -118,6 +138,51 @@ class Command(BaseCommand):
                 )
             )
             self.stdout.write(f"  - {experiencia.titulo} ({experiencia.id})")
+
+        # Experiencia para hoy dentro de la ventana de check-in (2.5 horas adelante)
+        exp_hoy = catalogo.publicar_experiencia().ejecutar(
+            PublicarExperienciaDTO(
+                id_organizador=organizador.id,
+                id_ubicacion=ubicaciones[0].id,
+                titulo="Taller de Barismo y Espresso",
+                descripcion="Taller practico de calibracion de espresso en Casa Rose.",
+                fecha_hora=ahora + timedelta(hours=2, minutes=30),
+                precio=Decimal("40000"),
+                cupo_maximo=8,
+                categorias=(categorias["Gastronomia"].id,),
+            )
+        )
+        self.stdout.write(f"  - {exp_hoy.titulo} ({exp_hoy.id}) [evento de hoy]")
+
+        self.stdout.write("Creando reserva con check-in y reseña de demostracion...")
+        reserva_demo = reservas.solicitar_reserva().ejecutar(
+            SolicitarReservaDTO(
+                id_usuario=asistente.id,
+                id_experiencia=exp_hoy.id,
+                cantidad_cupos=1,
+            )
+        )
+        reservas.confirmar_reserva().ejecutar(
+            ConfirmarReservaDTO(
+                id_reserva=reserva_demo.id,
+                referencia_pago="DEMO-REF-001",
+            )
+        )
+        reservas.registrar_check_in().ejecutar(
+            CheckInDTO(
+                codigo_ticket=reserva_demo.codigo_ticket,
+                id_organizador=organizador.id,
+            )
+        )
+        resena_demo = social.crear_resena().ejecutar(
+            CrearResenaDTO(
+                id_reserva=reserva_demo.id,
+                id_usuario=asistente.id,
+                calificacion=5,
+                comentario="Increible taller de barismo! El cafe y la explicacion de Laura fueron excepcionales.",
+            )
+        )
+        self.stdout.write(f"  - Resena registrada: {resena_demo.calificacion}* ({resena_demo.id})")
 
         self.stdout.write(self.style.SUCCESS("\nEscenario de demo listo."))
         self.stdout.write(f"  Asistente   : andres@meetu2.co  ({asistente.id})")

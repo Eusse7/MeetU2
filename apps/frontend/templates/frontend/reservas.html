@@ -34,6 +34,39 @@
 </section>
 
 <div id="tabla" class="card"></div>
+
+<!-- Modal para calificar experiencia (Modulo Social) -->
+<div id="modal-calificar" class="modal-overlay oculto">
+  <div class="modal-contenido">
+    <div class="modal-header">
+      <h3 id="calificar-titulo">⭐ Calificar Experiencia</h3>
+      <button class="modal-cerrar" onclick="cerrarModalCalificar()">&times;</button>
+    </div>
+    <p class="hint">
+      Como asistente verificado (check-in registrado), tu reseña ayuda a la comunidad y actualiza la reputación del organizador.
+    </p>
+    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+      <div>
+        <label for="calificar-estrellas">Puntuación</label>
+        <select id="calificar-estrellas" style="font-size: 1.05rem; padding: 0.5rem;">
+          <option value="5">★★★★★ (5 estrellas - Excelente)</option>
+          <option value="4">★★★★☆ (4 estrellas - Muy buena)</option>
+          <option value="3">★★★☆☆ (3 estrellas - Regular)</option>
+          <option value="2">★★☆☆☆ (2 estrellas - Mala)</option>
+          <option value="1">★☆☆☆☆ (1 estrella - Pésima)</option>
+        </select>
+      </div>
+      <div>
+        <label for="calificar-comentario">Tu opinión o comentario (opcional)</label>
+        <textarea id="calificar-comentario" rows="3" placeholder="¿Qué tal estuvo la actividad? Cuéntale a otros asistentes..."></textarea>
+      </div>
+      <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 0.5rem;">
+        <button class="secundario" onclick="cerrarModalCalificar()">Cancelar</button>
+        <button id="btn-enviar-calificacion">Publicar reseña</button>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
 
 {% block scripts %}
@@ -93,6 +126,21 @@ async function cargar() {
       }
       if (r.estado === "PENDIENTE_PAGO" || r.estado === "CONFIRMADA") {
         acciones.append(boton("Cancelar", () => cancelar(r.id), "peligro"));
+      }
+      if (r.estado === "CHECK_IN") {
+        const contenedorResena = document.createElement("span");
+        acciones.append(contenedorResena);
+        api.resenaDeReserva(r.id)
+          .then((resena) => {
+            if (resena && resena.id) {
+              contenedorResena.innerHTML = `<span class="etiqueta ok" style="cursor:pointer;" title="${resena.comentario || 'Sin comentario'}">★ ${resena.calificacion}/5 Reseña enviada</span>`;
+            } else {
+              contenedorResena.append(boton("⭐ Calificar", () => calificar(r.id, item.experiencia_titulo)));
+            }
+          })
+          .catch(() => {
+            contenedorResena.append(boton("⭐ Calificar", () => calificar(r.id, item.experiencia_titulo)));
+          });
       }
       tabla.querySelector("tbody").append(fila);
     });
@@ -157,6 +205,47 @@ async function cancelar(idReserva) {
     mostrarError(e);
   }
 }
+
+let reservaSeleccionadaParaCalificar = null;
+
+function calificar(idReserva, expTitulo) {
+  const usuario = sesion.get();
+  if (!usuario) {
+    toast("Debes tener una sesión activa para calificar.", "error");
+    return;
+  }
+  reservaSeleccionadaParaCalificar = idReserva;
+  $("calificar-titulo").textContent = `⭐ Calificar: ${expTitulo || 'Experiencia'}`;
+  $("calificar-comentario").value = "";
+  $("calificar-estrellas").value = "5";
+  $("modal-calificar").classList.remove("oculto");
+}
+
+function cerrarModalCalificar() {
+  $("modal-calificar").classList.add("oculto");
+  reservaSeleccionadaParaCalificar = null;
+}
+
+$("btn-enviar-calificacion").onclick = async () => {
+  if (!reservaSeleccionadaParaCalificar) return;
+  const usuario = sesion.get();
+  const calificacion = parseInt($("calificar-estrellas").value, 10);
+  const comentario = $("calificar-comentario").value.trim();
+
+  try {
+    const resena = await api.crearResena({
+      id_reserva: reservaSeleccionadaParaCalificar,
+      id_usuario: usuario.id,
+      calificacion: calificacion,
+      comentario: comentario,
+    });
+    toast(`¡Reseña registrada con éxito! Valoración: ${resena.calificacion}★.`);
+    cerrarModalCalificar();
+    cargar();
+  } catch (e) {
+    mostrarError(e);
+  }
+};
 
 $("opciones-pago").hidden = !pagosV2Habilitado();
 $("modo-pago").innerHTML = pagosV2Habilitado()
