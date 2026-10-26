@@ -46,6 +46,9 @@ def po_to_mo(po_path: Path, mo_path: Path):
     if current_msgid is not None and current_msgstr is not None:
         messages[current_msgid] = current_msgstr
 
+    if "" not in messages or "charset" not in messages.get("", "").lower():
+        messages[""] = "Content-Type: text/plain; charset=UTF-8\n"
+
     keys = sorted(messages.keys())
     offsets = []
     ids = b""

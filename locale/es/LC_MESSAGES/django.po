@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MeetU2 2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-25 16:30-0500\n"
-"PO-Revision-Date: 2026-10-25 16:30-0500\n"
+"POT-Creation-Date: 2026-10-25 18:30-0500\n"
+"PO-Revision-Date: 2026-10-25 18:30-0500\n"
 "Last-Translator: MeetU2 Team\n"
 "Language-Team: Spanish\n"
 "Language: es\n"
@@ -24,6 +24,9 @@ msgstr "Organiza"
 msgid "Mis reservas"
 msgstr "Mis reservas"
 
+msgid "Mis reservas — MeetU2"
+msgstr "Mis reservas — MeetU2"
+
 msgid "Iniciar sesión"
 msgstr "Iniciar sesión"
 
@@ -39,6 +42,9 @@ msgstr "Sal de la rutina."
 msgid "Conecta de verdad."
 msgstr "Conecta de verdad."
 
+msgid "Sal de la rutina. Conecta de verdad."
+msgstr "Sal de la rutina. Conecta de verdad."
+
 msgid "Descubre experiencias creadas para compartir, pasarlo bien y conocer a tu próxima persona favorita."
 msgstr "Descubre experiencias creadas para compartir, pasarlo bien y conocer a tu próxima persona favorita."
 
@@ -51,14 +57,41 @@ msgstr "¿DÓNDE?"
 msgid "Cocinar, bailar, crear..."
 msgstr "Cocinar, bailar, crear..."
 
+msgid "Buscar planes"
+msgstr "Buscar planes"
+
 msgid "Más de 2.000 personas ya conectaron"
 msgstr "Más de 2.000 personas ya conectaron"
+
+msgid "HOY"
+msgstr "HOY"
+
+msgid "Club de running"
+msgstr "Club de running"
+
+msgid "12 personas se apuntaron"
+msgstr "12 personas se apuntaron"
+
+msgid "Grupo de amigos al aire libre"
+msgstr "Grupo de amigos al aire libre"
+
+msgid "Haz clic para ver recomendaciones afines a tus gustos"
+msgstr "Haz clic para ver recomendaciones afines a tus gustos"
 
 msgid "Tu match ideal"
 msgstr "Tu match ideal"
 
 msgid "Según tus intereses"
 msgstr "Según tus intereses"
+
+msgid "Pronóstico del clima"
+msgstr "Pronóstico del clima"
+
+msgid "Clima ideal para actividades y planes al aire libre."
+msgstr "Clima ideal para actividades y planes al aire libre."
+
+msgid "Patrón Adapter"
+msgstr "Patrón Adapter"
 
 msgid "CERCA DE TI"
 msgstr "CERCA DE TI"
@@ -68,6 +101,9 @@ msgstr "Tu próximo plan empieza aquí"
 
 msgid "Ver todas"
 msgstr "Ver todas"
+
+msgid "Ver todas →"
+msgstr "Ver todas →"
 
 msgid "Todo"
 msgstr "Todo"
@@ -111,17 +147,293 @@ msgstr "¿Tienes un plan que merece ser compartido?"
 msgid "Publica tu experiencia"
 msgstr "Publica tu experiencia"
 
+msgid "Publica tu experiencia →"
+msgstr "Publica tu experiencia →"
+
+msgid "SERVICIO A CONSUMIR · RED DE ALIADOS"
+msgstr "SERVICIO A CONSUMIR · RED DE ALIADOS"
+
+msgid "Planes de la Red Aliada"
+msgstr "Planes de la Red Aliada"
+
+msgid "Experiencias compartidas por plataformas compañeras consumidas en tiempo real mediante Patrón Adapter."
+msgstr "Experiencias compartidas por plataformas compañeras consumidas en tiempo real mediante Patrón Adapter."
+
+msgid "↻ Actualizar red aliada"
+msgstr "↻ Actualizar red aliada"
+
 msgid "OPINIONES VERIFICADAS"
 msgstr "OPINIONES VERIFICADAS"
 
 msgid "Reseñas de la comunidad"
 msgstr "Reseñas de la comunidad"
 
-msgid "Planes de la Red Aliada"
-msgstr "Planes de la Red Aliada"
+msgid "Número de personas"
+msgstr "Número de personas"
 
-msgid "Servicios y experiencias de plataformas compañeras"
-msgstr "Servicios y experiencias de plataformas compañeras"
+msgid "Cupos disponibles:"
+msgstr "Cupos disponibles:"
 
-msgid "Pronóstico del clima"
-msgstr "Pronóstico del clima"
+msgid "Total a pagar:"
+msgstr "Total a pagar:"
+
+msgid "Confirmar reserva →"
+msgstr "Confirmar reserva →"
+
+msgid "Acceso a MeetU2"
+msgstr "Acceso a MeetU2"
+
+msgid "Tu correo electrónico"
+msgstr "Tu correo electrónico"
+
+msgid "Entrar"
+msgstr "Entrar"
+
+msgid "Cuentas de demostración:"
+msgstr "Cuentas de demostración:"
+
+msgid "Nombre completo"
+msgstr "Nombre completo"
+
+msgid "Correo electrónico"
+msgstr "Correo electrónico"
+
+msgid "Crear mi cuenta"
+msgstr "Crear mi cuenta"
+
+msgid "Cómo funciona MeetU2"
+msgstr "Cómo funciona MeetU2"
+
+msgid "Explora planes auténticos"
+msgstr "Explora planes auténticos"
+
+msgid "Actividades creadas por anfitriones apasionados en gastronomía, aventura, arte y más, pensadas para grupos pequeños."
+msgstr "Actividades creadas por anfitriones apasionados en gastronomía, aventura, arte y más, pensadas para grupos pequeños."
+
+msgid "Reserva con cupo garantizado"
+msgstr "Reserva con cupo garantizado"
+
+msgid "Aparta tu lugar al instante. Pagos seguros con microservicio y políticas transparentes de reembolso."
+msgstr "Aparta tu lugar al instante. Pagos seguros con microservicio y políticas transparentes de reembolso."
+
+msgid "Conecta y comparte tu opinión"
+msgstr "Conecta y comparte tu opinión"
+
+msgid "Haz check-in con tu código de ticket al llegar, conoce a tu próxima persona favorita y deja tu reseña verificada."
+msgstr "Haz check-in con tu código de ticket al llegar, conoce a tu próxima persona favorita y deja tu reseña verificada."
+
+msgid "¡Entendido! Explorar planes"
+msgstr "¡Entendido! Explorar planes"
+
+msgid "Panel de anfitriones — MeetU2"
+msgstr "Panel de anfitriones — MeetU2"
+
+msgid "ÁREA DE ANFITRIONES"
+msgstr "ÁREA DE ANFITRIONES"
+
+msgid "Panel del organizador"
+msgstr "Panel del organizador"
+
+msgid "Crea tus planes, administra tus sedes y aforos, valida tickets en puerta con check-in en tiempo real y consulta tu reputación y liquidación."
+msgstr "Crea tus planes, administra tus sedes y aforos, valida tickets en puerta con check-in en tiempo real y consulta tu reputación y liquidación."
+
+msgid "1. Perfil de organizador"
+msgstr "1. Perfil de organizador"
+
+msgid "Nombre comercial o de tu colectivo"
+msgstr "Nombre comercial o de tu colectivo"
+
+msgid "Cuenta bancaria de desembolsos"
+msgstr "Cuenta bancaria de desembolsos"
+
+msgid "Crear perfil"
+msgstr "Crear perfil"
+
+msgid "Verificar (backoffice)"
+msgstr "Verificar (backoffice)"
+
+msgid "Inicia sesión en la parte superior y luego crea aquí tu perfil de organizador."
+msgstr "Inicia sesión en la parte superior y luego crea aquí tu perfil de organizador."
+
+msgid "2. Sedes, aforos y categorías"
+msgstr "2. Sedes, aforos y categorías"
+
+msgid "Nombre del sitio"
+msgstr "Nombre del sitio"
+
+msgid "Dirección"
+msgstr "Dirección"
+
+msgid "Ciudad"
+msgstr "Ciudad"
+
+msgid "Aforo máximo"
+msgstr "Aforo máximo"
+
+msgid "Crear sede"
+msgstr "Crear sede"
+
+msgid "Nueva categoría"
+msgstr "Nueva categoría"
+
+msgid "Crear categoría"
+msgstr "Crear categoría"
+
+msgid "3. Publicar nueva experiencia"
+msgstr "3. Publicar nueva experiencia"
+
+msgid "Título de la actividad"
+msgstr "Título de la actividad"
+
+msgid "Sede / Ubicación"
+msgstr "Sede / Ubicación"
+
+msgid "Descripción de la propuesta"
+msgstr "Descripción de la propuesta"
+
+msgid "Fecha y hora (mínimo 2h adelante)"
+msgstr "Fecha y hora (mínimo 2h adelante)"
+
+msgid "Precio por persona ($)"
+msgstr "Precio por persona ($)"
+
+msgid "Cupo máximo (menor o igual al aforo)"
+msgstr "Cupo máximo (menor o igual al aforo)"
+
+msgid "Descuento (0 a 1)"
+msgstr "Descuento (0 a 1)"
+
+msgid "Categorías de interés vinculadas"
+msgstr "Categorías de interés vinculadas"
+
+msgid "Publicar experiencia →"
+msgstr "Publicar experiencia →"
+
+msgid "El ExperienciaBuilder valida automáticamente la antelación de tiempo y que los cupos no superen el aforo máximo de la sede seleccionada."
+msgstr "El ExperienciaBuilder valida automáticamente la antelación de tiempo y que los cupos no superen el aforo máximo de la sede seleccionada."
+
+msgid "4. Control de acceso (Check-in en puerta)"
+msgstr "4. Control de acceso (Check-in en puerta)"
+
+msgid "Código de ticket del asistente"
+msgstr "Código de ticket del asistente"
+
+msgid "✓ Validar y registrar check-in"
+msgstr "✓ Validar y registrar check-in"
+
+msgid "Habilitado dentro de la ventana de 3 horas alrededor del horario del evento. Al validar, habilita al asistente para publicar su reseña verificada."
+msgstr "Habilitado dentro de la ventana de 3 horas alrededor del horario del evento. Al validar, habilita al asistente para publicar su reseña verificada."
+
+msgid "5. Liquidación de ingresos (Microservicio de pagos)"
+msgstr "5. Liquidación de ingresos (Microservicio de pagos)"
+
+msgid "Cálculo en tiempo real atendido por Flask en /api/v2/pagos/organizadores/{id}/liquidacion: ingresos cobrados, comisión de la plataforma y reembolsos aplicados."
+msgstr "Cálculo en tiempo real atendido por Flask en /api/v2/pagos/organizadores/{id}/liquidacion: ingresos cobrados, comisión de la plataforma y reembolsos aplicados."
+
+msgid "6. Reputación y reseñas de tus asistentes"
+msgstr "6. Reputación y reseñas de tus asistentes"
+
+msgid "✓ Solo asistentes con check-in"
+msgstr "✓ Solo asistentes con check-in"
+
+msgid "Calificaciones de 1 a 5 estrellas dejadas por asistentes comprobados al terminar la actividad."
+msgstr "Calificaciones de 1 a 5 estrellas dejadas por asistentes comprobados al terminar la actividad."
+
+msgid "7. Experiencias activas en catálogo"
+msgstr "7. Experiencias activas en catálogo"
+
+msgid "8. Auditoría y Reportes de Fondo (Message Broker Celery/Redis)"
+msgstr "8. Auditoría y Reportes de Fondo (Message Broker Celery/Redis)"
+
+msgid "⚡ Procesamiento Asíncrono"
+msgstr "⚡ Procesamiento Asíncrono"
+
+msgid "Genera informes consolidados de plataforma y métricas de auditoría en segundo plano mediante Celery Worker y Redis Message Broker sin bloquear la aplicación web."
+msgstr "Genera informes consolidados de plataforma y métricas de auditoría en segundo plano mediante Celery Worker y Redis Message Broker sin bloquear la aplicación web."
+
+msgid "Correo para recepción del informe"
+msgstr "Correo para recepción del informe"
+
+msgid "📊 Generar reporte asíncrono"
+msgstr "📊 Generar reporte asíncrono"
+
+msgid "ASISTENCIA Y TICKETS"
+msgstr "ASISTENCIA Y TICKETS"
+
+msgid "Gestiona tus experiencias confirmadas, aparta el pago de tus cupos retenidos y califica las actividades a las que ya asististe."
+msgstr "Gestiona tus experiencias confirmadas, aparta el pago de tus cupos retenidos y califica las actividades a las que ya asististe."
+
+msgid "Canal de pago seguro"
+msgstr "Canal de pago seguro"
+
+msgid "↻ Actualizar estado"
+msgstr "↻ Actualizar estado"
+
+msgid "Método de pago preferido"
+msgstr "Método de pago preferido"
+
+msgid "Tarjeta Débito / Crédito"
+msgstr "Tarjeta Débito / Crédito"
+
+msgid "Transferencia PSE"
+msgstr "Transferencia PSE"
+
+msgid "Nequi / Billetera Digital"
+msgstr "Nequi / Billetera Digital"
+
+msgid "Respuesta simulada (Sandbox de pagos)"
+msgstr "Respuesta simulada (Sandbox de pagos)"
+
+msgid "Aprobado exitoso"
+msgstr "Aprobado exitoso"
+
+msgid "Rechazado por el banco"
+msgstr "Rechazado por el banco"
+
+msgid "Fondos insuficientes"
+msgstr "Fondos insuficientes"
+
+msgid "Política de cancelación transparente:"
+msgstr "Política de cancelación transparente:"
+
+msgid "100% de reembolso si cancelas con más de 48h de antelación; 50% entre 24h y 48h; 0% a menos de 24h del evento."
+msgstr "100% de reembolso si cancelas con más de 48h de antelación; 50% entre 24h y 48h; 0% a menos de 24h del evento."
+
+msgid "100%% de reembolso si cancelas con más de 48h de antelación; 50%% entre 24h y 48h; 0%% a menos de 24h del evento."
+msgstr "100%% de reembolso si cancelas con más de 48h de antelación; 50%% entre 24h y 48h; 0%% a menos de 24h del evento."
+
+msgid "⭐ Calificar Experiencia"
+msgstr "⭐ Calificar Experiencia"
+
+msgid "Tu check-in fue verificado por el organizador. Tu opinión sincera ayuda a la comunidad y actualiza la reputación del anfitrión."
+msgstr "Tu check-in fue verificado por el organizador. Tu opinión sincera ayuda a la comunidad y actualiza la reputación del anfitrión."
+
+msgid "Puntuación"
+msgstr "Puntuación"
+
+msgid "(5 estrellas - Excelente experiencia)"
+msgstr "(5 estrellas - Excelente experiencia)"
+
+msgid "(4 estrellas - Muy buena)"
+msgstr "(4 estrellas - Muy buena)"
+
+msgid "(3 estrellas - Regular)"
+msgstr "(3 estrellas - Regular)"
+
+msgid "(2 estrellas - Podría mejorar)"
+msgstr "(2 estrellas - Podría mejorar)"
+
+msgid "(1 estrella - No me gustó)"
+msgstr "(1 estrella - No me gustó)"
+
+msgid "Tu comentario u opinión pública (opcional)"
+msgstr "Tu comentario u opinión pública (opcional)"
+
+msgid "¿Cómo estuvo el ambiente, la puntualidad y las actividades?"
+msgstr "¿Cómo estuvo el ambiente, la puntualidad y las actividades?"
+
+msgid "Cancelar"
+msgstr "Cancelar"
+
+msgid "Publicar reseña verificada"
+msgstr "Publicar reseña verificada"

@@ -1,38 +1,39 @@
 {% extends "frontend/base.html" %}
 {% load static %}
-{% block titulo %}MeetU2 — Sal de la rutina. Conecta de verdad.{% endblock %}
+{% load i18n %}
+{% block titulo %}MeetU2 — {% trans "Sal de la rutina. Conecta de verdad." %}{% endblock %}
 
 {% block contenido %}
 <!-- ================================================================= Hero Section (Image 1) -->
 <section class="hero-section">
   <div class="hero-content">
     <div class="eyebrow-tag">
-      <span class="dot"></span> PLANES REALES. GENTE NUEVA.
+      <span class="dot"></span> {% trans "PLANES REALES. GENTE NUEVA." %}
     </div>
 
     <h1 class="hero-headline">
-      Sal de la rutina.<br>
-      <span class="hero-violet">Conecta de verdad.</span>
+      {% trans "Sal de la rutina." %}<br>
+      <span class="hero-violet">{% trans "Conecta de verdad." %}</span>
     </h1>
 
     <div class="hero-sparkle" aria-hidden="true">✦</div>
 
     <p class="hero-subtext">
-      Descubre experiencias creadas para compartir, pasarlo bien y conocer a tu próxima persona favorita.
+      {% trans "Descubre experiencias creadas para compartir, pasarlo bien y conocer a tu próxima persona favorita." %}
     </p>
 
     <!-- Search Bar Card -->
     <div class="search-pill-card">
       <div class="search-field">
-        <label class="search-label" for="f-texto">¿QUÉ TE APETECE?</label>
-        <input id="f-texto" class="search-input" placeholder="Cocinar, bailar, crear...">
+        <label class="search-label" for="f-texto">{% trans "¿QUÉ TE APETECE?" %}</label>
+        <input id="f-texto" class="search-input" placeholder="{% trans 'Cocinar, bailar, crear...' %}">
       </div>
       <div class="search-divider"></div>
       <div class="search-field">
-        <label class="search-label" for="f-ciudad">¿DÓNDE?</label>
+        <label class="search-label" for="f-ciudad">{% trans "¿DÓNDE?" %}</label>
         <input id="f-ciudad" class="search-input" placeholder="Madrid, Medellín...">
       </div>
-      <button id="btn-buscar" class="btn-search-arrow" title="Buscar planes">→</button>
+      <button id="btn-buscar" class="btn-search-arrow" title="{% trans 'Buscar planes' %}">→</button>
     </div>
 
     <!-- Social Proof -->
@@ -44,7 +45,7 @@
         <div class="avatar-bubble avatar-dark">+2k</div>
       </div>
       <div class="social-proof-text">
-        <b>4,9 ★</b> Más de 2.000 personas ya conectaron
+        <b>4,9 ★</b> {% trans "Más de 2.000 personas ya conectaron" %}
       </div>
     </div>
   </div>
@@ -53,22 +54,22 @@
   <div class="hero-visual-wrapper">
     <!-- Floating Badge Top Right -->
     <div class="floating-badge-top">
-      <span class="badge-tag-purple">HOY</span>
-      <h4 class="badge-title">Club de running</h4>
-      <p class="badge-sub">12 personas se apuntaron</p>
+      <span class="badge-tag-purple">{% trans "HOY" %}</span>
+      <h4 class="badge-title">{% trans "Club de running" %}</h4>
+      <p class="badge-sub">{% trans "12 personas se apuntaron" %}</p>
     </div>
 
     <!-- Organic Container with Campfire Photo -->
     <div class="hero-blob-container">
-      <img src="{% static 'frontend/img/hero_campfire.jpg' %}" alt="Grupo de amigos al aire libre" class="hero-blob-image">
+      <img src="{% static 'frontend/img/hero_campfire.jpg' %}" alt="{% trans 'Grupo de amigos al aire libre' %}" class="hero-blob-image">
     </div>
 
     <!-- Floating Badge Bottom Left -->
-    <div class="floating-badge-bottom" id="btn-hero-match" title="Haz clic para ver recomendaciones afines a tus gustos">
+    <div class="floating-badge-bottom" id="btn-hero-match" title="{% trans 'Haz clic para ver recomendaciones afines a tus gustos' %}">
       <div class="badge-percent-lime">98%</div>
       <div>
-        <h4 class="badge-title">Tu match ideal</h4>
-        <p class="badge-sub">Según tus intereses</p>
+        <h4 class="badge-title">{% trans "Tu match ideal" %}</h4>
+        <p class="badge-sub">{% trans "Según tus intereses" %}</p>
       </div>
     </div>
   </div>
@@ -81,15 +82,15 @@
     <div>
       <div style="font-weight: 800; color: var(--txt); font-size: 1.05rem;">
         <span id="clima-temp">22.5°C</span> · <span id="clima-ciudad">Medellín</span>
-        <span id="clima-desc" style="font-weight: 500; color: var(--txt-muted); font-size: 0.88rem; margin-left: 0.4rem;">Despejado y soleado</span>
+        <span id="clima-desc" style="font-weight: 500; color: var(--txt-muted); font-size: 0.88rem; margin-left: 0.4rem;">{% trans "Pronóstico del clima" %}</span>
       </div>
       <div id="clima-reco" style="font-size: 0.8rem; color: var(--primary); font-weight: 600; margin-top: 0.15rem;">
-        Clima ideal para actividades y planes al aire libre.
+        {% trans "Clima ideal para actividades y planes al aire libre." %}
       </div>
     </div>
   </div>
   <span style="font-size: 0.74rem; color: var(--txt-muted); background: #faf8f5; border: 1px solid var(--border); padding: 0.25rem 0.65rem; border-radius: var(--radius-pill); font-weight: 600;" id="clima-proveedor">
-    Open-Meteo Weather API (Patrón Adapter)
+    Open-Meteo Weather API ({% trans "Patrón Adapter" %})
   </span>
 </div>
 
@@ -97,21 +98,21 @@
 <section class="catalogue-section" id="catalogo">
   <div class="catalogue-header">
     <div>
-      <div class="catalogue-eyebrow">CERCA DE TI</div>
-      <h2 class="catalogue-title">Tu próximo plan empieza aquí</h2>
+      <div class="catalogue-eyebrow">{% trans "CERCA DE TI" %}</div>
+      <h2 class="catalogue-title">{% trans "Tu próximo plan empieza aquí" %}</h2>
     </div>
-    <a href="javascript:void(0)" id="btn-ver-todas" class="link-see-all">Ver todas →</a>
+    <a href="javascript:void(0)" id="btn-ver-todas" class="link-see-all">{% trans "Ver todas →" %}</a>
   </div>
 
   <!-- Category Pills Filter Bar -->
   <div class="category-filter-bar" id="category-pills">
-    <button class="cat-pill active" data-cat="TODO">Todo</button>
-    <button class="cat-pill" data-cat="Gastronomia">Gastronomía</button>
-    <button class="cat-pill" data-cat="Aire libre">Aventura</button>
-    <button class="cat-pill" data-cat="Arte">Creatividad</button>
-    <button class="cat-pill" data-cat="Bienestar">Bienestar</button>
-    <button class="cat-pill" data-cat="Musica">Música</button>
-    <button class="cat-pill" data-cat="Juegos de mesa">Juegos de mesa</button>
+    <button class="cat-pill active" data-cat="TODO">{% trans "Todo" %}</button>
+    <button class="cat-pill" data-cat="Gastronomia">{% trans "Gastronomía" %}</button>
+    <button class="cat-pill" data-cat="Aire libre">{% trans "Aventura" %}</button>
+    <button class="cat-pill" data-cat="Arte">{% trans "Creatividad" %}</button>
+    <button class="cat-pill" data-cat="Bienestar">{% trans "Bienestar" %}</button>
+    <button class="cat-pill" data-cat="Musica">{% trans "Música" %}</button>
+    <button class="cat-pill" data-cat="Juegos de mesa">{% trans "Juegos de mesa" %}</button>
   </div>
 
   <!-- Experience Cards Grid -->
@@ -121,11 +122,11 @@
 <!-- ============================================================ Host CTA Banner (Image 3) -->
 <section class="host-cta-banner">
   <div class="host-cta-text">
-    <span class="host-tag-lime">PARA HOSTS</span>
-    <h2 class="host-cta-heading">¿Tienes un plan que merece ser compartido?</h2>
+    <span class="host-tag-lime">{% trans "PARA HOSTS" %}</span>
+    <h2 class="host-cta-heading">{% trans "¿Tienes un plan que merece ser compartido?" %}</h2>
   </div>
   <a href="{% url 'frontend:organizador' %}" class="btn-host-lime">
-    Publica tu experiencia →
+    {% trans "Publica tu experiencia →" %}
   </a>
 </section>
 
@@ -133,38 +134,36 @@
 <section class="catalogue-section" id="seccion-planes-aliados" style="padding-top: 0;">
   <div class="catalogue-header">
     <div>
-      <div class="catalogue-eyebrow">SERVICIO A CONSUMIR · RED DE ALIADOS</div>
-      <h2 class="catalogue-title">Planes de la Red Aliada</h2>
+      <div class="catalogue-eyebrow">{% trans "SERVICIO A CONSUMIR · RED DE ALIADOS" %}</div>
+      <h2 class="catalogue-title">{% trans "Planes de la Red Aliada" %}</h2>
       <p class="hint" style="margin: 0.25rem 0 0;">
-        Experiencias compartidas por plataformas compañeras consumidas en tiempo real mediante Patrón Adapter.
+        {% trans "Experiencias compartidas por plataformas compañeras consumidas en tiempo real mediante Patrón Adapter." %}
       </p>
     </div>
     <button id="btn-recargar-aliados" class="secundario" style="font-size: 0.85rem; padding: 0.4rem 0.8rem;" onclick="cargarPlanesAliados()">
-      ↻ Actualizar red aliada
+      {% trans "↻ Actualizar red aliada" %}
     </button>
   </div>
   <div id="grid-aliados" class="experience-grid"></div>
 </section>
 
-
 <!-- ======================================================== Community Reviews Wall -->
 <section class="community-wall-section" id="seccion-muro-resenas">
   <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 0.5rem;">
     <div>
-      <div class="catalogue-eyebrow">OPINIONES VERIFICADAS</div>
-      <h2 class="community-wall-title">Reseñas de la comunidad</h2>
+      <div class="catalogue-eyebrow">{% trans "OPINIONES VERIFICADAS" %}</div>
+      <h2 class="community-wall-title">{% trans "Reseñas de la comunidad" %}</h2>
     </div>
     <span class="hint" id="total-resenas-muro" style="margin: 0;"></span>
   </div>
   <div id="muro-resenas" class="resenas-grid"></div>
 </section>
 
-
 <!-- ============================================================ Modal: Reservar Experiencia -->
 <div id="modal-reservar" class="modal-overlay oculto">
   <div class="modal-contenido">
     <div class="modal-header">
-      <h3 id="modal-res-titulo">Reservar plaza</h3>
+      <h3 id="modal-res-titulo">{% trans "Reservar plaza" %}</h3>
       <button class="modal-cerrar" onclick="cerrarModalReservar()">&times;</button>
     </div>
     <div id="modal-res-preview" style="display: flex; gap: 1rem; align-items: center; background: #faf8f5; padding: 1rem; border-radius: 14px;">
@@ -173,8 +172,8 @@
     
     <div style="display: flex; justify-content: space-between; align-items: center; margin: 0.5rem 0;">
       <div>
-        <label for="res-cupos-num" style="margin:0;">Número de personas</label>
-        <span class="hint" style="margin:0;">Cupos disponibles: <b id="modal-res-cupo-max">-</b></span>
+        <label for="res-cupos-num" style="margin:0;">{% trans "Número de personas" %}</label>
+        <span class="hint" style="margin:0;">{% trans "Cupos disponibles:" %} <b id="modal-res-cupo-max">-</b></span>
       </div>
       <div style="display: flex; align-items: center; gap: 0.5rem;">
         <button class="secundario" style="width: 38px; height: 38px; padding: 0; font-size: 1.2rem; border-radius: 50%;" onclick="cambiarCupos(-1)">-</button>
@@ -185,22 +184,21 @@
 
     <div style="border-top: 1px solid var(--border); padding-top: 1rem; display: flex; justify-content: space-between; align-items: center;">
       <div>
-        <span style="font-size: 0.85rem; color: var(--txt-muted);">Total a pagar:</span>
+        <span style="font-size: 0.85rem; color: var(--txt-muted);">{% trans "Total a pagar:" %}</span>
         <div id="modal-res-total" style="font-size: 1.6rem; font-weight: 800; color: var(--txt);">-</div>
       </div>
       <button id="btn-confirmar-reserva" class="btn-black-pill" style="padding: 0.85rem 1.6rem; font-size: 1rem;">
-        Confirmar reserva →
+        {% trans "Confirmar reserva →" %}
       </button>
     </div>
   </div>
 </div>
 
-
 <!-- ============================================================ Modal: Reseñas de Experiencia -->
 <div id="modal-resenas" class="modal-overlay oculto">
   <div class="modal-contenido">
     <div class="modal-header">
-      <h3 id="modal-titulo">Reseñas de la comunidad</h3>
+      <h3 id="modal-titulo">{% trans "Reseñas de la comunidad" %}</h3>
       <button class="modal-cerrar" onclick="cerrarModalResenas()">&times;</button>
     </div>
     <div id="modal-metricas" class="card" style="margin: 0; background: #faf8f5;"></div>
@@ -245,40 +243,40 @@ function tarjeta(exp, afinidad, idx = 0) {
   const agotada = exp.cupo_disponible === 0;
   const imagenUrl = seleccionarImagenExperiencia(exp, idx);
   const fechaTexto = typeof fechaTarjeta === "function" ? fechaTarjeta(exp.fecha_hora) : fecha(exp.fecha_hora);
-  const hostNombre = exp.organizador_nombre || "Host de la comunidad";
+  const hostNombre = exp.organizador_nombre || t("Host de la comunidad");
   const hostInicial = (hostNombre.charAt(0) || "H").toUpperCase();
 
   const afinidadBadge = afinidad !== undefined && afinidad > 0
-    ? `<span class="etiqueta ok" style="margin-left: 0.4rem;">${(afinidad * 100).toFixed(0)}% afín</span>`
+    ? `<span class="etiqueta ok" style="margin-left: 0.4rem;">${(afinidad * 100).toFixed(0)}% ${t("afín")}</span>`
     : "";
 
   const div = document.createElement("article");
   div.className = "exp-card";
   div.innerHTML = `
     <div class="exp-card-media">
-      <img src="${imagenUrl}" alt="${exp.titulo}" class="exp-card-img" loading="lazy">
-      <button class="btn-favorite-heart" title="Guardar en favoritos" onclick="toggleFavorito(this, event)">♥</button>
+      <img src="${imagenUrl}" alt="${t(exp.titulo)}" class="exp-card-img" loading="lazy">
+      <button class="btn-favorite-heart" title="${t("Guardar en favoritos")}" onclick="toggleFavorito(this, event)">♥</button>
       <div class="badge-availability-lime ${agotada ? 'soldout' : ''}">
-        ${agotada ? 'Agotada' : `Quedan ${exp.cupo_disponible} plazas`}
+        ${agotada ? t('Agotada') : (document.documentElement.lang === "en" ? `${exp.cupo_disponible} spots left` : `Quedan ${exp.cupo_disponible} plazas`)}
       </div>
     </div>
 
     <div class="exp-card-body">
       <div class="exp-date-tag">${fechaTexto}</div>
-      <h3 class="exp-card-title">${exp.titulo}</h3>
-      <div class="exp-location">${exp.ubicacion ? `${exp.ubicacion.nombre}, ${exp.ubicacion.ciudad}` : 'Medellín'}</div>
+      <h3 class="exp-card-title">${t(exp.titulo)}</h3>
+      <div class="exp-location">${exp.ubicacion ? `${t(exp.ubicacion.nombre)}, ${t(exp.ubicacion.ciudad)}` : t('Medellín')}</div>
 
       <div class="exp-rating-row" id="rating-exp-${exp.id}">
-        <span class="hint" style="margin: 0; font-size: 0.8rem;">Cargando opiniones...</span>
+        <span class="hint" style="margin: 0; font-size: 0.8rem;">${t("Cargando opiniones...")}</span>
       </div>
 
       <div class="exp-card-footer">
         <div class="exp-host-info">
           <div class="host-avatar">${hostInicial}</div>
-          <div class="host-name">Por <b>${hostNombre}</b></div>
+          <div class="host-name">${t("Por")} <b>${t(hostNombre)}</b></div>
         </div>
         <div class="exp-price-box">
-          <span class="price-from">desde</span>
+          <span class="price-from">${t("desde")}</span>
           <span class="price-value">${dinero(exp.precio)}</span>
           ${afinidadBadge}
         </div>
@@ -286,10 +284,10 @@ function tarjeta(exp, afinidad, idx = 0) {
 
       <div class="exp-card-actions">
         <button class="btn-card-reserve" ${agotada ? "disabled" : ""}>
-          ${agotada ? "Plazas agotadas" : "Reservar plaza"}
+          ${agotada ? t("Plazas agotadas") : t("Reservar plaza")}
         </button>
-        <button class="btn-card-reviews btn-ver-resenas" title="Ver opiniones de asistentes">
-          ⭐ Reseñas
+        <button class="btn-card-reviews btn-ver-resenas" title="${t("Ver opiniones de asistentes")}">
+          ⭐ ${t("Reseñas")}
         </button>
       </div>
     </div>
@@ -310,15 +308,15 @@ function tarjeta(exp, afinidad, idx = 0) {
         box.innerHTML = `
           <span class="exp-rating-star">★</span>
           <span class="exp-rating-val">${m.calificacion_promedio}</span>
-          <span class="exp-rating-count">(${m.total_resenas} ${m.total_resenas === 1 ? 'opinión' : 'opiniones'})</span>
+          <span class="exp-rating-count">(${m.total_resenas} ${m.total_resenas === 1 ? t('opinión') : t('opiniones')})</span>
         `;
         box.onclick = () => abrirModalResenas(exp);
       } else {
-        box.innerHTML = `<span class="hint" style="margin: 0; font-size: 0.8rem;">★ Nuevo en MeetU2</span>`;
+        box.innerHTML = `<span class="hint" style="margin: 0; font-size: 0.8rem;">★ ${t("Nuevo en MeetU2")}</span>`;
       }
     }).catch(() => {
       const box = div.querySelector(`#rating-exp-${exp.id}`);
-      if (box) box.innerHTML = `<span class="hint" style="margin: 0; font-size: 0.8rem;">★ Nuevo</span>`;
+      if (box) box.innerHTML = `<span class="hint" style="margin: 0; font-size: 0.8rem;">★ ${t("Nuevo")}</span>`;
     });
   }
 
@@ -348,15 +346,15 @@ async function cargarMuroResenas() {
       return;
     }
     $("seccion-muro-resenas").classList.remove("oculto");
-    $("total-resenas-muro").textContent = `${resenas.length} reseñas con asistencia comprobada`;
+    $("total-resenas-muro").textContent = `${resenas.length} ${t("reseñas con asistencia comprobada")}`;
     caja.innerHTML = resenas.slice(0, 3).map((r) => `
       <div class="resena-tarjeta">
         <div class="autor">
-          <span>${r.usuario_nombre || 'Asistente'}</span>
-          <span class="badge-verificado">✓ Check-in verificado</span>
+          <span>${r.usuario_nombre || t('Asistente')}</span>
+          <span class="badge-verificado">${t("✓ Check-in verificado")}</span>
         </div>
         <div style="font-size: 0.82rem; color: var(--primary); font-weight: 700;">
-          ${r.experiencia_titulo || 'Experiencia'}
+          ${t(r.experiencia_titulo) || t('Experiencia')}
         </div>
         <div class="estrellas">
           ${'★'.repeat(r.calificacion)}${'☆'.repeat(5 - r.calificacion)}
@@ -364,7 +362,7 @@ async function cargarMuroResenas() {
             ${r.calificacion}/5
           </span>
         </div>
-        ${r.comentario ? `<div class="comentario">“${r.comentario}”</div>` : '<div class="hint" style="margin:0;">Sin comentario escrito</div>'}
+        ${r.comentario ? `<div class="comentario">“${t(r.comentario)}”</div>` : `<div class="hint" style="margin:0;">${t("Sin comentario escrito")}</div>`}
         <div class="hint" style="font-size: 0.75rem; margin-top: auto; margin-bottom: 0;">${fecha(r.creado_en)}</div>
       </div>
     `).join("");
@@ -375,9 +373,9 @@ async function cargarMuroResenas() {
 
 // ------------------------------------------------------------- Modal Reseñas
 async function abrirModalResenas(exp) {
-  $("modal-titulo").textContent = `Opiniones: ${exp.titulo}`;
-  $("modal-metricas").innerHTML = '<p class="hint">Cargando métricas...</p>';
-  $("modal-lista").innerHTML = '<p class="hint">Cargando comentarios...</p>';
+  $("modal-titulo").textContent = `${t("Reseñas")}: ${exp.titulo}`;
+  $("modal-metricas").innerHTML = `<p class="hint">${t("Cargando métricas...")}</p>`;
+  $("modal-lista").innerHTML = `<p class="hint">${t("Cargando comentarios...")}</p>`;
   $("modal-resenas").classList.remove("oculto");
 
   try {
@@ -394,30 +392,30 @@ async function abrirModalResenas(exp) {
               <span class="estrellas">★</span> ${metricas.calificacion_promedio}
               <span style="font-size: 0.95rem; color: var(--txt-muted); font-weight: 500;">/ 5.0</span>
             </div>
-            <div class="hint" style="margin: 0.25rem 0 0;">${metricas.total_resenas} ${metricas.total_resenas === 1 ? 'opinión verificada' : 'opiniones verificadas'}</div>
+            <div class="hint" style="margin: 0.25rem 0 0;">${metricas.total_resenas} ${metricas.total_resenas === 1 ? t('opinión verificada') : t('opiniones verificadas')}</div>
           </div>
-          <span class="badge-verificado">✓ Solo asistentes con check-in</span>
+          <span class="badge-verificado">${t("✓ Solo asistentes con check-in")}</span>
         </div>
       `;
     } else {
-      $("modal-metricas").innerHTML = '<p class="hint" style="margin:0;">Esta experiencia aún no tiene calificaciones registradas.</p>';
+      $("modal-metricas").innerHTML = `<p class="hint" style="margin:0;">${t("Esta experiencia aún no tiene calificaciones registradas.")}</p>`;
     }
 
     if (!resenas || !resenas.length) {
-      $("modal-lista").innerHTML = '<p class="vacio">Sé la primera persona en asistir y calificar este plan.</p>';
+      $("modal-lista").innerHTML = `<p class="vacio">${t("Sé la primera persona en asistir y calificar este plan.")}</p>`;
       return;
     }
 
     $("modal-lista").innerHTML = resenas.map(r => `
       <div class="resena-tarjeta">
         <div class="autor">
-          <span>${r.usuario_nombre || 'Asistente'}</span>
-          <span class="badge-verificado">✓ Asistencia verificada</span>
+          <span>${r.usuario_nombre || t('Asistente')}</span>
+          <span class="badge-verificado">${t("✓ Asistencia verificada")}</span>
         </div>
         <div class="estrellas">
           ${'★'.repeat(r.calificacion)}${'☆'.repeat(5 - r.calificacion)}
         </div>
-        ${r.comentario ? `<div class="comentario">“${r.comentario}”</div>` : '<div class="hint" style="margin:0;">Sin comentario escrito</div>'}
+        ${r.comentario ? `<div class="comentario">“${r.comentario}”</div>` : `<div class="hint" style="margin:0;">${t("Sin comentario escrito")}</div>`}
         <div class="hint" style="font-size: 0.75rem; margin: 0;">${fecha(r.creado_en)}</div>
       </div>
     `).join("");
@@ -435,22 +433,22 @@ function abrirModalReservar(exp) {
   const usuario = sesion.get();
   if (!usuario) {
     abrirModalAuth('login');
-    toast("Inicia sesión o regístrate para reservar tu cupo", "info");
+    toast(t("Inicia sesión o regístrate para reservar tu cupo"), "info");
     return;
   }
 
   experienciaSeleccionadaParaReserva = exp;
-  $("modal-res-titulo").textContent = `Reservar: ${exp.titulo}`;
-  $("modal-res-cupo-max").textContent = `${exp.cupo_disponible} disponibles`;
+  $("modal-res-titulo").textContent = `${t("Reservar plaza")}: ${t(exp.titulo)}`;
+  $("modal-res-cupo-max").textContent = `${exp.cupo_disponible} ${t("disponibles")}`;
   $("res-cupos-num").value = 1;
   $("res-cupos-num").max = exp.cupo_disponible;
 
   const preview = $("modal-res-preview");
   preview.innerHTML = `
     <div>
-      <div style="font-weight: 700; font-size: 1rem; color: var(--txt);">${exp.titulo}</div>
+      <div style="font-weight: 700; font-size: 1rem; color: var(--txt);">${t(exp.titulo)}</div>
       <div style="font-size: 0.85rem; color: var(--primary); font-weight: 700;">${typeof fechaTarjeta === "function" ? fechaTarjeta(exp.fecha_hora) : fecha(exp.fecha_hora)}</div>
-      <div style="font-size: 0.82rem; color: var(--txt-muted);">${exp.ubicacion ? `${exp.ubicacion.nombre} · ${exp.ubicacion.ciudad}` : 'Medellín'}</div>
+      <div style="font-size: 0.82rem; color: var(--txt-muted);">${exp.ubicacion ? `${t(exp.ubicacion.nombre)} · ${t(exp.ubicacion.ciudad)}` : t('Medellín')}</div>
     </div>
   `;
 
@@ -528,7 +526,7 @@ function pintar(items) {
   }
 
   if (!filtrados.length) {
-    contenedor.innerHTML = '<p class="vacio" style="grid-column: 1 / -1;">No encontramos experiencias para este filtro. ¡Prueba buscando otra palabra o categoría!</p>';
+    contenedor.innerHTML = `<p class="vacio" style="grid-column: 1 / -1;">${t("No encontramos experiencias para este filtro. ¡Prueba buscando otra palabra o categoría!")}</p>`;
     return;
   }
 
@@ -610,8 +608,8 @@ async function cargarClima(ciudad = "Medellin") {
     $("clima-icono").textContent = c.icono || "🌤️";
     $("clima-temp").textContent = `${c.temperatura_c}°C`;
     $("clima-ciudad").textContent = c.ciudad;
-    $("clima-desc").textContent = c.descripcion;
-    $("clima-reco").textContent = c.recomendacion;
+    $("clima-desc").textContent = t(c.descripcion);
+    $("clima-reco").textContent = t(c.recomendacion);
     $("clima-proveedor").textContent = c.proveedor;
   } catch (e) {
     console.warn("No se pudo cargar el clima", e);
@@ -621,13 +619,13 @@ async function cargarClima(ciudad = "Medellin") {
 async function cargarPlanesAliados() {
   const caja = $("grid-aliados");
   if (!caja || typeof api?.planesAliados !== "function") return;
-  caja.innerHTML = '<p class="hint" style="grid-column: 1 / -1;">Cargando planes de la red aliada...</p>';
+  caja.innerHTML = `<p class="hint" style="grid-column: 1 / -1;">${t("Cargando planes de la red aliada...")}</p>`;
 
   try {
     const res = await api.planesAliados();
     const planes = res.planes || [];
     if (!planes.length) {
-      caja.innerHTML = '<p class="vacio" style="grid-column: 1 / -1;">No hay planes disponibles en la red aliada en este momento.</p>';
+      caja.innerHTML = `<p class="vacio" style="grid-column: 1 / -1;">${t("No hay planes disponibles en la red aliada en este momento.")}</p>`;
       return;
     }
 
@@ -636,33 +634,33 @@ async function cargarPlanesAliados() {
         <div class="exp-card-media">
           <img src="${IMAGENES_DISPONIBLES[(idx + 1) % IMAGENES_DISPONIBLES.length]}" alt="${p.titulo}" class="exp-card-img" loading="lazy">
           <div class="badge-availability-lime">
-            Red Aliada · ${p.cupos_disponibles} plazas
+            ${t("Red Aliada")} · ${p.cupos_disponibles} ${t("plazas")}
           </div>
         </div>
         <div class="exp-card-body">
-          <div class="exp-date-tag">${p.categoria.toUpperCase()} · ${p.ciudad.toUpperCase()}</div>
-          <h3 class="exp-card-title">${p.titulo}</h3>
-          <div class="exp-location">📍 ${p.ciudad} · ${p.red_aliada}</div>
+          <div class="exp-date-tag">${(t(p.categoria) || p.categoria).toUpperCase()} · ${(t(p.ciudad) || p.ciudad).toUpperCase()}</div>
+          <h3 class="exp-card-title">${t(p.titulo)}</h3>
+          <div class="exp-location">📍 ${t(p.ciudad)} · ${p.red_aliada}</div>
           <div class="exp-card-footer">
             <div class="exp-host-info">
               <div class="host-avatar" style="background:#e0f2fe;color:#0284c7;">A</div>
-              <div class="host-name">Por <b>${p.organizador}</b></div>
+              <div class="host-name">${t("Por")} <b>${t(p.organizador)}</b></div>
             </div>
             <div class="exp-price-box">
-              <span class="price-from">desde</span>
+              <span class="price-from">${t("desde")}</span>
               <span class="price-value">${dinero(p.precio)}</span>
             </div>
           </div>
           <div class="exp-card-actions">
             <a href="${p.url_externa}" target="_blank" rel="noopener" class="btn-card-reserve" style="text-align: center; text-decoration: none;">
-              Ver en plataforma aliada ↗
+              ${t("Ver en plataforma aliada ↗")}
             </a>
           </div>
         </div>
       </article>
     `).join("");
   } catch (e) {
-    caja.innerHTML = '<p class="vacio" style="grid-column: 1 / -1;">No fue posible conectar con el servicio aliado.</p>';
+    caja.innerHTML = `<p class="vacio" style="grid-column: 1 / -1;">${t("No fue posible conectar con el servicio aliado.")}</p>`;
   }
 }
 

@@ -2,13 +2,15 @@
 # Arranque del monolito dentro del contenedor.
 set -e
 
-python manage.py migrate --noinput
-python manage.py compile_translations
-python manage.py collectstatic --noinput --verbosity 0
+if [ "$1" != "celery" ] && [ "${SKIP_MIGRATIONS:-0}" != "1" ]; then
+  python manage.py compile_translations
+  python manage.py migrate --noinput
+  python manage.py collectstatic --noinput --verbosity 0
 
-# Datos de demostracion solo la primera vez (seed_demo falla si ya existen).
-if [ "${SEED_DEMO:-0}" = "1" ]; then
-  python manage.py seed_demo || echo "seed_demo omitido: los datos ya existen"
+  # Datos de demostracion solo la primera vez (seed_demo falla si ya existen).
+  if [ "${SEED_DEMO:-0}" = "1" ]; then
+    python manage.py seed_demo || echo "seed_demo omitido: los datos ya existen"
+  fi
 fi
 
 exec "$@"

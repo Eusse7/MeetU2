@@ -6,7 +6,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block titulo %}MeetU2 — {% trans "Sal de la rutina. Conecta de verdad." %}{% endblock %}</title>
-  <link rel="stylesheet" href="{% static 'frontend/app.css' %}?v=4">
+  <link rel="stylesheet" href="{% static 'frontend/app.css' %}?v=5">
 </head>
 <body data-pagos-v2="{{ pagos_v2_habilitado|yesno:'1,0' }}">
 
@@ -55,24 +55,24 @@
   <div id="modal-global-auth" class="modal-overlay oculto">
     <div class="modal-contenido" style="max-width: 440px;">
       <div class="modal-header">
-        <h3 id="auth-modal-title">Acceso a MeetU2</h3>
+        <h3 id="auth-modal-title">{% trans "Acceso a MeetU2" %}</h3>
         <button class="modal-cerrar" onclick="cerrarModalAuth()">&times;</button>
       </div>
 
       <!-- Tabs de selección -->
       <div style="display: flex; gap: 0.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.75rem;">
-        <button id="auth-tab-login" class="cat-pill active" onclick="abrirModalAuth('login')">Iniciar sesión</button>
-        <button id="auth-tab-registro" class="cat-pill" onclick="abrirModalAuth('registro')">Crear cuenta</button>
+        <button id="auth-tab-login" class="cat-pill active" onclick="abrirModalAuth('login')">{% trans "Iniciar sesión" %}</button>
+        <button id="auth-tab-registro" class="cat-pill" onclick="abrirModalAuth('registro')">{% trans "Crear cuenta" %}</button>
       </div>
 
       <!-- Panel Iniciar Sesión -->
       <div id="auth-panel-login">
-        <label for="auth-correo-login">Tu correo electrónico</label>
+        <label for="auth-correo-login">{% trans "Tu correo electrónico" %}</label>
         <input id="auth-correo-login" type="email" placeholder="andres@meetu2.co">
-        <button id="btn-modal-login" style="width: 100%; margin-top: 0.5rem;">Entrar</button>
+        <button id="btn-modal-login" style="width: 100%; margin-top: 0.5rem;">{% trans "Entrar" %}</button>
 
         <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px dashed var(--border);">
-          <div style="font-size: 0.78rem; font-weight: 700; color: var(--txt-muted); text-transform: uppercase; margin-bottom: 0.5rem;">Cuentas de demostración:</div>
+          <div style="font-size: 0.78rem; font-weight: 700; color: var(--txt-muted); text-transform: uppercase; margin-bottom: 0.5rem;">{% trans "Cuentas de demostración:" %}</div>
           <div style="display: flex; flex-direction: column; gap: 0.4rem;">
             <button class="btn-card-reviews" style="text-align: left; font-size: 0.82rem;" onclick="autollenarLogin('andres@meetu2.co')">
               👤 <b>Andrés Asistente</b> (andres@meetu2.co)
@@ -86,11 +86,11 @@
 
       <!-- Panel Registro -->
       <div id="auth-panel-registro" class="oculto">
-        <label for="auth-nombre-reg">Nombre completo</label>
+        <label for="auth-nombre-reg">{% trans "Nombre completo" %}</label>
         <input id="auth-nombre-reg" placeholder="Ej. Camila Morales">
-        <label for="auth-correo-reg">Correo electrónico</label>
+        <label for="auth-correo-reg">{% trans "Correo electrónico" %}</label>
         <input id="auth-correo-reg" type="email" placeholder="camila@ejemplo.co">
-        <button id="btn-modal-registro" style="width: 100%; margin-top: 0.5rem;">Crear mi cuenta</button>
+        <button id="btn-modal-registro" style="width: 100%; margin-top: 0.5rem;">{% trans "Crear mi cuenta" %}</button>
       </div>
     </div>
   </div>
@@ -99,41 +99,42 @@
   <div id="modal-como-funciona" class="modal-overlay oculto">
     <div class="modal-contenido" style="max-width: 500px;">
       <div class="modal-header">
-        <h3>Cómo funciona MeetU2</h3>
+        <h3>{% trans "Cómo funciona MeetU2" %}</h3>
         <button class="modal-cerrar" onclick="cerrarModalComoFunciona()">&times;</button>
       </div>
       <div style="display: flex; flex-direction: column; gap: 1.5rem; padding: 0.5rem 0;">
         <div style="display: flex; gap: 1rem; align-items: flex-start;">
           <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--lime); color: var(--lime-txt); display: flex; align-items: center; justify-content: center; font-weight: 800; flex-shrink: 0;">1</div>
           <div>
-            <div style="font-weight: 700; font-size: 1.05rem; margin-bottom: 0.2rem;">Explora planes auténticos</div>
-            <div style="font-size: 0.9rem; color: var(--txt-muted);">Actividades creadas por anfitriones apasionados en gastronomía, aventura, arte y más, pensadas para grupos pequeños.</div>
+            <div style="font-weight: 700; font-size: 1.05rem; margin-bottom: 0.2rem;">{% trans "Explora planes auténticos" %}</div>
+            <div style="font-size: 0.9rem; color: var(--txt-muted);">{% trans "Actividades creadas por anfitriones apasionados en gastronomía, aventura, arte y más, pensadas para grupos pequeños." %}</div>
           </div>
         </div>
         <div style="display: flex; gap: 1rem; align-items: flex-start;">
           <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center; font-weight: 800; flex-shrink: 0;">2</div>
           <div>
-            <div style="font-weight: 700; font-size: 1.05rem; margin-bottom: 0.2rem;">Reserva con cupo garantizado</div>
-            <div style="font-size: 0.9rem; color: var(--txt-muted);">Aparta tu lugar al instante. Pagos seguros con microservicio y políticas transparentes de reembolso.</div>
+            <div style="font-weight: 700; font-size: 1.05rem; margin-bottom: 0.2rem;">{% trans "Reserva con cupo garantizado" %}</div>
+            <div style="font-size: 0.9rem; color: var(--txt-muted);">{% trans "Aparta tu lugar al instante. Pagos seguros con microservicio y políticas transparentes de reembolso." %}</div>
           </div>
         </div>
         <div style="display: flex; gap: 1rem; align-items: flex-start;">
           <div style="width: 40px; height: 40px; border-radius: 50%; background: #ffaa94; color: #5c1e0f; display: flex; align-items: center; justify-content: center; font-weight: 800; flex-shrink: 0;">3</div>
           <div>
-            <div style="font-weight: 700; font-size: 1.05rem; margin-bottom: 0.2rem;">Conecta y comparte tu opinión</div>
-            <div style="font-size: 0.9rem; color: var(--txt-muted);">Haz check-in con tu código de ticket al llegar, conoce a tu próxima persona favorita y deja tu reseña verificada.</div>
+            <div style="font-weight: 700; font-size: 1.05rem; margin-bottom: 0.2rem;">{% trans "Conecta y comparte tu opinión" %}</div>
+            <div style="font-size: 0.9rem; color: var(--txt-muted);">{% trans "Haz check-in con tu código de ticket al llegar, conoce a tu próxima persona favorita y deja tu reseña verificada." %}</div>
           </div>
         </div>
       </div>
       <button class="btn-black-pill" style="justify-content: center; width: 100%; margin-top: 0.5rem;" onclick="cerrarModalComoFunciona()">
-        ¡Entendido! Explorar planes
+        {% trans "¡Entendido! Explorar planes" %}
       </button>
     </div>
   </div>
 
-  <script src="{% static 'frontend/api.js' %}?v=3"></script>
+  <script src="{% static 'frontend/api.js' %}?v=5"></script>
   <script>
     function cambiarIdioma(lang) {
+      document.cookie = `django_language=${lang};path=/;max-age=31536000;SameSite=Lax`;
       document.getElementById('input-idioma').value = lang;
       document.getElementById('form-idioma').submit();
     }

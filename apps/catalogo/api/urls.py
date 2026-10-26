@@ -15,6 +15,7 @@ app_name = "catalogo"
 
 urlpatterns = [
     path("experiencias", ExperienciaListCreateView.as_view(), name="experiencia-lista"),
+    path("experiencias/", ExperienciaListCreateView.as_view(), name="experiencia-lista-slash"),
     path(
         "experiencias/<uuid:id_experiencia>",
         ExperienciaDetailView.as_view(),
@@ -36,5 +37,7 @@ urlpatterns = [
         name="experiencias-recomendadas",
     ),
     path("ubicaciones", UbicacionListCreateView.as_view(), name="ubicacion-lista"),
+    path("ubicaciones/", UbicacionListCreateView.as_view(), name="ubicacion-lista-slash"),
     path("categorias", CategoriaListCreateView.as_view(), name="categoria-lista"),
+    path("categorias/", CategoriaListCreateView.as_view(), name="categoria-lista-slash"),
 ]

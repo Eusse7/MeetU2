@@ -9,27 +9,32 @@ hace check-in el día del evento. La plataforma cobra una comisión por reserva.
 > Migración a Microservicios, Integración y Resiliencia** (Strangler Pattern, Celery + Redis,
 > adaptadores de integración externa, API provista/consumida, i18n y despliegue en AWS).
 
-## Puesta en marcha con Docker (monolito + microservicio + Celery + Redis)
+## Puesta en marcha con Docker (Monolito + 4 Microservicios + Celery + Redis)
 
 ```bash
 docker compose up --build
 ```
 
-| Componente | URL / Puerto |
-|---|---|
-| Front (vía Nginx) | <http://localhost:8080/> |
-| API Monolito → Django | <http://localhost:8080/api/v1/catalogo/experiencias> |
-| Servicio Provisto (Integración) | <http://localhost:8080/api/v1/integracion/experiencias-publicas/> |
-| Servicio Consumido (Equipo Aliado) | <http://localhost:8080/api/v1/integracion/aliados/planes/> |
-| API Terceros (Clima Adapter) | <http://localhost:8080/api/v1/integracion/clima/?ciudad=Bogota> |
-| API Estrangulada → Flask Pagos | <http://localhost:8080/api/v2/pagos/salud> |
-| Message Broker | Redis en puerto `6379` |
-| Tareas en segundo plano | Worker Celery (`celery`) |
+| Componente | URL / Puerto | Función |
+|---|---|---|
+| Front (vía Nginx) | <http://localhost:8080/> | Interfaz web unificada |
+| API Monolito → Django | <http://localhost:8080/api/v1/> | Core de Reservas e Identidad |
+| Servicio Provisto (Integración) | <http://localhost:8080/api/v1/integracion/experiencias-publicas/> | API pública para aliados |
+| Servicio Consumido (Equipo Aliado) | <http://localhost:8080/api/v1/integracion/aliados/planes/> | Consumo con Adapter & Fallback |
+| API Terceros (Clima Adapter) | <http://localhost:8080/api/v1/integracion/clima/?ciudad=Bogota> | Open-Meteo vía Adapter |
+| **MS Pagos (Flask:5000)** | <http://localhost:8080/api/v2/pagos/salud> | Pasarelas y dispersión de cobros |
+| **MS Social (Flask:5001)** | <http://localhost:8080/api/v2/social/salud> | Reseñas, calificaciones y reputación |
+| **MS Notificaciones (Flask:5002)** | <http://localhost:8080/api/v2/notificaciones/salud> | Despacho multicanal y bitácora |
+| **MS Catálogo (Flask:5003)** | <http://localhost:8080/api/v2/catalogo/salud> | Experiencias, sedes y categorías |
+| Message Broker | Redis en puerto `6379` | Broker de eventos y colas |
+| Tareas en segundo plano | Worker Celery (`celery`) | Procesamiento asíncrono distribuido |
 
-Nginx (`nginx/nginx.conf`) actúa como API Gateway, enviando `/api/v2/pagos` al
-microservicio Flask (`services/pagos/`) y el resto al monolito. La documentación
-completa de arquitectura y la guía de despliegue en AWS EC2 se encuentran en
-[`docs/arquitectura_entrega_2.md`](docs/arquitectura_entrega_2.md).
+> **Bono de Excelencia Arquitectónica (>70% migrado):** 4 de los 5 dominios de negocio
+> principales (80%) han sido extraídos a microservicios autónomos con bases de datos segregadas
+> (`meetu2_pagos`, `meetu2_social`, `meetu2_notificaciones`, `meetu2_catalogo`), logrando la
+> **exención del Parcial 02** según los lineamientos de la cátedra.
+> La documentación completa de arquitectura y la guía de despliegue en AWS EC2 se encuentran en
+> [`docs/arquitectura_entrega_2.md`](docs/arquitectura_entrega_2.md).
 
 ## Puesta en marcha local (solo el monolito)
 
@@ -52,9 +57,9 @@ python manage.py runserver
 | Salud | <http://127.0.0.1:8000/healthz> |
 
 ```bash
-pytest                          # monolito: 167 pruebas
-cd services/pagos && pytest     # microservicio de pagos: 37 pruebas
-# Total: 204 pruebas unitarias y de integración pasando al 100%
+pytest                                                                          # monolito: 167 pruebas
+pytest -o pythonpath="services/pagos services/social services/notificaciones services/catalogo" services/ # microservicios: 51 pruebas
+# Total: 218 pruebas unitarias y de integración pasando al 100%
 ```
 
 Sin Docker el monolito funciona en **modo legado**: `PAGOS_SERVICE_URL` vacío,
@@ -105,9 +110,12 @@ apps/
 └── frontend/        páginas que consumen la API
 
 services/
-└── pagos/           microservicio Flask /api/v2/pagos              ← Strangler
-nginx/nginx.conf     fachada API Gateway: bifurca /api/v1 y /api/v2/pagos
-docker-compose.yml   db · django · pagos · redis · celery · nginx
+├── pagos/           microservicio Flask /api/v2/pagos              ← Strangler
+├── social/          microservicio Flask /api/v2/social             ← Strangler (>70%)
+├── notificaciones/  microservicio Flask /api/v2/notificaciones     ← Strangler (>70%)
+└── catalogo/        microservicio Flask /api/v2/catalogo           ← Strangler (>70%)
+nginx/nginx.conf     fachada API Gateway: bifurca /api/v1 y todas las rutas /api/v2
+docker-compose.yml   db · django · pagos · social · notificaciones · catalogo · redis · celery · nginx
 ```
 
 Cada contexto se divide en `domain/` (entidades y reglas puras),
@@ -121,7 +129,8 @@ dominio.**
 | DRF con Serializers, APIView y 201/400/404/409 | `*/api/` y `shared/api/exception_handler.py` |
 | **Builder** (entidad más compleja) | `catalogo/application/builders.py` |
 | **Factory** (dependencia externa) | `notificaciones/infrastructure/factories.py` · `services/pagos/pagos_service/gateways.py` |
-| **Strangler Pattern** | `services/pagos/` · `nginx/nginx.conf` · `docker-compose.yml` |
+| **Bono Excelencia (>70% migrado)** | `services/pagos/`, `services/social/`, `services/notificaciones/`, `services/catalogo/` |
+| **Strangler Pattern & API Gateway** | `nginx/nginx.conf` · `docker-compose.yml` |
 | **Message Broker (Celery + Redis)** | `config/celery.py` · `apps/notificaciones/tasks.py` · `apps/integraciones/tasks.py` |
 | **Servicio a Proveer** | `apps/integraciones/application/use_cases.py::ExponerExperienciasPublicasUseCase` (`/api/v1/integracion/experiencias-publicas/`) |
 | **Servicio a Consumir (Aliado)** | `apps/integraciones/domain/ports.py::ServicioAliadoPort` · `HttpServicioAliadoAdapter` |
@@ -136,7 +145,7 @@ python manage.py seed_demo            # datos de demostración
 python manage.py compile_translations # compila catálogos .po a binarios .mo
 python manage.py expirar_reservas     # libera cupos de reservas vencidas
 pytest                                # 167 pruebas del monolito
-cd services/pagos && pytest           # 37 pruebas del microservicio
+pytest -o pythonpath="services/pagos services/social services/notificaciones services/catalogo" services/ # 51 pruebas microservicios
 ```
 
 ## Herramientas usadas

@@ -1,12 +1,13 @@
 {% extends "frontend/base.html" %}
-{% block titulo %}Mis reservas — MeetU2{% endblock %}
+{% load i18n %}
+{% block titulo %}{% trans "Mis reservas — MeetU2" %}{% endblock %}
 
 {% block contenido %}
 <div style="margin-bottom: 2rem;">
-  <div class="catalogue-eyebrow">ASISTENCIA Y TICKETS</div>
-  <h1 style="font-size: 2.25rem; font-weight: 800; letter-spacing: -0.03em; margin: 0 0 0.5rem;">Mis reservas</h1>
+  <div class="catalogue-eyebrow">{% trans "ASISTENCIA Y TICKETS" %}</div>
+  <h1 style="font-size: 2.25rem; font-weight: 800; letter-spacing: -0.03em; margin: 0 0 0.5rem;">{% trans "Mis reservas" %}</h1>
   <p class="hint" style="max-width: 680px; margin: 0;">
-    Gestiona tus experiencias confirmadas, aparta el pago de tus cupos retenidos y califica las actividades a las que ya asististe.
+    {% trans "Gestiona tus experiencias confirmadas, aparta el pago de tus cupos retenidos y califica las actividades a las que ya asististe." %}
   </p>
 </div>
 
@@ -14,35 +15,35 @@
 <section class="card" id="card-config-pago">
   <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
     <div>
-      <h2 style="margin: 0; font-size: 1.15rem;">Canal de pago seguro</h2>
+      <h2 style="margin: 0; font-size: 1.15rem;">{% trans "Canal de pago seguro" %}</h2>
       <p class="hint" id="modo-pago" style="margin: 0.2rem 0 0;"></p>
     </div>
     <button id="btn-recargar" class="secundario" style="font-size: 0.85rem; padding: 0.5rem 1rem;">
-      ↻ Actualizar estado
+      {% trans "↻ Actualizar estado" %}
     </button>
   </div>
 
   <div class="fila" id="opciones-pago" hidden>
     <div>
-      <label for="medio-pago">Método de pago preferido</label>
+      <label for="medio-pago">{% trans "Método de pago preferido" %}</label>
       <select id="medio-pago">
-        <option value="TARJETA">💳 Tarjeta Débito / Crédito</option>
-        <option value="PSE">🏦 Transferencia PSE</option>
-        <option value="NEQUI">📱 Nequi / Billetera Digital</option>
+        <option value="TARJETA">💳 {% trans "Tarjeta Débito / Crédito" %}</option>
+        <option value="PSE">🏦 {% trans "Transferencia PSE" %}</option>
+        <option value="NEQUI">📱 {% trans "Nequi / Billetera Digital" %}</option>
       </select>
     </div>
     <div>
-      <label for="token-pago">Respuesta simulada (Sandbox de pagos)</label>
+      <label for="token-pago">{% trans "Respuesta simulada (Sandbox de pagos)" %}</label>
       <select id="token-pago">
-        <option value="tok_aprobada">✓ Aprobado exitoso</option>
-        <option value="tok_rechazada">✗ Rechazado por el banco</option>
-        <option value="tok_fondos_insuficientes">✗ Fondos insuficientes</option>
+        <option value="tok_aprobada">✓ {% trans "Aprobado exitoso" %}</option>
+        <option value="tok_rechazada">✗ {% trans "Rechazado por el banco" %}</option>
+        <option value="tok_fondos_insuficientes">✗ {% trans "Fondos insuficientes" %}</option>
       </select>
     </div>
   </div>
 
   <div style="background: #faf8f5; border: 1px dashed var(--border); border-radius: 10px; padding: 0.75rem 1rem; font-size: 0.82rem; color: var(--txt-muted); margin-top: 0.5rem;">
-    ℹ️ <b>Política de cancelación transparente:</b> 100% de reembolso si cancelas con más de 48h de antelación; 50% entre 24h y 48h; 0% a menos de 24h del evento.
+    ℹ️ <b>{% trans "Política de cancelación transparente:" %}</b> {% trans "100% de reembolso si cancelas con más de 48h de antelación; 50% entre 24h y 48h; 0% a menos de 24h del evento." %}
   </div>
 </section>
 
@@ -53,31 +54,31 @@
 <div id="modal-calificar" class="modal-overlay oculto">
   <div class="modal-contenido">
     <div class="modal-header">
-      <h3 id="calificar-titulo">⭐ Calificar Experiencia</h3>
+      <h3 id="calificar-titulo">{% trans "⭐ Calificar Experiencia" %}</h3>
       <button class="modal-cerrar" onclick="cerrarModalCalificar()">&times;</button>
     </div>
     <p class="hint" style="margin: 0;">
-      Tu check-in fue verificado por el organizador. Tu opinión sincera ayuda a la comunidad y actualiza la reputación del anfitrión.
+      {% trans "Tu check-in fue verificado por el organizador. Tu opinión sincera ayuda a la comunidad y actualiza la reputación del anfitrión." %}
     </p>
     <div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 0.5rem;">
       <div>
-        <label for="calificar-estrellas">Puntuación</label>
+        <label for="calificar-estrellas">{% trans "Puntuación" %}</label>
         <select id="calificar-estrellas" style="font-size: 1.05rem; padding: 0.6rem;">
-          <option value="5">★★★★★ (5 estrellas - Excelente experiencia)</option>
-          <option value="4">★★★★☆ (4 estrellas - Muy buena)</option>
-          <option value="3">★★★☆☆ (3 estrellas - Regular)</option>
-          <option value="2">★★☆☆☆ (2 estrellas - Podría mejorar)</option>
-          <option value="1">★☆☆☆☆ (1 estrella - No me gustó)</option>
+          <option value="5">★★★★★ {% trans "(5 estrellas - Excelente experiencia)" %}</option>
+          <option value="4">★★★★☆ {% trans "(4 estrellas - Muy buena)" %}</option>
+          <option value="3">★★★☆☆ {% trans "(3 estrellas - Regular)" %}</option>
+          <option value="2">★★☆☆☆ {% trans "(2 estrellas - Podría mejorar)" %}</option>
+          <option value="1">★☆☆☆☆ {% trans "(1 estrella - No me gustó)" %}</option>
         </select>
       </div>
       <div>
-        <label for="calificar-comentario">Tu comentario u opinión pública (opcional)</label>
-        <textarea id="calificar-comentario" rows="3" placeholder="¿Cómo estuvo el ambiente, la puntualidad y las actividades?"></textarea>
+        <label for="calificar-comentario">{% trans "Tu comentario u opinión pública (opcional)" %}</label>
+        <textarea id="calificar-comentario" rows="3" placeholder="{% trans '¿Cómo estuvo el ambiente, la puntualidad y las actividades?' %}"></textarea>
       </div>
       <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.5rem;">
-        <button class="secundario" onclick="cerrarModalCalificar()">Cancelar</button>
+        <button class="secundario" onclick="cerrarModalCalificar()">{% trans "Cancelar" %}</button>
         <button id="btn-enviar-calificacion" class="btn-black-pill" style="padding: 0.7rem 1.4rem;">
-          Publicar reseña verificada
+          {% trans "Publicar reseña verificada" %}
         </button>
       </div>
     </div>
@@ -103,9 +104,9 @@ async function cargar() {
   if (!usuario) {
     caja.innerHTML = `
       <div class="vacio" style="padding: 3rem 1.5rem;">
-        <p style="font-size: 1.1rem; font-weight: 700; color: var(--txt); margin-bottom: 0.5rem;">Inicia sesión para consultar tus reservas</p>
-        <p class="hint" style="margin-bottom: 1.25rem;">Accede con tu correo para ver tus tickets de asistencia y estado de pagos.</p>
-        <button class="btn-black-pill" onclick="abrirModalAuth('login')">Iniciar sesión ahora</button>
+        <p style="font-size: 1.1rem; font-weight: 700; color: var(--txt); margin-bottom: 0.5rem;">${t("Inicia sesión para consultar tus reservas")}</p>
+        <p class="hint" style="margin-bottom: 1.25rem;">${t("Accede con tu correo para ver tus tickets de asistencia y estado de pagos.")}</p>
+        <button class="btn-black-pill" onclick="abrirModalAuth('login')">${t("Iniciar sesión ahora")}</button>
       </div>
     `;
     return;
@@ -116,9 +117,9 @@ async function cargar() {
     if (!reservas.length) {
       caja.innerHTML = `
         <div class="vacio" style="padding: 3rem 1.5rem;">
-          <p style="font-size: 1.1rem; font-weight: 700; color: var(--txt); margin-bottom: 0.5rem;">Aún no tienes reservas activas</p>
-          <p class="hint" style="margin-bottom: 1.25rem;">Explora los planes recomendados y asegura tu plaza en la comunidad.</p>
-          <a href="{% url 'frontend:catalogo' %}" class="btn-black-pill">Explorar catálogo →</a>
+          <p style="font-size: 1.1rem; font-weight: 700; color: var(--txt); margin-bottom: 0.5rem;">${t("Aún no tienes reservas activas")}</p>
+          <p class="hint" style="margin-bottom: 1.25rem;">${t("Explora los planes recomendados y asegura tu plaza en la comunidad.")}</p>
+          <a href="{% url 'frontend:catalogo' %}" class="btn-black-pill">${t("Explorar catálogo →")}</a>
         </div>
       `;
       return;
@@ -128,13 +129,13 @@ async function cargar() {
     const tabla = document.createElement("table");
     tabla.innerHTML = `
       <thead><tr>
-        <th>Experiencia</th>
-        <th>Fecha y hora</th>
-        <th>Ticket</th>
-        <th>Plazas</th>
-        <th>Total</th>
-        <th>Estado</th>
-        <th style="text-align: right;">Acciones</th>
+        <th>${t("Experiencia")}</th>
+        <th>${t("Fecha y hora")}</th>
+        <th>${t("Ticket")}</th>
+        <th>${t("Plazas")}</th>
+        <th>${t("Total")}</th>
+        <th>${t("Estado")}</th>
+        <th style="text-align: right;">${t("Acciones")}</th>
       </tr></thead>
       <tbody></tbody>`;
 
@@ -142,6 +143,7 @@ async function cargar() {
       const r = item.reserva;
       const fila = document.createElement("tr");
       const fechaTexto = typeof fechaTarjeta === "function" ? fechaTarjeta(item.experiencia_fecha) : fecha(item.experiencia_fecha);
+      const estadoEtiqueta = t(r.estado) || r.estado.replace('_', ' ');
 
       fila.innerHTML = `
         <td>
@@ -160,22 +162,22 @@ async function cargar() {
         <td>
           <div style="font-weight: 700;">${dinero(r.monto_total)}</div>
           ${Number(r.monto_reembolsado) > 0
-            ? `<div class="hint" style="margin:0; font-size:0.75rem; color: var(--ok);">Reembolso: ${dinero(r.monto_reembolsado)}</div>`
+            ? `<div class="hint" style="margin:0; font-size:0.75rem; color: var(--ok);">${t("Reembolso:")} ${dinero(r.monto_reembolsado)}</div>`
             : ""}
         </td>
         <td>
           <span class="etiqueta ${ETIQUETAS[r.estado] ?? ""}">
-            ${r.estado.replace('_', ' ')}
+            ${estadoEtiqueta}
           </span>
         </td>
         <td style="text-align: right;"></td>`;
 
       const acciones = fila.lastElementChild;
       if (r.estado === "PENDIENTE_PAGO") {
-        acciones.append(boton("Pagar ahora", () => confirmar(r.id), "btn-black-pill", "padding: 0.4rem 0.8rem; font-size: 0.82rem;"));
+        acciones.append(boton(t("Pagar ahora"), () => confirmar(r.id), "btn-black-pill", "padding: 0.4rem 0.8rem; font-size: 0.82rem;"));
       }
       if (r.estado === "PENDIENTE_PAGO" || r.estado === "CONFIRMADA") {
-        acciones.append(boton("Cancelar", () => cancelar(r.id), "peligro", "font-size: 0.82rem; padding: 0.4rem 0.8rem;"));
+        acciones.append(boton(t("Cancelar"), () => cancelar(r.id), "peligro", "font-size: 0.82rem; padding: 0.4rem 0.8rem;"));
       }
       if (r.estado === "CHECK_IN") {
         const contenedorResena = document.createElement("span");
@@ -184,15 +186,15 @@ async function cargar() {
           .then((resena) => {
             if (resena && resena.id) {
               contenedorResena.innerHTML = `
-                <span class="badge-verificado" title="${resena.comentario || 'Sin comentario escrito'}">
-                  ★ ${resena.calificacion}/5 Reseña publicada
+                <span class="badge-verificado" title="${resena.comentario || t('Sin comentario escrito')}">
+                  ★ ${resena.calificacion}/5 ${t("Reseña publicada")}
                 </span>`;
             } else {
-              contenedorResena.append(boton("⭐ Calificar", () => calificar(r.id, item.experiencia_titulo), "btn-card-reviews", "font-size: 0.82rem; padding: 0.4rem 0.8rem;"));
+              contenedorResena.append(boton(t("⭐ Calificar"), () => calificar(r.id, item.experiencia_titulo), "btn-card-reviews", "font-size: 0.82rem; padding: 0.4rem 0.8rem;"));
             }
           })
           .catch(() => {
-            contenedorResena.append(boton("⭐ Calificar", () => calificar(r.id, item.experiencia_titulo), "btn-card-reviews", "font-size: 0.82rem; padding: 0.4rem 0.8rem;"));
+            contenedorResena.append(boton(t("⭐ Calificar"), () => calificar(r.id, item.experiencia_titulo), "btn-card-reviews", "font-size: 0.82rem; padding: 0.4rem 0.8rem;"));
           });
       }
       tabla.querySelector("tbody").append(fila);

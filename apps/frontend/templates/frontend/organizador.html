@@ -1,135 +1,136 @@
 {% extends "frontend/base.html" %}
-{% block titulo %}Panel de anfitriones — MeetU2{% endblock %}
+{% load i18n %}
+{% block titulo %}{% trans "Panel de anfitriones — MeetU2" %}{% endblock %}
 
 {% block contenido %}
 <div style="margin-bottom: 2rem;">
-  <div class="catalogue-eyebrow">ÁREA DE ANFITRIONES</div>
-  <h1 style="font-size: 2.25rem; font-weight: 800; letter-spacing: -0.03em; margin: 0 0 0.5rem;">Panel del organizador</h1>
+  <div class="catalogue-eyebrow">{% trans "ÁREA DE ANFITRIONES" %}</div>
+  <h1 style="font-size: 2.25rem; font-weight: 800; letter-spacing: -0.03em; margin: 0 0 0.5rem;">{% trans "Panel del organizador" %}</h1>
   <p class="hint" style="max-width: 680px; margin: 0;">
-    Crea tus planes, administra tus sedes y aforos, valida tickets en puerta con check-in en tiempo real y consulta tu reputación y liquidación.
+    {% trans "Crea tus planes, administra tus sedes y aforos, valida tickets en puerta con check-in en tiempo real y consulta tu reputación y liquidación." %}
   </p>
 </div>
 
 <!-- 1. Perfil de organizador -->
 <section class="card">
-  <h2>1. Perfil de organizador</h2>
+  <h2>{% trans "1. Perfil de organizador" %}</h2>
   <div class="fila">
     <div>
-      <label for="nombre-comercial">Nombre comercial o de tu colectivo</label>
+      <label for="nombre-comercial">{% trans "Nombre comercial o de tu colectivo" %}</label>
       <input id="nombre-comercial" placeholder="Colectivo Café &amp; Ritmo">
     </div>
     <div>
-      <label for="cuenta">Cuenta bancaria de desembolsos</label>
+      <label for="cuenta">{% trans "Cuenta bancaria de desembolsos" %}</label>
       <input id="cuenta" placeholder="123456789">
     </div>
-    <button id="btn-organizador" class="btn-black-pill" style="padding: 0.75rem 1.4rem;">Crear perfil</button>
-    <button id="btn-verificar" class="secundario" disabled>Verificar (backoffice)</button>
+    <button id="btn-organizador" class="btn-black-pill" style="padding: 0.75rem 1.4rem;">{% trans "Crear perfil" %}</button>
+    <button id="btn-verificar" class="secundario" disabled>{% trans "Verificar (backoffice)" %}</button>
   </div>
   <p class="hint" id="estado-organizador" style="margin-top: 0.5rem;">
-    Inicia sesión en la parte superior y luego crea aquí tu perfil de organizador.
+    {% trans "Inicia sesión en la parte superior y luego crea aquí tu perfil de organizador." %}
   </p>
 </section>
 
 <!-- 2. Ubicación y categorías -->
 <section class="card">
-  <h2>2. Sedes, aforos y categorías</h2>
+  <h2>{% trans "2. Sedes, aforos y categorías" %}</h2>
   <div class="fila">
     <div>
-      <label for="u-nombre">Nombre del sitio</label>
+      <label for="u-nombre">{% trans "Nombre del sitio" %}</label>
       <input id="u-nombre" placeholder="Casa Rosé">
     </div>
     <div>
-      <label for="u-direccion">Dirección</label>
+      <label for="u-direccion">{% trans "Dirección" %}</label>
       <input id="u-direccion" placeholder="Cra 35 #8A-3">
     </div>
     <div>
-      <label for="u-ciudad">Ciudad</label>
+      <label for="u-ciudad">{% trans "Ciudad" %}</label>
       <input id="u-ciudad" placeholder="Medellín" value="Medellín">
     </div>
     <div>
-      <label for="u-aforo">Aforo máximo</label>
+      <label for="u-aforo">{% trans "Aforo máximo" %}</label>
       <input id="u-aforo" type="number" min="1" value="30">
     </div>
-    <button id="btn-ubicacion" class="secundario">Crear sede</button>
+    <button id="btn-ubicacion" class="secundario">{% trans "Crear sede" %}</button>
   </div>
   <div class="fila" style="margin-top: 1rem; padding-top: 1rem; border-top: 1px dashed var(--border);">
     <div>
-      <label for="c-nombre">Nueva categoría</label>
+      <label for="c-nombre">{% trans "Nueva categoría" %}</label>
       <input id="c-nombre" placeholder="Ej. Cerámica y Vino">
     </div>
-    <button id="btn-categoria" class="secundario">Crear categoría</button>
+    <button id="btn-categoria" class="secundario">{% trans "Crear categoría" %}</button>
   </div>
 </section>
 
 <!-- 3. Publicar experiencia -->
 <section class="card">
-  <h2>3. Publicar nueva experiencia</h2>
+  <h2>{% trans "3. Publicar nueva experiencia" %}</h2>
   <div class="fila">
     <div>
-      <label for="titulo">Título de la actividad</label>
+      <label for="titulo">{% trans "Título de la actividad" %}</label>
       <input id="titulo" placeholder="Cata de cafés de origen y jazz">
     </div>
     <div>
-      <label for="ubicacion">Sede / Ubicación</label>
+      <label for="ubicacion">{% trans "Sede / Ubicación" %}</label>
       <select id="ubicacion"></select>
     </div>
   </div>
-  <label for="descripcion">Descripción de la propuesta</label>
+  <label for="descripcion">{% trans "Descripción de la propuesta" %}</label>
   <textarea id="descripcion" rows="2" placeholder="Describe qué harán, qué incluye y qué van a experimentar..."></textarea>
   <div class="fila">
     <div>
-      <label for="fecha">Fecha y hora (mínimo 2h adelante)</label>
+      <label for="fecha">{% trans "Fecha y hora (mínimo 2h adelante)" %}</label>
       <input id="fecha" type="datetime-local">
     </div>
     <div>
-      <label for="precio">Precio por persona ($)</label>
+      <label for="precio">{% trans "Precio por persona ($)" %}</label>
       <input id="precio" type="number" min="0" placeholder="45000">
     </div>
     <div>
-      <label for="cupo">Cupo máximo (menor o igual al aforo)</label>
+      <label for="cupo">{% trans "Cupo máximo (menor o igual al aforo)" %}</label>
       <input id="cupo" type="number" min="1" placeholder="12">
     </div>
     <div>
-      <label for="descuento">Descuento (0 a 1)</label>
+      <label for="descuento">{% trans "Descuento (0 a 1)" %}</label>
       <input id="descuento" type="number" min="0" max="1" step="0.05" value="0">
     </div>
   </div>
   <div class="fila">
     <div>
-      <label for="categorias">Categorías de interés vinculadas</label>
+      <label for="categorias">{% trans "Categorías de interés vinculadas" %}</label>
       <select id="categorias" multiple size="3"></select>
     </div>
     <button id="btn-publicar" class="btn-black-pill" style="padding: 0.8rem 1.6rem;" disabled>
-      Publicar experiencia →
+      {% trans "Publicar experiencia →" %}
     </button>
   </div>
   <p class="hint" style="margin-top: 0.5rem;">
-    El <b>ExperienciaBuilder</b> valida automáticamente la antelación de tiempo y que los cupos no superen el aforo máximo de la sede seleccionada.
+    {% trans "El ExperienciaBuilder valida automáticamente la antelación de tiempo y que los cupos no superen el aforo máximo de la sede seleccionada." %}
   </p>
 </section>
 
 <!-- 4. Check-in de asistentes en puerta -->
 <section class="card">
-  <h2>4. Control de acceso (Check-in en puerta)</h2>
+  <h2>{% trans "4. Control de acceso (Check-in en puerta)" %}</h2>
   <div class="fila">
     <div style="max-width: 380px;">
-      <label for="ticket">Código de ticket del asistente</label>
+      <label for="ticket">{% trans "Código de ticket del asistente" %}</label>
       <input id="ticket" placeholder="Ej. X3CY62XK" style="text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em;">
     </div>
     <button id="btn-checkin" class="btn-black-pill" style="padding: 0.75rem 1.4rem;" disabled>
-      ✓ Validar y registrar check-in
+      {% trans "✓ Validar y registrar check-in" %}
     </button>
   </div>
   <p class="hint" style="margin-top: 0.5rem;">
-    Habilitado dentro de la ventana de 3 horas alrededor del horario del evento. Al validar, habilita al asistente para publicar su reseña verificada.
+    {% trans "Habilitado dentro de la ventana de 3 horas alrededor del horario del evento. Al validar, habilita al asistente para publicar su reseña verificada." %}
   </p>
 </section>
 
 <!-- 5. Liquidación (Strangler Flask) -->
 <section class="card" id="card-liquidacion" hidden>
-  <h2>5. Liquidación de ingresos (Microservicio de pagos)</h2>
+  <h2>{% trans "5. Liquidación de ingresos (Microservicio de pagos)" %}</h2>
   <p class="hint">
-    Cálculo en tiempo real atendido por Flask en <code>/api/v2/pagos/organizadores/{id}/liquidacion</code>: ingresos cobrados, comisión de la plataforma y reembolsos aplicados.
+    {% trans "Cálculo en tiempo real atendido por Flask en /api/v2/pagos/organizadores/{id}/liquidacion: ingresos cobrados, comisión de la plataforma y reembolsos aplicados." %}
   </p>
   <div id="liquidacion"></div>
 </section>
@@ -137,11 +138,11 @@
 <!-- 6. Reseñas y Reputación (Módulo Social) -->
 <section class="card" id="card-resenas" hidden>
   <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 0.5rem;">
-    <h2>6. Reputación y reseñas de tus asistentes</h2>
-    <span class="badge-verificado">✓ Solo asistentes con check-in</span>
+    <h2>{% trans "6. Reputación y reseñas de tus asistentes" %}</h2>
+    <span class="badge-verificado">{% trans "✓ Solo asistentes con check-in" %}</span>
   </div>
   <p class="hint">
-    Calificaciones de 1 a 5 estrellas dejadas por asistentes comprobados al terminar la actividad.
+    {% trans "Calificaciones de 1 a 5 estrellas dejadas por asistentes comprobados al terminar la actividad." %}
   </p>
   <div id="metricas-resenas"></div>
   <div id="lista-resenas" style="margin-top: 1rem;"></div>
@@ -150,7 +151,7 @@
 <!-- 7. Mis experiencias publicadas -->
 <section class="card" style="padding: 0; overflow: hidden;">
   <div style="padding: 1.25rem 1.5rem 0.5rem;">
-    <h2>7. Experiencias activas en catálogo</h2>
+    <h2>{% trans "7. Experiencias activas en catálogo" %}</h2>
   </div>
   <div id="mis-experiencias"></div>
 </section>
@@ -158,19 +159,19 @@
 <!-- 8. Auditoría y Reportes Asíncronos (Message Broker Celery / Redis - Entregable 2) -->
 <section class="card" id="card-reportes-celery">
   <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 0.5rem;">
-    <h2>8. Auditoría y Reportes de Fondo (Message Broker Celery/Redis)</h2>
-    <span class="badge-verificado">⚡ Procesamiento Asíncrono</span>
+    <h2>{% trans "8. Auditoría y Reportes de Fondo (Message Broker Celery/Redis)" %}</h2>
+    <span class="badge-verificado">{% trans "⚡ Procesamiento Asíncrono" %}</span>
   </div>
   <p class="hint">
-    Genera informes consolidados de plataforma y métricas de auditoría en segundo plano mediante Celery Worker y Redis Message Broker sin bloquear la aplicación web.
+    {% trans "Genera informes consolidados de plataforma y métricas de auditoría en segundo plano mediante Celery Worker y Redis Message Broker sin bloquear la aplicación web." %}
   </p>
   <div class="fila" style="align-items: flex-end;">
     <div style="max-width: 340px;">
-      <label for="reporte-correo">Correo para recepción del informe</label>
+      <label for="reporte-correo">{% trans "Correo para recepción del informe" %}</label>
       <input id="reporte-correo" type="email" value="laura@meetu2.co">
     </div>
     <button id="btn-generar-reporte-celery" class="btn-black-pill" style="padding: 0.75rem 1.4rem;">
-      📊 Generar reporte asíncrono
+      {% trans "📊 Generar reporte asíncrono" %}
     </button>
   </div>
   <div id="resultado-reporte-celery" style="margin-top: 1rem;" class="oculto"></div>
@@ -187,11 +188,11 @@ function pintarOrganizador() {
 
   if (organizador) {
     const estrellas = Number(organizador.calificacion_promedio) > 0
-      ? `<span class="badge-verificado" style="margin-left: 0.5rem;">★ ${organizador.calificacion_promedio} reputación</span>`
-      : `<span class="etiqueta" style="margin-left: 0.5rem;">Sin calificaciones todavía</span>`;
+      ? `<span class="badge-verificado" style="margin-left: 0.5rem;">★ ${organizador.calificacion_promedio} ${t("reputación")}</span>`
+      : `<span class="etiqueta" style="margin-left: 0.5rem;">${t("Sin calificaciones todavía")}</span>`;
     caja.innerHTML =
-      `Perfil: <b>${organizador.nombre_comercial}</b> ` +
-      `<span class="etiqueta ${listo ? "ok" : "warn"}">${organizador.estado_verificacion}</span> ` +
+      `${t("Perfil:")} <b>${organizador.nombre_comercial}</b> ` +
+      `<span class="etiqueta ${listo ? "ok" : "warn"}">${t(organizador.estado_verificacion) || organizador.estado_verificacion}</span> ` +
       estrellas;
   }
   $("btn-verificar").disabled = !organizador || listo;
@@ -204,7 +205,7 @@ async function cargarPerfil() {
   const usuario = sesion.get();
   if (!usuario) {
     $("estado-organizador").innerHTML = `
-      <span style="color: var(--err);">Inicia sesión primero para vincular o ver tu perfil de organizador.</span>
+      <span style="color: var(--err);">${t("Inicia sesión primero para vincular o ver tu perfil de organizador.")}</span>
     `;
     return;
   }
@@ -233,29 +234,29 @@ async function cargarResenasOrganizador() {
     $("metricas-resenas").innerHTML = `
       <div style="display: flex; gap: 2rem; background: #faf8f5; padding: 1rem 1.25rem; border-radius: 12px; border: 1px solid var(--border);">
         <div>
-          <div style="font-size: 0.8rem; color: var(--txt-muted); font-weight: 700; text-transform: uppercase;">Calificación Promedio</div>
+          <div style="font-size: 0.8rem; color: var(--txt-muted); font-weight: 700; text-transform: uppercase;">${t("Calificación Promedio")}</div>
           <div style="font-size: 1.6rem; font-weight: 800; color: var(--txt);">
             <span class="estrellas">★</span> ${metricas.calificacion_promedio} <span style="font-size: 0.9rem; color: var(--txt-muted); font-weight: normal;">/ 5.0</span>
           </div>
         </div>
         <div>
-          <div style="font-size: 0.8rem; color: var(--txt-muted); font-weight: 700; text-transform: uppercase;">Total Evaluaciones</div>
+          <div style="font-size: 0.8rem; color: var(--txt-muted); font-weight: 700; text-transform: uppercase;">${t("Total Evaluaciones")}</div>
           <div style="font-size: 1.6rem; font-weight: 800; color: var(--txt);">${metricas.total_resenas}</div>
         </div>
       </div>
     `;
     if (!resenas.length) {
-      $("lista-resenas").innerHTML = '<p class="vacio">Tus asistentes aún no han publicado reseñas para tus planes.</p>';
+      $("lista-resenas").innerHTML = `<p class="vacio">${t("Tus asistentes aún no han publicado reseñas para tus planes.")}</p>`;
       return;
     }
     $("lista-resenas").innerHTML = `<div class="resenas-grid">` + resenas.map(r => `
       <div class="resena-tarjeta">
         <div class="autor">
-          <span>${r.usuario_nombre || 'Asistente'}</span>
-          <span class="badge-verificado">✓ Check-in verificado</span>
+          <span>${r.usuario_nombre || t('Asistente')}</span>
+          <span class="badge-verificado">${t("✓ Check-in verificado")}</span>
         </div>
         <div style="font-size: 0.82rem; color: var(--primary); font-weight: 700;">
-          ${r.experiencia_titulo || 'Experiencia'}
+          ${r.experiencia_titulo || t('Experiencia')}
         </div>
         <div class="estrellas">
           ${'★'.repeat(r.calificacion)}${'☆'.repeat(5 - r.calificacion)}
@@ -263,7 +264,7 @@ async function cargarResenasOrganizador() {
             ${r.calificacion}/5
           </span>
         </div>
-        ${r.comentario ? `<div class="comentario">“${r.comentario}”</div>` : '<div class="hint" style="margin:0;">Sin comentario escrito</div>'}
+        ${r.comentario ? `<div class="comentario">“${r.comentario}”</div>` : `<div class="hint" style="margin:0;">${t("Sin comentario escrito")}</div>`}
         <div class="hint" style="font-size: 0.75rem; margin-top: auto; margin-bottom: 0;">${fecha(r.creado_en)}</div>
       </div>
     `).join("") + `</div>`;
@@ -279,12 +280,12 @@ async function cargarLiquidacion() {
     const l = await api.liquidacionOrganizador(organizador.id);
     $("liquidacion").innerHTML = `
       <table><tbody>
-        <tr><td>Pagos procesados</td><td style="font-weight: 600;">${l.pagos_considerados} transacciones</td></tr>
-        <tr><td>Total recaudado bruto</td><td style="font-weight: 600;">${dinero(l.total_cobrado)}</td></tr>
-        <tr><td>Reembolsos por cancelaciones</td><td style="color: var(--err);">${dinero(l.total_reembolsado)}</td></tr>
-        <tr><td>Comisión de plataforma (10%)</td><td style="color: var(--txt-muted);">${dinero(l.comision_plataforma)}</td></tr>
+        <tr><td>${t("Pagos procesados")}</td><td style="font-weight: 600;">${l.pagos_considerados} ${t("transacciones")}</td></tr>
+        <tr><td>${t("Total recaudado bruto")}</td><td style="font-weight: 600;">${dinero(l.total_cobrado)}</td></tr>
+        <tr><td>${t("Reembolsos por cancelaciones")}</td><td style="color: var(--err);">${dinero(l.total_reembolsado)}</td></tr>
+        <tr><td>${t("Comisión de plataforma (10%)")}</td><td style="color: var(--txt-muted);">${dinero(l.comision_plataforma)}</td></tr>
         <tr style="background: #faf8f5;">
-          <td><b style="font-size: 1rem;">Neto a desembolsar</b></td>
+          <td><b style="font-size: 1rem;">${t("Neto a desembolsar")}</b></td>
           <td><b style="font-size: 1.15rem; color: var(--ok);">${dinero(l.neto_a_desembolsar)}</b></td>
         </tr>
       </tbody></table>`;
@@ -316,43 +317,44 @@ async function cargarExperiencias() {
     const experiencias = await api.experienciasDeOrganizador(organizador.id);
     const caja = $("mis-experiencias");
     if (!experiencias.length) {
-      caja.innerHTML = '<p class="vacio">Aún no has publicado experiencias.</p>';
+      caja.innerHTML = `<p class="vacio">${t("Aún no has publicado experiencias.")}</p>`;
       return;
     }
     const tabla = document.createElement("table");
     tabla.innerHTML = `
       <thead><tr>
-        <th>Título</th>
-        <th>Fecha y hora</th>
-        <th>Precio</th>
-        <th>Plazas</th>
-        <th>Estado</th>
-        <th style="text-align: right;">Acciones</th>
+        <th>${t("Título")}</th>
+        <th>${t("Fecha y hora")}</th>
+        <th>${t("Precio")}</th>
+        <th>${t("Plazas")}</th>
+        <th>${t("Estado")}</th>
+        <th style="text-align: right;">${t("Acciones")}</th>
       </tr></thead>
       <tbody></tbody>`;
 
     experiencias.forEach((exp) => {
       const fila = document.createElement("tr");
       const fechaTexto = typeof fechaTarjeta === "function" ? fechaTarjeta(exp.fecha_hora) : fecha(exp.fecha_hora);
+      const estadoEtiqueta = t(exp.estado) || exp.estado;
 
       fila.innerHTML = `
         <td style="font-weight: 700;">${exp.titulo}</td>
         <td style="color: var(--primary); font-weight: 600; font-size: 0.85rem;">${fechaTexto}</td>
         <td style="font-weight: 700;">${dinero(exp.precio)}</td>
-        <td><span class="badge-availability-lime" style="position:static;">${exp.cupo_disponible} / ${exp.cupo_maximo} libres</span></td>
-        <td><span class="etiqueta ${exp.estado === 'PUBLICADA' ? 'ok' : ''}">${exp.estado}</span></td>
+        <td><span class="badge-availability-lime" style="position:static;">${exp.cupo_disponible} / ${exp.cupo_maximo} ${t("libres")}</span></td>
+        <td><span class="etiqueta ${exp.estado === 'PUBLICADA' ? 'ok' : ''}">${estadoEtiqueta}</span></td>
         <td style="text-align: right;"></td>`;
 
       if (exp.estado !== "CANCELADA" && exp.estado !== "FINALIZADA") {
         const b = document.createElement("button");
-        b.textContent = "Cancelar plan";
+        b.textContent = t("Cancelar plan");
         b.className = "peligro";
         b.style.fontSize = "0.8rem";
         b.style.padding = "0.35rem 0.75rem";
         b.onclick = async () => {
           try {
             await api.cancelarExperiencia(exp.id, organizador.id, "cancelada por el anfitrión");
-            toast("Experiencia cancelada.");
+            toast(t("Experiencia cancelada."));
             cargarExperiencias();
           } catch (e) {
             mostrarError(e);
