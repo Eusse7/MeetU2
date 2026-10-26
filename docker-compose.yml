@@ -52,9 +52,8 @@ services:
       POSTGRES_HOST: db
       POSTGRES_DB: meetu2
       DJANGO_DEBUG: "False"
-      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:-cambiar-en-produccion}
-      DJANGO_ALLOWED_HOSTS: localhost,127.0.0.1,django
-      DJANGO_CSRF_TRUSTED_ORIGINS: http://localhost:8080,http://127.0.0.1:8080
+      DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-localhost,127.0.0.1,django,*}
+      DJANGO_CSRF_TRUSTED_ORIGINS: ${DJANGO_CSRF_TRUSTED_ORIGINS:-http://localhost:8080,http://127.0.0.1:8080,http://localhost,http://127.0.0.1}
       CANAL_NOTIFICACION: asincrono
       CELERY_BROKER_URL: redis://redis:6379/0
       CELERY_RESULT_BACKEND: redis://redis:6379/0
@@ -62,6 +61,8 @@ services:
       PAGOS_SERVICE_URL: http://pagos:5000
       PAGOS_V2_HABILITADO: "True"
       SEED_DEMO: ${SEED_DEMO:-1}
+      SERVICIO_ALIADO_URL: ${SERVICIO_ALIADO_URL:-}
+      CLIMA_PROVIDER: ${CLIMA_PROVIDER:-open_meteo}
     volumes:
       - static_files:/app/staticfiles
     depends_on:
@@ -160,6 +161,7 @@ services:
   nginx:
     image: nginx:1.27-alpine
     ports:
+      - "80:80"
       - "8080:80"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
