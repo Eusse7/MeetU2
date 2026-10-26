@@ -1,7 +1,7 @@
 # MeetU2
 
 **Marketplace de experiencias sociales.** Conecta personas a través de
-actividades presenciales reservables: un organizador publica experiencias con
+actividades presenciales reservables: un organizador publica experiencias con un
 cupo limitado, un asistente las descubre según sus intereses, reserva, paga y
 hace check-in el día del evento. La plataforma cobra una comisión por reserva.
 
