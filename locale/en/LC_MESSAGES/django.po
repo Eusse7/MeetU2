@@ -479,3 +479,36 @@ msgstr "Estimated total stay:"
 
 msgid "Confirmar Reserva Hotelera →"
 msgstr "Confirm Hotel Booking →"
+
+msgid "SERVICIO A CONSUMIR · HOTELMDJ"
+msgstr "SERVICE TO CONSUME · HOTELMDJ"
+
+msgid "Hoteles y Hospedajes hotelMDJ"
+msgstr "hotelMDJ Hotels & Lodgings"
+
+msgid "Encuentra alojamiento de calidad cerca de tus experiencias, consumido en tiempo real desde la API de hotelMDJ mediante Patrón Adapter."
+msgstr "Find quality lodging near your experiences, consumed in real time from the hotelMDJ API via Adapter Pattern."
+
+msgid "🏨 API hotelMDJ Conectada"
+msgstr "🏨 hotelMDJ API Connected"
+
+msgid "Reserva en hotelMDJ"
+msgstr "hotelMDJ Booking"
+
+msgid "Confirmar Reserva hotelMDJ →"
+msgstr "Confirm hotelMDJ Booking →"
+
+msgid "Gestiona tus experiencias confirmadas, tus vouchers de hospedajes en hotelMDJ, y califica las actividades a las que ya asististe."
+msgstr "Manage your confirmed experiences, your hotelMDJ lodging vouchers, and review attended activities."
+
+msgid "Hospedajes hotelMDJ"
+msgstr "hotelMDJ Lodgings"
+
+msgid "Vouchers y Estadías en hotelMDJ"
+msgstr "Vouchers & Stays in hotelMDJ"
+
+msgid "Reservas directas gestionadas mediante la integración en vivo con hotelMDJ."
+msgstr "Direct bookings managed through live hotelMDJ integration."
+
+msgid "+ Reservar en hotelMDJ"
+msgstr "+ Book in hotelMDJ"

@@ -61,7 +61,8 @@ class PlanesAliadosAPIView(APIView):
 
         return Response(
             {
-                "fuente": "Red Hotelera Aliada (Servicio de Hoteles)",
+                "fuente": "hotelMDJ (Servicio de Hoteles Aliado)",
+                "servicio_aliado": "hotelMDJ",
                 "tipo_servicio": "Hospedajes y Hoteles",
                 "total": len(planes),
                 "planes": [
@@ -160,7 +161,7 @@ class DetalleReporteAsincronoAPIView(APIView):
 
 class PartnerHotelesAPIView(APIView):
     """
-    API REST de la Red Hotelera Aliada (HotelHub Integration).
+    API REST del Servicio de Hoteles Aliado (hotelMDJ Integration).
     Expone el catálogo en vivo de alojamientos y hospedajes disponibles
     para consumo por parte de la plataforma MeetU2 y aplicaciones autorizadas.
     """
@@ -168,8 +169,8 @@ class PartnerHotelesAPIView(APIView):
     def get(self, request: Request) -> Response:
         return Response(
             {
-                "servicio": "HotelHub Cloud API v2.4",
-                "proveedor": "Red Hotelera Nacional & Alojamientos Aliados",
+                "servicio": "hotelMDJ Cloud API v2.4",
+                "proveedor": "hotelMDJ — Cadena & Alojamientos Aliados",
                 "estado": "operativo",
                 "total": 4,
                 "hoteles": [
@@ -183,8 +184,8 @@ class PartnerHotelesAPIView(APIView):
                         "habitaciones_disponibles": 5,
                         "estrellas": 4.9,
                         "amenidades": ["☕ Desayuno buffet", "🏊 Piscina en terraza", "🧖 Spa & Sauna", "📶 WiFi 500 Mbps"],
-                        "url_reserva": "https://hoteles-aliados.com/hotel/poblado-boutique",
-                        "cadena": "Cadena Hotelera Estelar (Red Aliada)",
+                        "url_reserva": "https://hotelmdj.com/hotel/poblado-boutique",
+                        "cadena": "Cadena Hotelera Estelar (hotelMDJ)",
                         "imagen": "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&auto=format&fit=crop",
                     },
                     {
@@ -197,8 +198,8 @@ class PartnerHotelesAPIView(APIView):
                         "habitaciones_disponibles": 3,
                         "estrellas": 4.8,
                         "amenidades": ["🔥 Fogata nocturna", "🛁 Jacuzzi privado", "🍳 Desayuno campesino", "🌿 Vista panorámica"],
-                        "url_reserva": "https://hoteles-aliados.com/hotel/glamping-santa-elena",
-                        "cadena": "EcoHoteles Antioquia (Red Aliada)",
+                        "url_reserva": "https://hotelmdj.com/hotel/glamping-santa-elena",
+                        "cadena": "EcoHoteles Antioquia (hotelMDJ)",
                         "imagen": "https://images.unsplash.com/photo-1587061949409-02df41d5e562?w=800&auto=format&fit=crop",
                     },
                     {
@@ -211,8 +212,8 @@ class PartnerHotelesAPIView(APIView):
                         "habitaciones_disponibles": 6,
                         "estrellas": 4.7,
                         "amenidades": ["🍹 Rooftop Bar", "☕ Cafetería de autor", "🏋️ Gimnasio", "📶 WiFi 500 Mbps"],
-                        "url_reserva": "https://hoteles-aliados.com/hotel/laureles-urban",
-                        "cadena": "Urban Boutique Hotels (Red Aliada)",
+                        "url_reserva": "https://hotelmdj.com/hotel/laureles-urban",
+                        "cadena": "Urban Boutique Hotels (hotelMDJ)",
                         "imagen": "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=800&auto=format&fit=crop",
                     },
                     {
@@ -225,8 +226,8 @@ class PartnerHotelesAPIView(APIView):
                         "habitaciones_disponibles": 4,
                         "estrellas": 4.9,
                         "amenidades": ["⛵ Muelle náutico", "🏊 Piscina infinita", "🍽️ Restaurante lacustre", "🚴 Kayaks incluidos"],
-                        "url_reserva": "https://hoteles-aliados.com/hotel/guatape-resort",
-                        "cadena": "Lakeside Resorts (Red Aliada)",
+                        "url_reserva": "https://hotelmdj.com/hotel/guatape-resort",
+                        "cadena": "Lakeside Resorts (hotelMDJ)",
                         "imagen": "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800&auto=format&fit=crop",
                     },
                 ],
@@ -241,8 +242,8 @@ SimuladorHotelesAPIView = PartnerHotelesAPIView
 
 class ReservarHotelAliadoAPIView(APIView):
     """
-    Transacción de reserva con la Red Hotelera Aliada.
-    Genera el voucher hotelero oficial y persiste la reserva en base de datos
+    Transacción de reserva con el servicio aliado hotelMDJ.
+    Genera el voucher oficial y persiste la reserva en base de datos
     asociándola a la cuenta del usuario para su consulta en 'Mis reservas'.
     """
 
@@ -281,7 +282,7 @@ class ReservarHotelAliadoAPIView(APIView):
             except (ValueError, AttributeError):
                 usuario_id = None
 
-        codigo_reserva = f"HTL-{uuid4().hex[:6].upper()}"
+        codigo_reserva = f"MDJ-{uuid4().hex[:6].upper()}"
 
         reserva = ReservaHotel.objects.create(
             usuario_id=usuario_id,
@@ -305,6 +306,7 @@ class ReservarHotelAliadoAPIView(APIView):
         return Response(
             {
                 "status": "confirmada",
+                "servicio_aliado": "hotelMDJ",
                 "id": str(reserva.id),
                 "codigo_reserva": reserva.codigo_reserva,
                 "hotel_id": reserva.hotel_id,
@@ -321,7 +323,7 @@ class ReservarHotelAliadoAPIView(APIView):
                 "correo": reserva.huesped_correo,
                 "usuario_id": str(reserva.usuario_id) if reserva.usuario_id else None,
                 "imagen_url": reserva.imagen_url,
-                "mensaje": f"¡Reserva confirmada en {reserva.nombre_hotel}! Voucher de confirmación: {reserva.codigo_reserva}",
+                "mensaje": f"¡Reserva confirmada en {reserva.nombre_hotel} con hotelMDJ! Voucher de confirmación: {reserva.codigo_reserva}",
             },
             status=status.HTTP_201_CREATED,
         )

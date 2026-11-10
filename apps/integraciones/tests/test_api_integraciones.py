@@ -44,7 +44,7 @@ def test_endpoint_partner_hotels_y_simulador():
     resp = client.get("/api/v1/integracion/partner/hotels/")
     assert resp.status_code == status.HTTP_200_OK
     data = resp.json()
-    assert "HotelHub" in data["servicio"]
+    assert "hotelMDJ" in data["servicio"]
     assert "hoteles" in data
     assert len(data["hoteles"]) >= 1
     assert data["hoteles"][0]["precio_noche"] > 0
@@ -82,7 +82,7 @@ def test_endpoint_reservar_hotel_aliado_y_aislamiento_entre_usuarios():
     assert resp.status_code == status.HTTP_201_CREATED
     data = resp.json()
     assert data["status"] == "confirmada"
-    assert data["codigo_reserva"].startswith("HTL-")
+    assert data["codigo_reserva"].startswith("MDJ-")
     assert data["hotel"] == "Hotel Boutique & Spa El Poblado"
     assert data["noches"] == 2
     assert data["monto_total"] == 440000.0

@@ -1,6 +1,6 @@
 """
 Modelos para el contexto acotado de Integraciones.
-Persistencia de transacciones y vouchers de la red hotelera aliada.
+Persistencia de transacciones y vouchers del servicio aliado hotelMDJ.
 """
 from django.core.validators import MinValueValidator
 from django.db import models
@@ -10,7 +10,7 @@ from apps.shared.domain.base_models import BaseEntity
 
 class ReservaHotel(BaseEntity):
     """
-    Reserva confirmada en la Red Hotelera Aliada (HotelHub).
+    Reserva confirmada en el servicio aliado hotelMDJ.
     Vincula al usuario de MeetU2 con el voucher emitido por el servicio de hoteles.
     """
     usuario_id = models.UUIDField(db_index=True, null=True, blank=True)

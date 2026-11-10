@@ -134,14 +134,14 @@
 <section class="catalogue-section" id="seccion-planes-aliados" style="padding-top: 0;">
   <div class="catalogue-header">
     <div>
-      <div class="catalogue-eyebrow">{% trans "SERVICIO A CONSUMIR · RED HOTELERA ALIADA" %}</div>
-      <h2 class="catalogue-title">{% trans "Hoteles y Hospedajes Aliados" %}</h2>
+      <div class="catalogue-eyebrow">{% trans "SERVICIO A CONSUMIR · HOTELMDJ" %}</div>
+      <h2 class="catalogue-title">{% trans "Hoteles y Hospedajes hotelMDJ" %}</h2>
       <p class="hint" style="margin: 0.25rem 0 0;">
-        {% trans "Encuentra alojamiento de calidad cerca de tus experiencias, consumido en tiempo real desde la API del servicio de hoteles aliado mediante Patrón Adapter." %}
+        {% trans "Encuentra alojamiento de calidad cerca de tus experiencias, consumido en tiempo real desde la API de hotelMDJ mediante Patrón Adapter." %}
       </p>
     </div>
     <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
-      <span class="badge-verificado" style="font-size: 0.78rem;">{% trans "🏨 API HotelHub Conectada" %}</span>
+      <span class="badge-verificado" style="font-size: 0.78rem;">{% trans "🏨 API hotelMDJ Conectada" %}</span>
       <button id="btn-recargar-aliados" class="secundario" style="font-size: 0.85rem; padding: 0.4rem 0.8rem;" onclick="cargarPlanesAliados()">
         {% trans "↻ Actualizar hoteles" %}
       </button>
@@ -213,7 +213,7 @@
 <div id="modal-reserva-hotel" class="modal-overlay oculto">
   <div class="modal-contenido" style="max-width: 520px;">
     <div class="modal-header">
-      <h3 id="modal-hotel-titulo">{% trans "Reserva en Hotel Aliado" %}</h3>
+      <h3 id="modal-hotel-titulo">{% trans "Reserva en hotelMDJ" %}</h3>
       <button class="modal-cerrar" onclick="cerrarModalReservaHotel()">&times;</button>
     </div>
     
@@ -257,7 +257,7 @@
         <div id="modal-hotel-total" style="font-size: 1.5rem; font-weight: 800; color: var(--txt);">-</div>
       </div>
       <button id="btn-confirmar-reserva-hotel" class="btn-black-pill" style="padding: 0.8rem 1.4rem; font-size: 0.95rem;">
-        {% trans "Confirmar Reserva Hotelera →" %}
+        {% trans "Confirmar Reserva hotelMDJ →" %}
       </button>
     </div>
   </div>
@@ -679,14 +679,14 @@ let hotelSeleccionadoParaReserva = null;
 async function cargarPlanesAliados() {
   const caja = $("grid-aliados");
   if (!caja || typeof api?.planesAliados !== "function") return;
-  caja.innerHTML = `<p class="hint" style="grid-column: 1 / -1;">${t("Cargando hoteles y hospedajes de la red aliada...")}</p>`;
+  caja.innerHTML = `<p class="hint" style="grid-column: 1 / -1;">${t("Cargando hoteles y hospedajes de hotelMDJ...")}</p>`;
 
   try {
     const res = await api.planesAliados();
     const planes = res.planes || [];
     hotelesAliadosCache = planes;
     if (!planes.length) {
-      caja.innerHTML = `<p class="vacio" style="grid-column: 1 / -1;">${t("No hay hoteles disponibles en la red aliada en este momento.")}</p>`;
+      caja.innerHTML = `<p class="vacio" style="grid-column: 1 / -1;">${t("No hay hoteles disponibles en hotelMDJ en este momento.")}</p>`;
       return;
     }
 
@@ -704,7 +704,7 @@ async function cargarPlanesAliados() {
         <div class="exp-card-media">
           <img src="${img}" alt="${t(p.titulo)}" class="exp-card-img" loading="lazy">
           <div class="badge-availability-lime">
-            🏨 ${t("Red Hotelera")} · ${p.cupos_disponibles} ${t("habs disponibles")}
+            🏨 ${t("hotelMDJ")} · ${p.cupos_disponibles} ${t("habs disponibles")}
           </div>
         </div>
         <div class="exp-card-body">
@@ -742,7 +742,7 @@ async function cargarPlanesAliados() {
       `;
     }).join("");
   } catch (e) {
-    caja.innerHTML = `<p class="vacio" style="grid-column: 1 / -1;">${t("No fue posible conectar con el servicio aliado.")}</p>`;
+    caja.innerHTML = `<p class="vacio" style="grid-column: 1 / -1;">${t("No fue posible conectar con hotelMDJ.")}</p>`;
   }
 }
 
@@ -750,7 +750,7 @@ async function cargarPlanesAliados() {
 function abrirModalReservaHotel(hotelId) {
   const usuario = sesion.get();
   if (!usuario) {
-    toast('Inicia sesión en la parte superior para reservar hospedajes aliados.', 'warn');
+    toast('Inicia sesión en la parte superior para reservar hospedajes en hotelMDJ.', 'warn');
     abrirModalAuth('login');
     return;
   }
@@ -759,7 +759,7 @@ function abrirModalReservaHotel(hotelId) {
   if (!hotel) return;
 
   hotelSeleccionadoParaReserva = hotel;
-  $("modal-hotel-titulo").textContent = `${t("Reserva en Hotel Aliado")}: ${t(hotel.titulo)}`;
+  $("modal-hotel-titulo").textContent = `${t("Reserva en hotelMDJ")}: ${t(hotel.titulo)}`;
   $("modal-hotel-habs-max").textContent = hotel.cupos_disponibles;
   $("hotel-res-habs-num").value = 1;
   $("hotel-res-habs-num").max = hotel.cupos_disponibles;
@@ -856,7 +856,7 @@ $("btn-confirmar-reserva-hotel").onclick = async () => {
       usuario_id: usuario ? usuario.id : null,
     };
 
-    let voucher = `HTL-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+    let voucher = `MDJ-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
     let resp = null;
     if (typeof api?.reservarHotelAliado === "function") {
       try {
@@ -895,7 +895,7 @@ $("btn-confirmar-reserva-hotel").onclick = async () => {
       localStorage.setItem(userKey, JSON.stringify(lista));
     } catch (_) {}
 
-    toast(`🎉 ¡Hospedaje confirmado en ${t(hotelSeleccionadoParaReserva.titulo)}! Voucher: ${voucher}. Ya se encuentra disponible en 'Mis reservas'.`, "ok");
+    toast(`🎉 ¡Hospedaje confirmado en ${t(hotelSeleccionadoParaReserva.titulo)} con hotelMDJ! Voucher: ${voucher}. Ya se encuentra disponible en 'Mis reservas'.`, "ok");
     cerrarModalReservaHotel();
 
     setTimeout(() => {

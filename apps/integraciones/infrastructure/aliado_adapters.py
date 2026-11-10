@@ -1,6 +1,6 @@
 """
-Patrón Adapter para el Servicio a Consumir (API del equipo aliado).
-Permite integrar servicios de la red hotelera aliada o activar la contingencia de alta disponibilidad.
+Patrón Adapter para el Servicio a Consumir (API hotelMDJ).
+Permite integrar servicios de la red hotelera aliada hotelMDJ o activar la contingencia de alta disponibilidad.
 """
 import json
 import logging
@@ -18,7 +18,7 @@ logger = logging.getLogger("meetu2.integraciones.aliados")
 
 class FallbackServicioAliadoAdapter(ServicioAliadoPort):
     """
-    Adaptador de contingencia que expone la oferta hotelera de la red aliada
+    Adaptador de contingencia que expone la oferta hotelera de hotelMDJ
     (Servicio de Hoteles) garantizando que la aplicación nunca falle ni muestre pantallas vacías.
     """
 
@@ -30,10 +30,10 @@ class FallbackServicioAliadoAdapter(ServicioAliadoPort):
                 categoria="Hotel & Spa",
                 ciudad="Medellín",
                 precio=Decimal("220000"),
-                organizador="Cadena Hotelera Estelar (Red Aliada)",
+                organizador="Cadena Hotelera Estelar (hotelMDJ)",
                 cupos_disponibles=5,
-                url_externa="https://hoteles-aliados.com/hotel/poblado-boutique",
-                red_aliada="Red Hotelera Aliada (Servicio de Hoteles)",
+                url_externa="https://hotelmdj.com/hotel/poblado-boutique",
+                red_aliada="hotelMDJ (Servicio de Hoteles)",
                 amenidades=("☕ Desayuno buffet", "🏊 Piscina en terraza", "🧖 Spa & Sauna", "📶 WiFi 500 Mbps"),
                 estrellas=4.9,
                 tipo_alojamiento="Suite Deluxe con Balcón",
@@ -45,10 +45,10 @@ class FallbackServicioAliadoAdapter(ServicioAliadoPort):
                 categoria="Glamping & Naturaleza",
                 ciudad="Santa Elena",
                 precio=Decimal("185000"),
-                organizador="EcoHoteles Antioquia (Red Aliada)",
+                organizador="EcoHoteles Antioquia (hotelMDJ)",
                 cupos_disponibles=3,
-                url_externa="https://hoteles-aliados.com/hotel/glamping-santa-elena",
-                red_aliada="Red Hotelera Aliada (Servicio de Hoteles)",
+                url_externa="https://hotelmdj.com/hotel/glamping-santa-elena",
+                red_aliada="hotelMDJ (Servicio de Hoteles)",
                 amenidades=("🔥 Fogata nocturna", "🛁 Jacuzzi privado", "🍳 Desayuno campesino", "🌿 Vista panorámica"),
                 estrellas=4.8,
                 tipo_alojamiento="Domo Geodésico con Jacuzzi",
@@ -60,10 +60,10 @@ class FallbackServicioAliadoAdapter(ServicioAliadoPort):
                 categoria="Hotel Urbano",
                 ciudad="Medellín",
                 precio=Decimal("160000"),
-                organizador="Urban Boutique Hotels (Red Aliada)",
+                organizador="Urban Boutique Hotels (hotelMDJ)",
                 cupos_disponibles=6,
-                url_externa="https://hoteles-aliados.com/hotel/laureles-urban",
-                red_aliada="Red Hotelera Aliada (Servicio de Hoteles)",
+                url_externa="https://hotelmdj.com/hotel/laureles-urban",
+                red_aliada="hotelMDJ (Servicio de Hoteles)",
                 amenidades=("🍹 Rooftop Bar", "☕ Cafetería de autor", "🏋️ Gimnasio", "📶 WiFi 500 Mbps"),
                 estrellas=4.7,
                 tipo_alojamiento="Habitación Superior King",
@@ -75,10 +75,10 @@ class FallbackServicioAliadoAdapter(ServicioAliadoPort):
                 categoria="Resort Lacustre",
                 ciudad="Guatapé",
                 precio=Decimal("290000"),
-                organizador="Lakeside Resorts (Red Aliada)",
+                organizador="Lakeside Resorts (hotelMDJ)",
                 cupos_disponibles=4,
-                url_externa="https://hoteles-aliados.com/hotel/guatape-resort",
-                red_aliada="Red Hotelera Aliada (Servicio de Hoteles)",
+                url_externa="https://hotelmdj.com/hotel/guatape-resort",
+                red_aliada="hotelMDJ (Servicio de Hoteles)",
                 amenidades=("⛵ Muelle náutico", "🏊 Piscina infinita", "🍽️ Restaurante lacustre", "🚴 Kayaks incluidos"),
                 estrellas=4.9,
                 tipo_alojamiento="Cabaña frente al Embalse",
@@ -89,7 +89,7 @@ class FallbackServicioAliadoAdapter(ServicioAliadoPort):
 
 class HttpServicioAliadoAdapter(ServicioAliadoPort):
     """
-    Consume el servicio REST del equipo aliado (Servicio de Hoteles) mediante HTTP
+    Consume el servicio REST del equipo aliado hotelMDJ mediante HTTP
     implementando el patrón Adapter para transformar su esquema al modelo de dominio.
     Usa la URL configurada en SERVICIO_ALIADO_URL.
     """
@@ -101,7 +101,7 @@ class HttpServicioAliadoAdapter(ServicioAliadoPort):
 
     def obtener_planes_aliados(self) -> list[PlanAliadoDTO]:
         if not self._url:
-            logger.info("SERVICIO_ALIADO_URL no configurada. Usando catálogo de red hotelera aliada.")
+            logger.info("SERVICIO_ALIADO_URL no configurada. Usando catálogo hotelMDJ.")
             return self._fallback.obtener_planes_aliados()
 
         try:
@@ -128,15 +128,15 @@ class HttpServicioAliadoAdapter(ServicioAliadoPort):
                 planes.append(
                     PlanAliadoDTO(
                         id=str(it.get("id_hotel", it.get("id", f"hotel-{len(planes)+1}"))),
-                        titulo=str(it.get("nombre_hotel", it.get("nombre", it.get("titulo", "Hotel Aliado")))),
+                        titulo=str(it.get("nombre_hotel", it.get("nombre", it.get("titulo", "Hotel hotelMDJ")))),
                         categoria=str(it.get("tipo_alojamiento", it.get("tipo_hospedaje", it.get("categoria", "Hotel & Hospedaje")))),
                         tipo_alojamiento=str(it.get("habitacion", it.get("tipo_alojamiento", it.get("tipo", "Habitación Estándar")))),
                         ciudad=str(it.get("ciudad", "Medellín")),
                         precio=Decimal(str(it.get("precio_noche", it.get("tarifa_noche", it.get("precio", "0"))))),
-                        organizador=str(it.get("cadena", it.get("hotel", it.get("organizador", it.get("proveedor", "Red Hotelera Aliada"))))),
+                        organizador=str(it.get("cadena", it.get("hotel", it.get("organizador", it.get("proveedor", "hotelMDJ"))))),
                         cupos_disponibles=int(it.get("habitaciones_disponibles", it.get("habitaciones_libres", it.get("cupos_disponibles", it.get("cupo_disponible", 3))))),
                         url_externa=str(it.get("url_reserva", it.get("enlace_reserva", it.get("url_externa", it.get("url", self._url))))),
-                        red_aliada=str(it.get("red_aliada", "Red Hotelera Aliada (Integración HTTP en vivo)")),
+                        red_aliada=str(it.get("red_aliada", "hotelMDJ (Integración HTTP en vivo)")),
                         amenidades=amenidades_tuple,
                         estrellas=float(it.get("estrellas", it.get("calificacion", 4.8))),
                         imagen_url=str(it.get("imagen", it.get("foto_url", it.get("imagen_url", "")))),
@@ -146,7 +146,7 @@ class HttpServicioAliadoAdapter(ServicioAliadoPort):
             return planes if planes else self._fallback.obtener_planes_aliados()
         except (URLError, TimeoutError, json.JSONDecodeError, Exception) as exc:
             logger.warning(
-                "Fallo al conectar con servicio aliado en %s (%s). Activando fallback de resiliencia.",
+                "Fallo al conectar con servicio aliado hotelMDJ en %s (%s). Activando fallback de resiliencia.",
                 self._url,
                 exc,
             )

@@ -7,7 +7,7 @@
   <div class="catalogue-eyebrow">{% trans "ASISTENCIA, VOUCHERS Y TICKETS" %}</div>
   <h1 style="font-size: 2.25rem; font-weight: 800; letter-spacing: -0.03em; margin: 0 0 0.5rem;">{% trans "Mis reservas" %}</h1>
   <p class="hint" style="max-width: 680px; margin: 0;">
-    {% trans "Gestiona tus experiencias confirmadas, tus vouchers de hospedajes y hoteles aliados, y califica las actividades a las que ya asististe." %}
+    {% trans "Gestiona tus experiencias confirmadas, tus vouchers de hospedajes en hotelMDJ, y califica las actividades a las que ya asististe." %}
   </p>
 </div>
 
@@ -20,7 +20,7 @@
   </button>
   <button id="tab-btn-hoteles" class="secundario" style="padding: 0.6rem 1.25rem; font-size: 0.92rem; display: inline-flex; align-items: center; gap: 0.5rem;" onclick="cambiarTab('hoteles')">
     <span>🏨</span>
-    <span>{% trans "Hospedajes y Hoteles Aliados" %}</span>
+    <span>{% trans "Hospedajes hotelMDJ" %}</span>
     <span id="badge-cont-hoteles" style="background: var(--border); padding: 0.1rem 0.45rem; border-radius: 12px; font-size: 0.78rem; font-weight: 700;">0</span>
   </button>
 </div>
@@ -71,12 +71,12 @@
 <div id="panel-hoteles" class="oculto">
   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.75rem;">
     <div>
-      <h2 style="font-size: 1.25rem; font-weight: 800; margin: 0 0 0.25rem;">{% trans "Vouchers y Estadías en Red Hotelera Aliada" %}</h2>
-      <p class="hint" style="margin: 0;">{% trans "Reservas directas gestionadas mediante la integración en vivo con HotelHub." %}</p>
+      <h2 style="font-size: 1.25rem; font-weight: 800; margin: 0 0 0.25rem;">{% trans "Vouchers y Estadías en hotelMDJ" %}</h2>
+      <p class="hint" style="margin: 0;">{% trans "Reservas directas gestionadas mediante la integración en vivo con hotelMDJ." %}</p>
     </div>
     <div style="display: flex; gap: 0.5rem;">
       <a href="{% url 'frontend:catalogo' %}#seccion-planes-aliados" class="btn-black-pill" style="font-size: 0.85rem; padding: 0.45rem 0.9rem; text-decoration: none;">
-        {% trans "+ Reservar otro hotel" %}
+        {% trans "+ Reservar en hotelMDJ" %}
       </a>
       <button class="secundario" style="font-size: 0.85rem; padding: 0.45rem 0.9rem;" onclick="cargarHoteles()">
         {% trans "↻ Refrescar" %}
@@ -331,8 +331,8 @@ async function cargarHoteles() {
       <div class="vacio" style="padding: 3.5rem 1.5rem;">
         <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🏨</div>
         <p style="font-size: 1.15rem; font-weight: 700; color: var(--txt); margin-bottom: 0.5rem;">${t("Aún no tienes hospedajes reservados")}</p>
-        <p class="hint" style="max-width: 480px; margin: 0 auto 1.5rem;">${t("Explora los hoteles boutique, eco-lodges y glampings de la red aliada integrados en tiempo real.")}</p>
-        <a href="{% url 'frontend:catalogo' %}#seccion-planes-aliados" class="btn-black-pill" style="text-decoration:none;">${t("Explorar Hoteles Aliados →")}</a>
+        <p class="hint" style="max-width: 480px; margin: 0 auto 1.5rem;">${t("Explora los hoteles boutique, eco-lodges y glampings de hotelMDJ integrados en tiempo real.")}</p>
+        <a href="{% url 'frontend:catalogo' %}#seccion-planes-aliados" class="btn-black-pill" style="text-decoration:none;">${t("Explorar hotelMDJ →")}</a>
       </div>
     `;
     return;
@@ -344,7 +344,7 @@ async function cargarHoteles() {
     <thead><tr>
       <th>${t("Hotel y Alojamiento")}</th>
       <th>${t("Estadía y Fechas")}</th>
-      <th>${t("Voucher Aliado")}</th>
+      <th>${t("Voucher hotelMDJ")}</th>
       <th>${t("Habitaciones")}</th>
       <th>${t("Total liquidado")}</th>
       <th>${t("Estado")}</th>
@@ -439,7 +439,7 @@ async function cancelarHotel(codigoReserva, nombreHotel) {
       } catch (_) {}
     }
 
-    toast(t(`Reserva ${codigoReserva} cancelada exitosamente en el sistema aliado.`));
+    toast(t(`Reserva ${codigoReserva} cancelada exitosamente en hotelMDJ.`));
     cargarHoteles();
   } catch (e) {
     mostrarError(e);
