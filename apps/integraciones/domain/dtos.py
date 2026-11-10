@@ -17,7 +17,7 @@ class ClimaDTO:
 
 @dataclass(frozen=True)
 class PlanAliadoDTO:
-    """Experiencia/plan obtenido del servicio aliado (Servicio a Consumir)."""
+    """Experiencia/hospedaje obtenido del servicio aliado (Servicio a Consumir)."""
     id: str
     titulo: str
     categoria: str
@@ -27,6 +27,10 @@ class PlanAliadoDTO:
     cupos_disponibles: int
     url_externa: str
     red_aliada: str
+    amenidades: tuple[str, ...] = ()
+    estrellas: float = 4.8
+    tipo_alojamiento: str = "Hospedaje"
+    imagen_url: str = ""
 
 
 @dataclass(frozen=True)

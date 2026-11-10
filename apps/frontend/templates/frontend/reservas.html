@@ -3,52 +3,89 @@
 {% block titulo %}{% trans "Mis reservas — MeetU2" %}{% endblock %}
 
 {% block contenido %}
-<div style="margin-bottom: 2rem;">
-  <div class="catalogue-eyebrow">{% trans "ASISTENCIA Y TICKETS" %}</div>
+<div style="margin-bottom: 1.5rem;">
+  <div class="catalogue-eyebrow">{% trans "ASISTENCIA, VOUCHERS Y TICKETS" %}</div>
   <h1 style="font-size: 2.25rem; font-weight: 800; letter-spacing: -0.03em; margin: 0 0 0.5rem;">{% trans "Mis reservas" %}</h1>
   <p class="hint" style="max-width: 680px; margin: 0;">
-    {% trans "Gestiona tus experiencias confirmadas, aparta el pago de tus cupos retenidos y califica las actividades a las que ya asististe." %}
+    {% trans "Gestiona tus experiencias confirmadas, tus vouchers de hospedajes y hoteles aliados, y califica las actividades a las que ya asististe." %}
   </p>
 </div>
 
-<!-- Configuración de pago simulado (Microservicio de Pagos v2 / Strangler) -->
-<section class="card" id="card-config-pago">
-  <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
-    <div>
-      <h2 style="margin: 0; font-size: 1.15rem;">{% trans "Canal de pago seguro" %}</h2>
-      <p class="hint" id="modo-pago" style="margin: 0.2rem 0 0;"></p>
+<!-- Selector de pestañas: Experiencias vs Hoteles Aliados -->
+<div style="display: flex; gap: 0.75rem; margin-bottom: 1.75rem; border-bottom: 1px solid var(--border); padding-bottom: 0.75rem; flex-wrap: wrap;">
+  <button id="tab-btn-experiencias" class="btn-black-pill" style="padding: 0.6rem 1.25rem; font-size: 0.92rem; display: inline-flex; align-items: center; gap: 0.5rem;" onclick="cambiarTab('experiencias')">
+    <span>🎟️</span>
+    <span>{% trans "Experiencias MeetU2" %}</span>
+    <span id="badge-cont-exp" style="background: rgba(255,255,255,0.25); padding: 0.1rem 0.45rem; border-radius: 12px; font-size: 0.78rem; font-weight: 700;">0</span>
+  </button>
+  <button id="tab-btn-hoteles" class="secundario" style="padding: 0.6rem 1.25rem; font-size: 0.92rem; display: inline-flex; align-items: center; gap: 0.5rem;" onclick="cambiarTab('hoteles')">
+    <span>🏨</span>
+    <span>{% trans "Hospedajes y Hoteles Aliados" %}</span>
+    <span id="badge-cont-hoteles" style="background: var(--border); padding: 0.1rem 0.45rem; border-radius: 12px; font-size: 0.78rem; font-weight: 700;">0</span>
+  </button>
+</div>
+
+<!-- ============================================================ PANEL 1: EXPERIENCIAS -->
+<div id="panel-experiencias">
+  <!-- Configuración de pago (Microservicio de Pagos v2 / Strangler) -->
+  <section class="card" id="card-config-pago">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
+      <div>
+        <h2 style="margin: 0; font-size: 1.15rem;">{% trans "Canal de pago seguro" %}</h2>
+        <p class="hint" id="modo-pago" style="margin: 0.2rem 0 0;"></p>
+      </div>
+      <button id="btn-recargar" class="secundario" style="font-size: 0.85rem; padding: 0.5rem 1rem;">
+        {% trans "↻ Actualizar estado" %}
+      </button>
     </div>
-    <button id="btn-recargar" class="secundario" style="font-size: 0.85rem; padding: 0.5rem 1rem;">
-      {% trans "↻ Actualizar estado" %}
-    </button>
+
+    <div class="fila" id="opciones-pago" hidden>
+      <div>
+        <label for="medio-pago">{% trans "Método de pago preferido" %}</label>
+        <select id="medio-pago">
+          <option value="TARJETA">💳 {% trans "Tarjeta Débito / Crédito" %}</option>
+          <option value="PSE">🏦 {% trans "Transferencia PSE" %}</option>
+          <option value="NEQUI">📱 {% trans "Nequi / Billetera Digital" %}</option>
+        </select>
+      </div>
+      <div>
+        <label for="token-pago">{% trans "Pasarela de pagos en línea (Gateway Sandbox)" %}</label>
+        <select id="token-pago">
+          <option value="tok_aprobada">✓ {% trans "Aprobado exitoso" %}</option>
+          <option value="tok_rechazada">✗ {% trans "Rechazado por el banco" %}</option>
+          <option value="tok_fondos_insuficientes">✗ {% trans "Fondos insuficientes" %}</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="background: #faf8f5; border: 1px dashed var(--border); border-radius: 10px; padding: 0.75rem 1rem; font-size: 0.82rem; color: var(--txt-muted); margin-top: 0.5rem;">
+      ℹ️ <b>{% trans "Política de cancelación transparente:" %}</b> {% trans "100% de reembolso si cancelas con más de 48h de antelación; 50% entre 24h y 48h; 0% a menos de 24h del evento." %}
+    </div>
+  </section>
+
+  <!-- Listado de Reservas de Experiencias -->
+  <div id="tabla" class="card" style="padding: 0; overflow: hidden;"></div>
+</div>
+
+<!-- ============================================================ PANEL 2: HOTELES ALIADOS -->
+<div id="panel-hoteles" class="oculto">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.75rem;">
+    <div>
+      <h2 style="font-size: 1.25rem; font-weight: 800; margin: 0 0 0.25rem;">{% trans "Vouchers y Estadías en Red Hotelera Aliada" %}</h2>
+      <p class="hint" style="margin: 0;">{% trans "Reservas directas gestionadas mediante la integración en vivo con HotelHub." %}</p>
+    </div>
+    <div style="display: flex; gap: 0.5rem;">
+      <a href="{% url 'frontend:catalogo' %}#seccion-planes-aliados" class="btn-black-pill" style="font-size: 0.85rem; padding: 0.45rem 0.9rem; text-decoration: none;">
+        {% trans "+ Reservar otro hotel" %}
+      </a>
+      <button class="secundario" style="font-size: 0.85rem; padding: 0.45rem 0.9rem;" onclick="cargarHoteles()">
+        {% trans "↻ Refrescar" %}
+      </button>
+    </div>
   </div>
 
-  <div class="fila" id="opciones-pago" hidden>
-    <div>
-      <label for="medio-pago">{% trans "Método de pago preferido" %}</label>
-      <select id="medio-pago">
-        <option value="TARJETA">💳 {% trans "Tarjeta Débito / Crédito" %}</option>
-        <option value="PSE">🏦 {% trans "Transferencia PSE" %}</option>
-        <option value="NEQUI">📱 {% trans "Nequi / Billetera Digital" %}</option>
-      </select>
-    </div>
-    <div>
-      <label for="token-pago">{% trans "Respuesta simulada (Sandbox de pagos)" %}</label>
-      <select id="token-pago">
-        <option value="tok_aprobada">✓ {% trans "Aprobado exitoso" %}</option>
-        <option value="tok_rechazada">✗ {% trans "Rechazado por el banco" %}</option>
-        <option value="tok_fondos_insuficientes">✗ {% trans "Fondos insuficientes" %}</option>
-      </select>
-    </div>
-  </div>
-
-  <div style="background: #faf8f5; border: 1px dashed var(--border); border-radius: 10px; padding: 0.75rem 1rem; font-size: 0.82rem; color: var(--txt-muted); margin-top: 0.5rem;">
-    ℹ️ <b>{% trans "Política de cancelación transparente:" %}</b> {% trans "100% de reembolso si cancelas con más de 48h de antelación; 50% entre 24h y 48h; 0% a menos de 24h del evento." %}
-  </div>
-</section>
-
-<!-- Listado de Reservas -->
-<div id="tabla" class="card" style="padding: 0; overflow: hidden;"></div>
+  <div id="tabla-hoteles" class="card" style="padding: 0; overflow: hidden;"></div>
+</div>
 
 <!-- Modal para calificar experiencia (Módulo Social) -->
 <div id="modal-calificar" class="modal-overlay oculto">
@@ -88,6 +125,32 @@
 
 {% block scripts %}
 <script>
+let pestanaActiva = "experiencias";
+
+function cambiarTab(tab) {
+  pestanaActiva = tab;
+  const btnExp = $("tab-btn-experiencias");
+  const btnHot = $("tab-btn-hoteles");
+  const panelExp = $("panel-experiencias");
+  const panelHot = $("panel-hoteles");
+
+  if (tab === "experiencias") {
+    btnExp.className = "btn-black-pill";
+    btnExp.querySelector("#badge-cont-exp").style.background = "rgba(255,255,255,0.25)";
+    btnHot.className = "secundario";
+    btnHot.querySelector("#badge-cont-hoteles").style.background = "var(--border)";
+    panelExp.classList.remove("oculto");
+    panelHot.classList.add("oculto");
+  } else {
+    btnHot.className = "btn-black-pill";
+    btnHot.querySelector("#badge-cont-hoteles").style.background = "rgba(255,255,255,0.25)";
+    btnExp.className = "secundario";
+    btnExp.querySelector("#badge-cont-exp").style.background = "var(--border)";
+    panelHot.classList.remove("oculto");
+    panelExp.classList.add("oculto");
+  }
+}
+
 const ETIQUETAS = {
   PENDIENTE_PAGO: "warn",
   CONFIRMADA: "ok",
@@ -98,6 +161,10 @@ const ETIQUETAS = {
 };
 
 async function cargar() {
+  await Promise.all([cargarExperiencias(), cargarHoteles()]);
+}
+
+async function cargarExperiencias() {
   const usuario = sesion.get();
   const caja = $("tabla");
 
@@ -109,15 +176,18 @@ async function cargar() {
         <button class="btn-black-pill" onclick="abrirModalAuth('login')">${t("Iniciar sesión ahora")}</button>
       </div>
     `;
+    $("badge-cont-exp").textContent = "0";
     return;
   }
 
   try {
     const reservas = await api.misReservas(usuario.id);
+    $("badge-cont-exp").textContent = reservas.length;
+
     if (!reservas.length) {
       caja.innerHTML = `
         <div class="vacio" style="padding: 3rem 1.5rem;">
-          <p style="font-size: 1.1rem; font-weight: 700; color: var(--txt); margin-bottom: 0.5rem;">${t("Aún no tienes reservas activas")}</p>
+          <p style="font-size: 1.1rem; font-weight: 700; color: var(--txt); margin-bottom: 0.5rem;">${t("Aún no tienes reservas de experiencias activas")}</p>
           <p class="hint" style="margin-bottom: 1.25rem;">${t("Explora los planes recomendados y asegura tu plaza en la comunidad.")}</p>
           <a href="{% url 'frontend:catalogo' %}" class="btn-black-pill">${t("Explorar catálogo →")}</a>
         </div>
@@ -201,6 +271,176 @@ async function cargar() {
     });
 
     caja.append(tabla);
+  } catch (e) {
+    mostrarError(e);
+  }
+}
+
+async function cargarHoteles() {
+  const usuario = sesion.get();
+  const caja = $("tabla-hoteles");
+
+  // Limpiar cualquier residuo de la clave global antigua no particionada
+  try {
+    localStorage.removeItem("meetu2_reservas_hotel");
+  } catch (_) {}
+
+  if (!usuario) {
+    caja.innerHTML = `
+      <div class="vacio" style="padding: 3rem 1.5rem;">
+        <p style="font-size: 1.1rem; font-weight: 700; color: var(--txt); margin-bottom: 0.5rem;">${t("Inicia sesión para consultar tus reservas")}</p>
+        <p class="hint" style="margin-bottom: 1.25rem;">${t("Accede con tu correo para ver tus tickets de asistencia y estado de pagos.")}</p>
+        <button class="btn-black-pill" onclick="abrirModalAuth('login')">${t("Iniciar sesión ahora")}</button>
+      </div>
+    `;
+    $("badge-cont-hoteles").textContent = "0";
+    return;
+  }
+
+  let listaBackend = [];
+  try {
+    if (typeof api?.misReservasHotel === "function") {
+      listaBackend = await api.misReservasHotel(usuario.id);
+    }
+  } catch (err) {
+    console.warn("Fallo temporal consultando backend de hoteles", err);
+  }
+
+  // Leer exclusivamente de la clave scoped del usuario actual
+  let listaLocal = [];
+  try {
+    const userKey = `meetu2_reservas_hotel_${usuario.id}`;
+    listaLocal = JSON.parse(localStorage.getItem(userKey) || "[]");
+  } catch (_) {}
+
+  // Combinar por codigo_reserva asegurando que pertenezca exclusivamente a este usuario
+  const mapa = new Map();
+  [...listaBackend, ...listaLocal].forEach(item => {
+    const itemUserId = item.usuario_id || "";
+    if (item.codigo_reserva && !mapa.has(item.codigo_reserva)) {
+      if (!itemUserId || String(itemUserId) === String(usuario.id)) {
+        mapa.set(item.codigo_reserva, item);
+      }
+    }
+  });
+  const hoteles = Array.from(mapa.values());
+  $("badge-cont-hoteles").textContent = hoteles.length;
+
+  if (!hoteles.length) {
+    caja.innerHTML = `
+      <div class="vacio" style="padding: 3.5rem 1.5rem;">
+        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🏨</div>
+        <p style="font-size: 1.15rem; font-weight: 700; color: var(--txt); margin-bottom: 0.5rem;">${t("Aún no tienes hospedajes reservados")}</p>
+        <p class="hint" style="max-width: 480px; margin: 0 auto 1.5rem;">${t("Explora los hoteles boutique, eco-lodges y glampings de la red aliada integrados en tiempo real.")}</p>
+        <a href="{% url 'frontend:catalogo' %}#seccion-planes-aliados" class="btn-black-pill" style="text-decoration:none;">${t("Explorar Hoteles Aliados →")}</a>
+      </div>
+    `;
+    return;
+  }
+
+  caja.replaceChildren();
+  const tabla = document.createElement("table");
+  tabla.innerHTML = `
+    <thead><tr>
+      <th>${t("Hotel y Alojamiento")}</th>
+      <th>${t("Estadía y Fechas")}</th>
+      <th>${t("Voucher Aliado")}</th>
+      <th>${t("Habitaciones")}</th>
+      <th>${t("Total liquidado")}</th>
+      <th>${t("Estado")}</th>
+      <th style="text-align: right;">${t("Acciones")}</th>
+    </tr></thead>
+    <tbody></tbody>`;
+
+  hoteles.forEach((h) => {
+    const fila = document.createElement("tr");
+    const esConfirmada = h.estado === "CONFIRMADA";
+
+    fila.innerHTML = `
+      <td>
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <div style="width: 40px; height: 40px; border-radius: 8px; background: #e0f2fe; color: #0284c7; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0;">
+            🏨
+          </div>
+          <div>
+            <div style="font-weight: 700; color: var(--txt);">${t(h.nombre_hotel)}</div>
+            <div class="hint" style="margin: 0; font-size: 0.8rem;">📍 ${t(h.ciudad || 'Medellín')} · ${t(h.tipo_alojamiento || 'Hospedaje')}</div>
+          </div>
+        </div>
+      </td>
+      <td>
+        <div style="font-weight: 600; color: var(--primary); font-size: 0.88rem;">
+          ${h.fecha_checkin} → ${h.fecha_checkout}
+        </div>
+        <div class="hint" style="margin: 0; font-size: 0.78rem;">
+          ${h.noches || 1} ${(h.noches || 1) === 1 ? t('noche') : t('noches')}
+        </div>
+      </td>
+      <td>
+        <code style="background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; padding: 0.25rem 0.55rem; letter-spacing: 0.05em; font-weight: 800; border-radius: 4px;">
+          ${h.codigo_reserva}
+        </code>
+      </td>
+      <td>
+        <div style="font-weight: 700;">${h.habitaciones || 1} ${t("hab.")}</div>
+        <div class="hint" style="margin: 0; font-size: 0.75rem;">${h.huesped_nombre || t("Huésped")}</div>
+      </td>
+      <td>
+        <div style="font-weight: 800; color: var(--txt);">${dinero(h.monto_total)}</div>
+        <div class="hint" style="margin:0; font-size:0.75rem;">${dinero(h.precio_noche)} / ${t("noche")}</div>
+      </td>
+      <td>
+        <span class="etiqueta ${esConfirmada ? 'ok' : 'err'}">
+          ${t(h.estado)}
+        </span>
+      </td>
+      <td style="text-align: right;"></td>`;
+
+    const acciones = fila.lastElementChild;
+    if (esConfirmada) {
+      acciones.append(
+        boton(
+          t("Cancelar hospedaje"),
+          () => cancelarHotel(h.codigo_reserva, h.nombre_hotel),
+          "peligro",
+          "font-size: 0.82rem; padding: 0.4rem 0.8rem;"
+        )
+      );
+    } else {
+      const sp = document.createElement("span");
+      sp.className = "hint";
+      sp.textContent = t("Cancelada");
+      acciones.append(sp);
+    }
+    tabla.querySelector("tbody").append(fila);
+  });
+
+  caja.append(tabla);
+}
+
+async function cancelarHotel(codigoReserva, nombreHotel) {
+  const usuario = sesion.get();
+  if (!confirm(`¿Estás seguro de que deseas cancelar la reserva ${codigoReserva} en ${nombreHotel}?`)) {
+    return;
+  }
+  try {
+    if (typeof api?.cancelarReservaHotel === "function") {
+      await api.cancelarReservaHotel(codigoReserva);
+    }
+    // Actualizar cache local scoped al usuario
+    if (usuario) {
+      try {
+        const userKey = `meetu2_reservas_hotel_${usuario.id}`;
+        const lista = JSON.parse(localStorage.getItem(userKey) || "[]");
+        const actualizada = lista.map(item =>
+          item.codigo_reserva === codigoReserva ? { ...item, estado: "CANCELADA" } : item
+        );
+        localStorage.setItem(userKey, JSON.stringify(actualizada));
+      } catch (_) {}
+    }
+
+    toast(t(`Reserva ${codigoReserva} cancelada exitosamente en el sistema aliado.`));
+    cargarHoteles();
   } catch (e) {
     mostrarError(e);
   }
@@ -310,6 +550,11 @@ $("modo-pago").innerHTML = pagosV2Habilitado()
   : "Modo monolito: confirmación de reserva en <code>/api/v1</code>.";
 
 $("btn-recargar").onclick = cargar;
+
+if (window.location.hash === "#hoteles") {
+  cambiarTab("hoteles");
+}
+
 cargar();
 </script>
 {% endblock %}

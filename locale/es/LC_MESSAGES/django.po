@@ -437,3 +437,45 @@ msgstr "Cancelar"
 
 msgid "Publicar reseña verificada"
 msgstr "Publicar reseña verificada"
+
+msgid "SERVICIO A CONSUMIR · RED HOTELERA ALIADA"
+msgstr "SERVICIO A CONSUMIR · RED HOTELERA ALIADA"
+
+msgid "Hoteles y Hospedajes Aliados"
+msgstr "Hoteles y Hospedajes Aliados"
+
+msgid "Encuentra alojamiento de calidad cerca de tus experiencias, consumido en tiempo real desde la API del servicio de hoteles aliado mediante Patrón Adapter."
+msgstr "Encuentra alojamiento de calidad cerca de tus experiencias, consumido en tiempo real desde la API del servicio de hoteles aliado mediante Patrón Adapter."
+
+msgid "🏨 API HotelHub Conectada"
+msgstr "🏨 API HotelHub Conectada"
+
+msgid "↻ Actualizar hoteles"
+msgstr "↻ Actualizar hoteles"
+
+msgid "Reserva en Hotel Aliado"
+msgstr "Reserva en Hotel Aliado"
+
+msgid "Fecha de Check-in"
+msgstr "Fecha de Check-in"
+
+msgid "Fecha de Check-out"
+msgstr "Fecha de Check-out"
+
+msgid "Número de habitaciones"
+msgstr "Número de habitaciones"
+
+msgid "Habitaciones disponibles:"
+msgstr "Habitaciones disponibles:"
+
+msgid "Nombre del huésped"
+msgstr "Nombre del huésped"
+
+msgid "Correo de contacto"
+msgstr "Correo de contacto"
+
+msgid "Total estadía estimada:"
+msgstr "Total estadía estimada:"
+
+msgid "Confirmar Reserva Hotelera →"
+msgstr "Confirmar Reserva Hotelera →"

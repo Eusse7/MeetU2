@@ -237,8 +237,29 @@ const api = {
   clima: (ciudad, lat, lon) =>
     apiFetch(`/integracion/clima${qs({ ciudad, lat, lon })}`),
 
+  reservarHotelAliado: (datos) =>
+    apiFetch("/integracion/aliados/hoteles/reserva/", {
+      method: "POST",
+      body: JSON.stringify(datos),
+    }),
+
+  misReservasHotel: (idUsuario) =>
+    apiFetch(
+      idUsuario
+        ? `/integracion/aliados/hoteles/mis-reservas/?usuario_id=${idUsuario}`
+        : "/integracion/aliados/hoteles/mis-reservas/"
+    ),
+
+  cancelarReservaHotel: (codigoReserva) =>
+    apiFetch(`/integracion/aliados/hoteles/reservas/${codigoReserva}/cancelar/`, {
+      method: "POST",
+    }),
+
   planesAliados: () =>
     apiFetch("/integracion/aliados/planes/"),
+
+  hotelesAliados: () =>
+    apiFetch("/integracion/aliados/hoteles/"),
 
   solicitarReporteAsincrono: (correo) =>
     apiFetch("/integracion/reportes/asincrono/", {
@@ -303,6 +324,63 @@ const I18N_EN = {
   "Host de la comunidad": "Community Host",
   "afín": "match",
   "PRÓXIMAMENTE": "COMING SOON",
+
+  // Partner Network Hotels & Lodging
+  "Hotel Boutique & Spa El Poblado": "El Poblado Boutique Hotel & Spa",
+  "Eco-Lodge & Glamping Santa Elena": "Santa Elena Eco-Lodge & Glamping",
+  "Hotel Terraza Laureles Urban & Rooftop": "Laureles Urban & Rooftop Terrace Hotel",
+  "Resort & Cabañas Guatapé Lakefront": "Guatapé Lakefront Resort & Cabins",
+  "Hotel & Spa": "Hotel & Spa",
+  "Glamping & Naturaleza": "Glamping & Nature",
+  "Hotel Urbano": "Urban Hotel",
+  "Resort Lacustre": "Lakefront Resort",
+  "Suite Deluxe con Balcón": "Deluxe Balcony Suite",
+  "Domo Geodésico con Jacuzzi": "Geodesic Dome with Jacuzzi",
+  "Habitación Superior King": "Superior King Room",
+  "Cabaña frente al Embalse": "Lakefront Cabin",
+  "☕ Desayuno buffet": "☕ Buffet breakfast",
+  "🏊 Piscina en terraza": "🏊 Rooftop pool",
+  "🧖 Spa & Sauna": "🧖 Spa & Sauna",
+  "📶 WiFi 500 Mbps": "📶 500 Mbps WiFi",
+  "🔥 Fogata nocturna": "🔥 Night campfire",
+  "🛁 Jacuzzi privado": "🛁 Private jacuzzi",
+  "🍳 Desayuno campesino": "🍳 Farmhouse breakfast",
+  "🌿 Vista panorámica": "🌿 Panoramic view",
+  "🍹 Rooftop Bar": "🍹 Rooftop Bar",
+  "☕ Cafetería de autor": "☕ Signature coffee shop",
+  "🏋️ Gimnasio": "🏋️ Gym",
+  "⛵ Muelle náutico": "⛵ Boat dock",
+  "🏊 Piscina infinita": "🏊 Infinity pool",
+  "🍽️ Restaurante lacustre": "🍽️ Lakeside restaurant",
+  "🚴 Kayaks incluidos": "🚴 Kayaks included",
+  "Cadena Hotelera Estelar (Red Aliada)": "Estelar Hotel Chain (Partner Network)",
+  "EcoHoteles Antioquia (Red Aliada)": "EcoHoteles Antioquia (Partner Network)",
+  "Urban Boutique Hotels (Red Aliada)": "Urban Boutique Hotels (Partner Network)",
+  "Lakeside Resorts (Red Aliada)": "Lakeside Resorts (Partner Network)",
+  "Red Hotelera Aliada": "Partner Hotel Network",
+  "Red Hotelera": "Partner Hotel Network",
+  "habs disponibles": "rooms left",
+  "hab.": "room",
+  "habs": "rooms",
+  "noche desde": "night from",
+  "Reservar hab.": "Book room",
+  "Reservar habitación": "Book room",
+  "Ver hotel ↗": "View hotel ↗",
+  "Actualizar hoteles": "Refresh hotels",
+  "🏨 API HotelHub Conectada": "🏨 HotelHub API Connected",
+  "Cargando hoteles y hospedajes de la red aliada...": "Loading partner hotels and accommodations...",
+  "No hay hoteles disponibles en la red aliada en este momento.": "No partner hotels available right now.",
+  "Reserva en Hotel Aliado": "Partner Hotel Booking",
+  "Confirmar Reserva Hotelera →": "Confirm Hotel Booking →",
+  "Fecha de Check-in": "Check-in Date",
+  "Fecha de Check-out": "Check-out Date",
+  "Número de habitaciones": "Number of rooms",
+  "Nombre del huésped": "Guest name",
+  "Correo de contacto": "Contact email",
+  "Total estadía estimada": "Estimated total stay",
+  "Guatapé": "Guatape",
+  "Cadena": "Chain",
+  "Cadena Hotelera": "Hotel Chain",
 
   // Partner Network Experiences
   "Cena en la oscuridad": "Dining in the Dark",
@@ -443,7 +521,31 @@ const I18N_EN = {
   "Experiencia cancelada.": "Experience cancelled.",
   "PUBLICADA": "PUBLISHED",
   "VERIFICADO": "VERIFIED",
-  "PENDIENTE": "PENDING"
+  "PENDIENTE": "PENDING",
+
+  // Hotel reservations and partner integration
+  "Hospedajes y Hoteles Aliados": "Partner Hotels & Stays",
+  "Experiencias MeetU2": "MeetU2 Experiences",
+  "Vouchers y Estadías en Red Hotelera Aliada": "Vouchers & Stays in Partner Hotel Network",
+  "Voucher Aliado": "Partner Voucher",
+  "Hotel y Alojamiento": "Hotel & Accommodation",
+  "Estadía y Fechas": "Stay & Dates",
+  "Habitaciones": "Rooms",
+  "Total liquidado": "Total Billed",
+  "Cancelar hospedaje": "Cancel Stay",
+  "Aún no tienes hospedajes reservados": "You don't have reserved stays yet",
+  "Explora los hoteles boutique, eco-lodges y glampings de la red aliada integrados en tiempo real.": "Explore boutique hotels, eco-lodges and glampings from our live partner network.",
+  "Explorar Hoteles Aliados →": "Explore Partner Hotels →",
+  "+ Reservar otro hotel": "+ Book another hotel",
+  "hab.": "room",
+  "habs.": "rooms",
+  "noche": "night",
+  "noches": "nights",
+  "Huésped": "Guest",
+  "Cancelada": "Cancelled",
+  "¡Reporte completado y correo enviado con éxito!": "Report completed and email sent successfully!",
+  "Informe consolidado enviado exitosamente al correo:": "Consolidated report sent successfully to email:",
+  "Reporte generado y registrado en servidor de correo.": "Report generated and recorded on mail server."
 };
 
 function t(texto) {

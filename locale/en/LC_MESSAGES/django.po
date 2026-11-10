@@ -437,3 +437,45 @@ msgstr "Cancel"
 
 msgid "Publicar reseña verificada"
 msgstr "Publish verified review"
+
+msgid "SERVICIO A CONSUMIR · RED HOTELERA ALIADA"
+msgstr "SERVICE TO CONSUME · PARTNER HOTEL NETWORK"
+
+msgid "Hoteles y Hospedajes Aliados"
+msgstr "Partner Hotels & Lodging"
+
+msgid "Encuentra alojamiento de calidad cerca de tus experiencias, consumido en tiempo real desde la API del servicio de hoteles aliado mediante Patrón Adapter."
+msgstr "Find quality lodging near your experiences, consumed in real time from the partner hotel service API via Adapter Pattern."
+
+msgid "🏨 API HotelHub Conectada"
+msgstr "🏨 HotelHub API Connected"
+
+msgid "↻ Actualizar hoteles"
+msgstr "↻ Refresh hotels"
+
+msgid "Reserva en Hotel Aliado"
+msgstr "Partner Hotel Booking"
+
+msgid "Fecha de Check-in"
+msgstr "Check-in Date"
+
+msgid "Fecha de Check-out"
+msgstr "Check-out Date"
+
+msgid "Número de habitaciones"
+msgstr "Number of rooms"
+
+msgid "Habitaciones disponibles:"
+msgstr "Available rooms:"
+
+msgid "Nombre del huésped"
+msgstr "Guest name"
+
+msgid "Correo de contacto"
+msgstr "Contact email"
+
+msgid "Total estadía estimada:"
+msgstr "Estimated total stay:"
+
+msgid "Confirmar Reserva Hotelera →"
+msgstr "Confirm Hotel Booking →"
