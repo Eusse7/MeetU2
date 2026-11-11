@@ -145,7 +145,7 @@ python manage.py seed_demo            # datos de demostración
 python manage.py compile_translations # compila catálogos .po a binarios .mo
 python manage.py expirar_reservas     # libera cupos de reservas vencidas
 pytest                                # 167 pruebas del monolito
-pytest -o pythonpath="services/pagos services/social services/notificaciones services/catalogo" services/ # 51 pruebas microservicios
+pytest -o pythonpath="services/pagos services/social services/notificaciones services/catalogo" services/ # 51 pruebas de microservicios
 ```
 
 ## Herramientas usadas
