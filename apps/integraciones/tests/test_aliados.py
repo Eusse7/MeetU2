@@ -79,3 +79,62 @@ def test_use_case_planes_aliados():
 
     assert len(hoteles) >= 3
     assert "Hotel" in hoteles[0].titulo or "Glamping" in hoteles[0].titulo or "Resort" in hoteles[0].titulo
+
+
+def test_http_aliados_con_formato_rooms_hotel_aliado():
+    mock_payload = json.dumps({
+        "page": 1,
+        "page_size": 12,
+        "total": 2,
+        "rooms": [
+            {
+                "id": 1,
+                "number": "101",
+                "floor": 1,
+                "status": "AVAILABLE",
+                "image_urls": [],
+                "room_type": {
+                    "id": 1,
+                    "name": "Sencilla",
+                    "description": "Para una persona. Cama sencilla y baño.",
+                    "max_capacity": 1,
+                    "bed_type": "Cama sencilla",
+                    "base_price_per_night": "180000.00",
+                },
+            },
+            {
+                "id": 10,
+                "number": "402",
+                "floor": 4,
+                "status": "MAINTENANCE",
+                "image_urls": [],
+                "room_type": {
+                    "id": 4,
+                    "name": "Suite",
+                    "description": "En mantenimiento.",
+                    "max_capacity": 4,
+                    "bed_type": "Cama king",
+                    "base_price_per_night": "520000.00",
+                },
+            },
+        ],
+    }).encode("utf-8")
+
+    mock_resp = MagicMock()
+    mock_resp.read.return_value = mock_payload
+    mock_resp.__enter__.return_value = mock_resp
+
+    adapter = HttpServicioAliadoAdapter(url="https://api.hotelmdj.com/v1/rooms")
+
+    with patch("urllib.request.urlopen", return_value=mock_resp):
+        hoteles = adapter.obtener_planes_aliados()
+
+    # Solo la habitación AVAILABLE debe ser listada
+    assert len(hoteles) == 1
+    hab = hoteles[0]
+    assert hab.id == "hotel-mdj-hab-101"
+    assert "Nuestro Hotel Aliado hotelMDJ" in hab.titulo
+    assert hab.precio == Decimal("180000.00")
+    assert hab.cupos_disponibles == 1
+    assert "Sencilla" in hab.categoria
+    assert "Medellín" in hab.ciudad

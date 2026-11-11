@@ -162,75 +162,23 @@ class DetalleReporteAsincronoAPIView(APIView):
 class PartnerHotelesAPIView(APIView):
     """
     API REST del Servicio de Hoteles Aliado (hotelMDJ Integration).
-    Expone el catálogo en vivo de alojamientos y hospedajes disponibles
+    Expone la disponibilidad de habitaciones de nuestro hotel aliado hotelMDJ
     para consumo por parte de la plataforma MeetU2 y aplicaciones autorizadas.
     """
 
     def get(self, request: Request) -> Response:
+        from apps.integraciones.infrastructure.aliado_adapters import ROOMS_DATASET_DEFAULT
+
         return Response(
             {
+                "page": 1,
+                "page_size": 12,
+                "total": len(ROOMS_DATASET_DEFAULT),
+                "total_pages": 1,
+                "hotel": "hotelMDJ (Nuestro Hotel Aliado)",
                 "servicio": "hotelMDJ Cloud API v2.4",
-                "proveedor": "hotelMDJ — Cadena & Alojamientos Aliados",
-                "estado": "operativo",
-                "total": 4,
-                "hoteles": [
-                    {
-                        "id_hotel": "hotel-poblado-01",
-                        "nombre_hotel": "Hotel Boutique & Spa El Poblado",
-                        "tipo_alojamiento": "Suite Deluxe con Balcón",
-                        "ciudad": "Medellín",
-                        "sector": "El Poblado",
-                        "precio_noche": 220000,
-                        "habitaciones_disponibles": 5,
-                        "estrellas": 4.9,
-                        "amenidades": ["☕ Desayuno buffet", "🏊 Piscina en terraza", "🧖 Spa & Sauna", "📶 WiFi 500 Mbps"],
-                        "url_reserva": "https://hotelmdj.com/hotel/poblado-boutique",
-                        "cadena": "Cadena Hotelera Estelar (hotelMDJ)",
-                        "imagen": "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&auto=format&fit=crop",
-                    },
-                    {
-                        "id_hotel": "hotel-santaelena-02",
-                        "nombre_hotel": "Eco-Lodge & Glamping Santa Elena",
-                        "tipo_alojamiento": "Domo Geodésico con Jacuzzi",
-                        "ciudad": "Santa Elena",
-                        "sector": "Bosque Nativo",
-                        "precio_noche": 185000,
-                        "habitaciones_disponibles": 3,
-                        "estrellas": 4.8,
-                        "amenidades": ["🔥 Fogata nocturna", "🛁 Jacuzzi privado", "🍳 Desayuno campesino", "🌿 Vista panorámica"],
-                        "url_reserva": "https://hotelmdj.com/hotel/glamping-santa-elena",
-                        "cadena": "EcoHoteles Antioquia (hotelMDJ)",
-                        "imagen": "https://images.unsplash.com/photo-1587061949409-02df41d5e562?w=800&auto=format&fit=crop",
-                    },
-                    {
-                        "id_hotel": "hotel-laureles-03",
-                        "nombre_hotel": "Hotel Terraza Laureles Urban & Rooftop",
-                        "tipo_alojamiento": "Habitación Superior King",
-                        "ciudad": "Medellín",
-                        "sector": "Laureles",
-                        "precio_noche": 160000,
-                        "habitaciones_disponibles": 6,
-                        "estrellas": 4.7,
-                        "amenidades": ["🍹 Rooftop Bar", "☕ Cafetería de autor", "🏋️ Gimnasio", "📶 WiFi 500 Mbps"],
-                        "url_reserva": "https://hotelmdj.com/hotel/laureles-urban",
-                        "cadena": "Urban Boutique Hotels (hotelMDJ)",
-                        "imagen": "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=800&auto=format&fit=crop",
-                    },
-                    {
-                        "id_hotel": "hotel-guatape-04",
-                        "nombre_hotel": "Resort & Cabañas Guatapé Lakefront",
-                        "tipo_alojamiento": "Cabaña frente al Embalse",
-                        "ciudad": "Guatapé",
-                        "sector": "Represa El Peñol",
-                        "precio_noche": 290000,
-                        "habitaciones_disponibles": 4,
-                        "estrellas": 4.9,
-                        "amenidades": ["⛵ Muelle náutico", "🏊 Piscina infinita", "🍽️ Restaurante lacustre", "🚴 Kayaks incluidos"],
-                        "url_reserva": "https://hotelmdj.com/hotel/guatape-resort",
-                        "cadena": "Lakeside Resorts (hotelMDJ)",
-                        "imagen": "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800&auto=format&fit=crop",
-                    },
-                ],
+                "proveedor": "hotelMDJ — Nuestro Hotel Aliado",
+                "rooms": ROOMS_DATASET_DEFAULT,
             },
             status=status.HTTP_200_OK,
         )

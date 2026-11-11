@@ -512,3 +512,9 @@ msgstr "Direct bookings managed through live hotelMDJ integration."
 
 msgid "+ Reservar en hotelMDJ"
 msgstr "+ Book in hotelMDJ"
+
+msgid "Nuestro Hotel Aliado hotelMDJ"
+msgstr "Our Partner Hotel hotelMDJ"
+
+msgid "Habitaciones y hospedaje en nuestro hotel aliado hotelMDJ, consumidos en tiempo real desde su API oficial mediante Patrón Adapter."
+msgstr "Rooms and lodging at our partner hotel hotelMDJ, consumed in real time from its official API via Adapter Pattern."

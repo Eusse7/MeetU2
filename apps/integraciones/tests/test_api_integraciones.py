@@ -44,10 +44,10 @@ def test_endpoint_partner_hotels_y_simulador():
     resp = client.get("/api/v1/integracion/partner/hotels/")
     assert resp.status_code == status.HTTP_200_OK
     data = resp.json()
-    assert "hotelMDJ" in data["servicio"]
-    assert "hoteles" in data
-    assert len(data["hoteles"]) >= 1
-    assert data["hoteles"][0]["precio_noche"] > 0
+    assert "hotelMDJ" in data.get("servicio", "") or "hotelMDJ" in data.get("hotel", "")
+    assert "rooms" in data
+    assert len(data["rooms"]) == 10
+    assert float(data["rooms"][0]["room_type"]["base_price_per_night"]) > 0
 
     # Alias compatible
     resp_alias = client.get("/api/v1/integracion/simulador/hoteles/")
